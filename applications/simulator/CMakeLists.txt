@@ -1,4 +1,4 @@
-find_package(qcustomplot REQUIRED)
+#find_package(qcustomplot REQUIRED)
 include_directories (../../libraries/aircraft-simulator/headers)
 #include_directories("${QCUSTOMPLOT_INCLUDE_DIR}")
 
