@@ -7,54 +7,89 @@
 #include <algorithm>
 
 
+/*! \class OurVector
+*   \brief Class describing the custom vector
+*/
 template<uint8_t size, typename type = float>
 class OurVector
 {
 public:
     //!Default constructor
-    OurVector() : vector(new type[size]) {}
+    OurVector() : _vector(new type[size]) {}
     //! Copy constructor
     OurVector(const OurVector& other);
     //! Overloading operator -
     OurVector<size, type>& operator=(const OurVector& other);
     //! Destructor
-    ~OurVector() { delete[] vector; }
+    ~OurVector();
+
+    //! Replace all fields
+    void swap(OurVector& other);
+
+    //! Overloading operator==
+    bool operator==(const OurVector& other);
+    //! Overloading operator!=
+    bool operator!=(const OurVector& other);
 
     //! Overloading operator[] with link
-    type& operator[](uint8_t i) { return vector[i]; }
+    type& operator[](uint8_t i) { return _vector[i]; }
 
-    //! Overloading sum with another vector
+    //! Overloading sum with another _vector
     OurVector<size, type> operator+(const OurVector& other);
-    //! Overloading subtraction with another vector
-    OurVector<size, type> operator-(const OurVector& other);
-    //! Overloading multiplying with another vector
+    //! Overloading multiplying with another _vector
     OurVector<size, type> operator*(const OurVector& other);
+    //! Overloading subtraction with another _vector
+    OurVector<size, type> operator-(OurVector other);
+    //! Overloading operator- that inverts number
+    OurVector<size, type> operator-();
+
+    //! Overloading multiplying with single number
+    OurVector<size, type> operator*(float number);
+    //! Overloading multiplying with single number(number is first)
+    template<uint8_t size_, typename T>
+    friend OurVector<size_, T> operator*(float number, OurVector<size_, T>& vector);
 
     //! Get size
     [[nodiscard]] uint8_t inline getSize() const { return size; }
     //! Check size
     void checkSize(const OurVector& other) { assert(other.getSize() == size); }
 private:
-    type* vector;
+    type* _vector;
 };
 
-//! Overloading multiplying with single number
-template<uint8_t size, typename type = float>
-OurVector<size, type> operator*(OurVector<size, type>& vector, float number)
-{
-    for(uint8_t i = 0; i < size; ++i)
-    {
-        vector[i] *= number;
-    }
 
-    return vector;
+template<uint8_t size, typename type>
+OurVector<size, type>::~OurVector()
+{
+    if (_vector)
+    {
+        delete[] _vector;
+    }
 }
 
-//! Another overloading multiplying with single number
-template<uint8_t size, typename type = float>
-OurVector<size, type> operator*(float number, OurVector<size, type>& vector)
+template<uint8_t size, typename type>
+OurVector<size, type> OurVector<size, type>::operator*(float number)
+{
+    OurVector<size, type> result;
+
+    for(uint8_t i = 0; i < size; ++i)
+    {
+        result._vector[i] = this->_vector[i] * number;
+    }
+
+    return result;
+}
+
+template<uint8_t size_, typename T>
+OurVector<size_, T> operator*(float number, OurVector<size_, T>& vector)
 {
     return vector * number;
+}
+
+template<uint8_t size, typename type>
+void OurVector<size, type>::swap(OurVector &other)
+{
+    std::swap(this->_vector, other._vector);
 }
 
 template<uint8_t size, typename type>
@@ -62,61 +97,85 @@ OurVector<size, type> &OurVector<size, type>::operator=(const OurVector &other)
 {
     if (this != &other)
     {
-        std::swap(OurVector(other), *this);
+        OurVector(other).swap(*this);
     }
 
     return *this;
 }
 
 template<uint8_t size, typename type>
-OurVector<size, type>::OurVector(const OurVector &other) : vector(new type[size])
+OurVector<size, type>::OurVector(const OurVector &other) : _vector(new type[size])
 {
     checkSize(other);
 
     for(uint8_t i = 0; i < size; ++i)
     {
-        this->vector[i] = other.vector[i];
+        this->_vector[i] = other._vector[i];
     }
 
+}
+
+template<uint8_t size, typename type>
+bool OurVector<size, type>::operator==(const OurVector &other)
+{
+    checkSize(other);
+
+    for(uint8_t i = 0; i < size; ++i)
+    {
+        if (this->_vector[i] != other._vector[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+template<uint8_t size, typename type>
+bool OurVector<size, type>::operator!=(const OurVector &other)
+{
+    return *this == other;
 }
 
 template<uint8_t size, typename type>
 OurVector<size, type> OurVector<size, type>::operator+(const OurVector &other)
 {
     checkSize(other);
+    OurVector<size, type> result;
 
     for(uint8_t i = 0; i < size; ++i)
     {
-        this->vector[i] += other.vector[i];
+        result[i] = this->_vector[i] + other._vector[i];
     }
 
-    return *this;
+    return result;
 }
 
 template<uint8_t size, typename type>
-OurVector<size, type> OurVector<size, type>::operator-(const OurVector &other)
+OurVector<size, type> OurVector<size, type>::operator-()
+{
+    return *this * (-1);
+}
+
+template<uint8_t size, typename type>
+OurVector<size, type> OurVector<size, type>::operator-(OurVector other)
+{
+    return *this + (-other);
+}
+
+
+template<uint8_t size, typename type>
+OurVector<size, type> OurVector<size, type>::operator*(const OurVector& other)
 {
     checkSize(other);
+    OurVector<size, type> result;
 
     for(uint8_t i = 0; i < size; ++i)
     {
-        this->vector[i] -= other.vector[i];
+        result[i] = this->_vector[i] * other._vector[i];
     }
 
-    return *this;
-}
-
-
-template<uint8_t size, typename type>
-OurVector<size, type> OurVector<size, type>::operator*(const OurVector& other) {
-    checkSize(other);
-
-    for(uint8_t i = 0; i < size; ++i)
-    {
-        this->vector[i] *= other.vector[i];
-    }
-
-    return *this;
+    return result;
 }
 
 #endif //MLAT_VECTOR_H
