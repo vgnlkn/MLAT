@@ -49,6 +49,17 @@ public:
     template<uint8_t size_, typename T>
     friend OurVector<size_, T> operator*(float number, OurVector<size_, T>& vector);
 
+    //! Overloading operator*=
+    OurVector<size, type>& operator*=(const OurVector& other);
+    //! Overloading operator+=
+    OurVector<size, type>& operator+=(const OurVector& other);
+    //! Overloading operator-=
+    OurVector<size, type>& operator-=(OurVector& other);
+
+    //! Overloading output to stream operator
+    template<uint8_t size_, typename T>
+    friend std::ostream& operator<<(std::ostream& os, const OurVector<size_, T>& vector);
+
     //! Get size
     [[nodiscard]] uint8_t inline getSize() const { return size; }
     //! Check size
@@ -176,6 +187,41 @@ OurVector<size, type> OurVector<size, type>::operator*(const OurVector& other)
     }
 
     return result;
+}
+
+template<uint8_t size, typename type>
+OurVector<size, type> &OurVector<size, type>::operator*=(const OurVector &other)
+{
+    *this = *this * other;
+
+    return *this;
+}
+
+template<uint8_t size, typename type>
+OurVector<size, type> &OurVector<size, type>::operator+=(const OurVector &other)
+{
+    *this = *this + other;
+
+    return *this;
+}
+
+template<uint8_t size, typename type>
+OurVector<size, type> &OurVector<size, type>::operator-=(OurVector &other)
+{
+    *this += -other;
+
+    return *this;
+}
+
+template<uint8_t size_, typename T>
+std::ostream &operator<<(std::ostream &os, const OurVector<size_, T> &vector)
+{
+    for(uint8_t i = 0; i < size_; ++i)
+    {
+        os << vector._vector[i] << ' ';
+    }
+
+    return os;
 }
 
 #endif //MLAT_VECTOR_H
