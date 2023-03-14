@@ -5,6 +5,7 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#include <typeinfo>
 
 
 /*! \class OurVector
@@ -49,22 +50,16 @@ public:
     template<uint8_t size_, typename T>
     friend OurVector<size_, T> operator*(float number, OurVector<size_, T>& vector);
 
-    //! Overloading operator*=
-    OurVector<size, type>& operator*=(const OurVector& other);
-    //! Overloading operator+=
-    OurVector<size, type>& operator+=(const OurVector& other);
-    //! Overloading operator-=
-    OurVector<size, type>& operator-=(OurVector& other);
-
     //! Overloading output to stream operator
     template<uint8_t size_, typename T>
     friend std::ostream& operator<<(std::ostream& os, const OurVector<size_, T>& vector);
 
     //! Get size
     [[nodiscard]] uint8_t inline getSize() const { return size; }
-    //! Check size
-    void checkSize(const OurVector& other) { assert(other.getSize() == size); }
 private:
+    //! Check all parameters
+    void checkParams(const OurVector& other);
+
     type* _vector;
 };
 
@@ -117,7 +112,7 @@ OurVector<size, type> &OurVector<size, type>::operator=(const OurVector &other)
 template<uint8_t size, typename type>
 OurVector<size, type>::OurVector(const OurVector &other) : _vector(new type[size])
 {
-    checkSize(other);
+    checkParams(other);
 
     for(uint8_t i = 0; i < size; ++i)
     {
@@ -129,7 +124,7 @@ OurVector<size, type>::OurVector(const OurVector &other) : _vector(new type[size
 template<uint8_t size, typename type>
 bool OurVector<size, type>::operator==(const OurVector &other)
 {
-    checkSize(other);
+    checkParams(other);
 
     for(uint8_t i = 0; i < size; ++i)
     {
@@ -151,7 +146,7 @@ bool OurVector<size, type>::operator!=(const OurVector &other)
 template<uint8_t size, typename type>
 OurVector<size, type> OurVector<size, type>::operator+(const OurVector &other)
 {
-    checkSize(other);
+    checkParams(other);
     OurVector<size, type> result;
 
     for(uint8_t i = 0; i < size; ++i)
@@ -178,7 +173,7 @@ OurVector<size, type> OurVector<size, type>::operator-(OurVector other)
 template<uint8_t size, typename type>
 OurVector<size, type> OurVector<size, type>::operator*(const OurVector& other)
 {
-    checkSize(other);
+    checkParams(other);
     OurVector<size, type> result;
 
     for(uint8_t i = 0; i < size; ++i)
@@ -187,30 +182,6 @@ OurVector<size, type> OurVector<size, type>::operator*(const OurVector& other)
     }
 
     return result;
-}
-
-template<uint8_t size, typename type>
-OurVector<size, type> &OurVector<size, type>::operator*=(const OurVector &other)
-{
-    *this = *this * other;
-
-    return *this;
-}
-
-template<uint8_t size, typename type>
-OurVector<size, type> &OurVector<size, type>::operator+=(const OurVector &other)
-{
-    *this = *this + other;
-
-    return *this;
-}
-
-template<uint8_t size, typename type>
-OurVector<size, type> &OurVector<size, type>::operator-=(OurVector &other)
-{
-    *this += -other;
-
-    return *this;
 }
 
 template<uint8_t size_, typename T>
@@ -222,6 +193,14 @@ std::ostream &operator<<(std::ostream &os, const OurVector<size_, T> &vector)
     }
 
     return os;
+}
+
+template<uint8_t size, typename type>
+void OurVector<size, type>::checkParams(const OurVector &other)
+{
+    assert(std::is_arithmetic<type>() &&
+           typeid(_vector).name() == typeid(other._vector).name());
+    assert(other.getSize() == size);
 }
 
 #endif //MLAT_VECTOR_H
