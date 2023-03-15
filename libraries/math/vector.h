@@ -12,7 +12,7 @@
 *   \brief Class describing the custom vector
 */
 template<uint8_t size, typename type = float>
-class OurVector
+class OurVector final
 {
 public:
     //!Default constructor
@@ -149,7 +149,7 @@ bool OurVector<size, type>::operator==(const OurVector &other)
 template<uint8_t size, typename type>
 bool OurVector<size, type>::operator!=(const OurVector &other)
 {
-    return *this == other;
+    return !(*this == other);
 }
 
 template<uint8_t size, typename type>
