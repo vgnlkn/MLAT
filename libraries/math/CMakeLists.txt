@@ -25,6 +25,6 @@ if (${GTest_FOUND})
         Math
     )
     enable_testing()
-    add_test(NAME Tests COMMAND tests_aircraft)
+    add_test(NAME ExampleTest COMMAND test_math)
 
 endif (${GTest_FOUND})
