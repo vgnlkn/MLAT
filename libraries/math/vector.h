@@ -16,17 +16,17 @@ class OurVector
 {
 public:
     //!Default constructor
-    OurVector() : _vector(new type[size]) {}
+    OurVector() : _vector(new type[size]) { setValue(0.f); }
     //! Copy constructor
     OurVector(const OurVector& other);
     //! Overloading operator -
     OurVector<size, type>& operator=(const OurVector& other);
     //! Destructor
     ~OurVector();
-
+    //! set vector values to val
+    void setValue(type value);
     //! Replace all fields
     void swap(OurVector& other);
-
     //! Overloading operator==
     bool operator==(const OurVector& other);
     //! Overloading operator!=
@@ -70,6 +70,15 @@ OurVector<size, type>::~OurVector()
     if (_vector)
     {
         delete[] _vector;
+    }
+}
+
+template<uint8_t size, typename type>
+inline void OurVector<size, type>::setValue(type value)
+{
+    for (int i = 0; i < size; ++i)
+    {
+        _vector[i] = value;
     }
 }
 
