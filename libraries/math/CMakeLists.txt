@@ -5,6 +5,7 @@ include_directories (. tests/)
 add_library (Math
     vector.h
     equation_solver.h
+    matrix.h
     src/equation_solver.cpp
 )
 
