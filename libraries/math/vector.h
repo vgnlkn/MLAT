@@ -7,7 +7,6 @@
 #include <algorithm>
 #include <typeinfo>
 
-
 /*! \class OurVector
 *   \brief Class describing the custom vector
 */
@@ -15,7 +14,7 @@ template<uint8_t size, typename type = float>
 class OurVector final
 {
 public:
-    //!Default constructor
+    //! Default constructor
     OurVector() : _vector(new type[size]) { setValue(0.f); }
     //! Copy constructor
     OurVector(const OurVector& other);
@@ -33,7 +32,7 @@ public:
     bool operator!=(const OurVector& other);
 
     //! Overloading operator[] with link
-    type& operator[](uint8_t i) { return _vector[i]; }
+    type& operator[](uint8_t i) const { return _vector[i]; }
 
     //! Overloading sum with another _vector
     OurVector<size, type> operator+(const OurVector& other);
