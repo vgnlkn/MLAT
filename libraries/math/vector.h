@@ -19,7 +19,7 @@ public:
     OurVector() : _vector(new type[size]) { setValue(0.f); }
     //! Copy constructor
     OurVector(const OurVector& other);
-    //! Overloading operator -
+    //! Overloading operator =
     OurVector<size, type>& operator=(const OurVector& other);
     //! Destructor
     ~OurVector();
