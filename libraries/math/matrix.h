@@ -58,9 +58,9 @@ public:
      * with dimensions that are powers of two. If the dimensions of the matrices
      * are not a power of two, then they can be padded with zeros to the next
      * power of two.*/
-    template<uint8_t row_, uint8_t col_, typename T>
-    friend OurMatrix<row_, col_, T> strassenAlg(const OurMatrix<row_, col_, T>& first,
-                                                const OurMatrix<row_, col_, T> &second);
+    template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
+    friend OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first,
+                                                const OurMatrix<row2, col2, T>& second);
 
     //! Get row size
     [[nodiscard]] inline uint8_t getRowNumber() const { return row; }
@@ -95,7 +95,7 @@ public:
     //! Overloading multiplying with another matrix
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
     friend OurMatrix<row1, col2, T> operator*(const OurMatrix<row1, col1, T>& first,
-                                              const OurMatrix<row1, col2, T> &second);
+                                              const OurMatrix<row2, col2, T>& second);
     //! Overloading operator <<
     template<uint8_t row_, uint8_t col_, typename T>
     friend std::ostream& operator<<(std::ostream& os, const OurMatrix<row_, col_, T>& matrix);
@@ -103,7 +103,7 @@ public:
 private:
     void checkParams(const OurMatrix& other);
 
-private:
+public:
     OurVector<col, type>* _matrix;
 
 };
@@ -112,9 +112,10 @@ private:
 template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
 OurMatrix<row1, col2, T> operator*(const OurMatrix<row1, col1, T>& first, const OurMatrix<row2, col2, T>& second)
 {
+
     if (row1 == col1 == row2 == col2)
     {
-        return classicAlgMultiplication(first, second);
+        return strassenAlg(first, second);
     }
     return classicAlgMultiplication(first, second);
 }
@@ -145,14 +146,15 @@ OurMatrix<row1, col2, T> classicAlgMultiplication(const OurMatrix<row1, col1, T>
     return result;
 }
 
-template<uint8_t row_, uint8_t col_, typename T>
-OurMatrix<row_, col_, T> strassenAlg(const OurMatrix<row_, col_, T>& first, const OurMatrix<row_, col_, T> &second)
+template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
+OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first,
+                                     const OurMatrix<row2, col2, T>& second)
 {
-    const uint8_t n = row_;
+    const uint8_t n = row1;
     OurMatrix<n, n, T> result;
     if (n == 1)
     {
-        result[0][0] = first._matrix[0][0] * second._matrix[0][0];
+        result._matrix[0][0] = first._matrix[0][0] * second._matrix[0][0];
         return result;
     }
 
@@ -163,14 +165,14 @@ OurMatrix<row_, col_, T> strassenAlg(const OurMatrix<row_, col_, T>& first, cons
     {
         for (uint8_t j = 0; j < m; j++)
         {
-            A11[i][j] = first._matrix[i][j];
-            A12[i][j] = first._matrix[i][j + m];
-            A21[i][j] = first._matrix[i + m][j];
-            A22[i][j] = first._matrix[i + m][j + m];
-            B11[i][j] = second._matrix[i][j];
-            B12[i][j] = second._matrix[i][j + m];
-            B21[i][j] = second._matrix[i + m][j];
-            B22[i][j] = second._matrix[i + m][j + m];
+            A11._matrix[i][j] = first._matrix[i][j];
+            A12._matrix[i][j] = first._matrix[i][j + m];
+            A21._matrix[i][j] = first._matrix[i + m][j];
+            A22._matrix[i][j] = first._matrix[i + m][j + m];
+            B11._matrix[i][j] = second._matrix[i][j];
+            B12._matrix[i][j] = second._matrix[i][j + m];
+            B21._matrix[i][j] = second._matrix[i + m][j];
+            B22._matrix[i][j] = second._matrix[i + m][j + m];
         }
     }
 
@@ -180,16 +182,16 @@ OurMatrix<row_, col_, T> strassenAlg(const OurMatrix<row_, col_, T>& first, cons
     {
         for (uint8_t j = 0; j < m; j++)
         {
-            S1[i][j] = B12[i][j] - B22[i][j];
-            S2[i][j] = A11[i][j] + A12[i][j];
-            S3[i][j] = A21[i][j] + A22[i][j];
-            S4[i][j] = B21[i][j] - B11[i][j];
-            S5[i][j] = A11[i][j] + A22[i][j];
-            S6[i][j] = B11[i][j] + B22[i][j];
-            S7[i][j] = A12[i][j] - A22[i][j];
-            S8[i][j] = B21[i][j] + B22[i][j];
-            S9[i][j] = A11[i][j] - A21[i][j];
-            S10[i][j] = B11[i][j] + B12[i][j];
+            S1._matrix[i][j] = B12._matrix[i][j] - B22._matrix[i][j];
+            S2._matrix[i][j] = A11._matrix[i][j] + A12._matrix[i][j];
+            S3._matrix[i][j] = A21._matrix[i][j] + A22._matrix[i][j];
+            S4._matrix[i][j] = B21._matrix[i][j] - B11._matrix[i][j];
+            S5._matrix[i][j] = A11._matrix[i][j] + A22._matrix[i][j];
+            S6._matrix[i][j] = B11._matrix[i][j] + B22._matrix[i][j];
+            S7._matrix[i][j] = A12._matrix[i][j] - A22._matrix[i][j];
+            S8._matrix[i][j] = B21._matrix[i][j] + B22._matrix[i][j];
+            S9._matrix[i][j] = A11._matrix[i][j] - A21._matrix[i][j];
+            S10._matrix[i][j] = B11._matrix[i][j] + B12._matrix[i][j];
         }
     }
 
@@ -204,10 +206,12 @@ OurMatrix<row_, col_, T> strassenAlg(const OurMatrix<row_, col_, T>& first, cons
     {
         for (uint8_t j = 0; j < m; j++)
         {
-            result[i][j] = P5[i][j] + P4[i][j] - P2[i][j] + P6[i][j];
-            result[i][j + m] = P1[i][j] + P2[i][j];
-            result[i + m][j] = P3[i][j] + P4[i][j];
-            result[i + m][j + m] = P5[i][j] + P1[i][j] - P3[i][j] - P7[i][j];
+            result._matrix[i][j] = P5._matrix[i][j] + P4._matrix[i][j]
+                                   - P2._matrix[i][j] + P6._matrix[i][j];
+            result._matrix[i][j + m] = P1._matrix[i][j] + P2._matrix[i][j];
+            result._matrix[i + m][j] = P3._matrix[i][j] + P4._matrix[i][j];
+            result._matrix[i + m][j + m] = P5._matrix[i][j] + P1._matrix[i][j]
+                                           - P3._matrix[i][j] - P7._matrix[i][j];
         }
     }
 
