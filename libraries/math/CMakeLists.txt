@@ -15,6 +15,7 @@ if (${GTest_FOUND})
     add_executable(test_math 
         tests/main.cpp
         tests/test_vector.cpp
+        tests/test_matrix.cpp
     )
 
     target_link_libraries(test_math 

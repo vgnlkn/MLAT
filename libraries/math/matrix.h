@@ -113,9 +113,9 @@ template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
 OurMatrix<row1, col2, T> operator*(const OurMatrix<row1, col1, T>& first, const OurMatrix<row2, col2, T>& second)
 {
 
-    if (row1 == col1 == row2 == col2)
+    if (row1 == col1 && row2 == col2 && row1 == row2)
     {
-        return strassenAlg(first, second);
+        return classicAlgMultiplication(first, second);
     }
     return classicAlgMultiplication(first, second);
 }
