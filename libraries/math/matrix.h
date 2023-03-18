@@ -53,11 +53,7 @@ public:
     void setIdentity() { this->setDiagonalValue(1.f); };
     //! Transposes the matrix
     void transpose();
-    /**Strassen's algorithm
-     * Strassen's algorithm for matrix multiplication works for square matrices
-     * with dimensions that are powers of two. If the dimensions of the matrices
-     * are not a power of two, then they can be padded with zeros to the next
-     * power of two.*/
+    //! Strassen's algorithm
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
     friend OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first,
                                                 const OurMatrix<row2, col2, T>& second);
@@ -103,7 +99,7 @@ public:
 private:
     void checkParams(const OurMatrix& other);
 
-public:
+private:
     OurVector<col, type>* _matrix;
 
 };
@@ -112,10 +108,11 @@ public:
 template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
 OurMatrix<row1, col2, T> operator*(const OurMatrix<row1, col1, T>& first, const OurMatrix<row2, col2, T>& second)
 {
+    assert(col1 == row2);
 
-    if (row1 == col1 && row2 == col2 && row1 == row2)
+    if (row1 == col1 == row2 == col2)
     {
-        return classicAlgMultiplication(first, second);
+        return strassenAlg(first, second);
     }
     return classicAlgMultiplication(first, second);
 }
@@ -125,8 +122,6 @@ template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
 OurMatrix<row1, col2, T> classicAlgMultiplication(const OurMatrix<row1, col1, T>& first,
                                                   const OurMatrix<row2, col2, T>& second)
 {
-    assert(col1 == row2);
-
     const uint8_t n = row1;
     const uint8_t m = col2;
     const uint8_t p = col1;
@@ -146,12 +141,19 @@ OurMatrix<row1, col2, T> classicAlgMultiplication(const OurMatrix<row1, col1, T>
     return result;
 }
 
+
+/**
+ * Strassen's algorithm for matrix multiplication works for square matrices
+ * with dimensions that are powers of two. If the dimensions of the matrices
+ * are not a power of two, then they can be padded with zeros to the next
+ * power of two.
+ */
 template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
 OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first,
                                      const OurMatrix<row2, col2, T>& second)
 {
     const uint8_t n = row1;
-    OurMatrix<n, n, T> result;
+    OurMatrix<row1, col2, T> result;
     if (n == 1)
     {
         result._matrix[0][0] = first._matrix[0][0] * second._matrix[0][0];
