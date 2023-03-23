@@ -30,11 +30,6 @@ public:
     void checkSpeed();
     //! Check acceleration of the _aircraft
     void checkAcceleration();
-
-    //! Methods to work with signals
-    //! Sends data to the processor
-    void sendData(const OurVector<3>& coordinates, float time);
-
 private:
     Tower* _towers;
     OurMatrix<3, 2> _state;

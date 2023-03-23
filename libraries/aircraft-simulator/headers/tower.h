@@ -5,7 +5,7 @@
 #include <vector.h>
 #include <cstring>
 
-class Tower : public Processor
+class Tower
 {
 public:
     //! Default constructor

@@ -1,6 +1,6 @@
 #include <aircraft.h>
 
-Aircraft::Aircraft(const OurVector<3> &acceleration) : _towers(new Tower[4])
+Aircraft::Aircraft(const OurVector<3> &acceleration)
 {
     for (uint8_t i = 0; i < 3; ++i)
     {
@@ -11,12 +11,6 @@ Aircraft::Aircraft(const OurVector<3> &acceleration) : _towers(new Tower[4])
 Aircraft::Aircraft(const Aircraft &other)
 {
     _state = other._state;
-
-    _towers = new Tower[4];
-    for (uint8_t i = 0; i < 4; ++i)
-    {
-        _towers[i] = other._towers[i];
-    }
 }
 
 
@@ -67,10 +61,3 @@ void Aircraft::checkAcceleration()
         }
     }
 }
-
-void Aircraft::sendData(const OurVector<3>& coordinates, float time)
-{
-    _towers[0].acceptSignal(time);
-    _towers[0].acceptCoordinates(coordinates);
-}
-

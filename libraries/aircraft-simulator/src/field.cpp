@@ -1,9 +1,15 @@
 #include <field.h>
 #include <aircraft.h>
 
-Field::Field()
+Field::Field() : _coordinates(new OurVector<3>[1000]), _times(new float[1000])
 {
     _current_position[2] = 10;
+}
+
+Field::~Field()
+{
+    delete[] _coordinates;
+    delete[] _times;
 }
 
 void Field::startMovement()
@@ -15,8 +21,8 @@ void Field::startMovement()
         checkHeight();
         _aircraft.calculateNewSpeed();
         _aircraft.checkSpeed();
-        _aircraft.sendData(_current_position, 60.f * i);
-        // std::cout << "current _aircraft position: " << _current_position  << " with time: " << 60.f * i << '\n';
+        _times[i] = 60.f * i;
+        _coordinates[i] = _current_position;
     }
 }
 
