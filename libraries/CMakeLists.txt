@@ -1,1 +1,2 @@
 add_subdirectory(aircraft-simulator)
+add_subdirectory(math)
