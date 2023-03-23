@@ -1,5 +1,5 @@
-#include "../headers/processor.h"
-
+#include <field.h>
+#include <processor.h>
 
 void Processor::printResult()
 {

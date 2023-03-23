@@ -1,4 +1,4 @@
-#include "../headers/tower.h"
+#include <tower.h>
 
 Tower::Tower(const Tower &other)
 {

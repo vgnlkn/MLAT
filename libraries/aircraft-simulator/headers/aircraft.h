@@ -1,10 +1,9 @@
 #ifndef MLAT_AIRCRAFT_H
 #define MLAT_AIRCRAFT_H
 
-#include "../../math/matrix.h"
-#include "tower.h"
+#include <matrix.h>
+#include <tower.h>
 #include <cmath>
-
 
 class Aircraft
 {
@@ -35,6 +34,7 @@ public:
     //! Methods to work with signals
     //! Sends data to the processor
     void sendData(const OurVector<3>& coordinates, float time);
+
 private:
     Tower* _towers;
     OurMatrix<3, 2> _state;

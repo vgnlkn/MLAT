@@ -1,5 +1,5 @@
-#ifndef PLOTTER_H
-#define PLOTTER_H
+#ifndef MLAT_PLOTTER_H
+#define MLAT_PLOTTER_H
 
 #include <fstream>
 #include <string>

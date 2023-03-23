@@ -3,8 +3,7 @@
 
 #include <chrono>
 #include <vector>
-#include "field.h"
-
+#include <vector.h>
 
 class Processor
 {
@@ -30,5 +29,4 @@ private:
     std::vector<OurVector<3>> _coordinates;
 };
 
-
-#endif //UNTITLED1_PROCESSOR_H
+#endif 

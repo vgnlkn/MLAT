@@ -1,5 +1,5 @@
-#include "../headers/field.h"
-#include "../headers/aircraft.h"
+#include <field.h>
+#include <aircraft.h>
 
 Field::Field()
 {

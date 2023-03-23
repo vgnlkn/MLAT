@@ -1,10 +1,9 @@
 #ifndef MLAT_TOWER_H
 #define MLAT_TOWER_H
 
-#include "processor.h"
-#include "../../math/vector.h"
+#include <processor.h>
+#include <vector.h>
 #include <cstring>
-
 
 class Tower : public Processor
 {

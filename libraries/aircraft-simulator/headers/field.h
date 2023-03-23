@@ -1,7 +1,7 @@
 #ifndef MLAT_FIELD_H
 #define MLAT_FIELD_H
 
-#include "aircraft.h"
+#include <aircraft.h>
 
 const float kilometer = 1000.f;
 
@@ -11,9 +11,9 @@ public:
     //! Default constructor
     Field();
     //! Constructor with start position
-    explicit Field(const OurVector<3>& start) : _current_position(start) {}
+    Field(const OurVector<3>& start) : _current_position(start) {}
     //! Constructor with _aircraft
-    explicit Field(const Aircraft& aircraft) : _aircraft(aircraft) {}
+    Field(const Aircraft& aircraft) : _aircraft(aircraft) {}
 
     //! Methods responsible for the movement of the _aircraft
     //! Start movement
@@ -27,6 +27,5 @@ private:
     //! Start position with (x; y; z) coordinates in vector
     OurVector<3> _current_position;
 };
-
 
 #endif
