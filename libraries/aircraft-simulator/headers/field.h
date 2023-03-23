@@ -2,6 +2,7 @@
 #define MLAT_FIELD_H
 
 #include <aircraft.h>
+#include <plotter.h>
 
 const float kilometer = 1000.f;
 
@@ -12,12 +13,14 @@ public:
     Field();
     //! Constructor with start position
     explicit Field(const OurVector<3>& start)
-            :  _coordinates(new OurVector<3>[1000]), _times(new float[1000]), _current_position(start) {}
+            :  _coordinates(new OurVector<3>[1000]), _times(new float[1000]), _current_position(start), _plt(nullptr) {}
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft)
             : _aircraft(aircraft), _coordinates(new OurVector<3>[1000]), _times(new float[1000]) {}
     //! Destructor
     ~Field();
+
+    void setPlotter(Plotter* plt) { _plt = plt; }
 
     //! Methods responsible for the movement of the _aircraft
     //! Start movement
@@ -38,6 +41,8 @@ private:
     //! Arrays of data
     OurVector<3>* _coordinates;
     float* _times;
+    //! Plotter object
+    Plotter* _plt;
 };
 
 
