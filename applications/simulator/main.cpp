@@ -6,25 +6,13 @@
 #include <aircraft.h>
 #include <field.h>
 
-#define RAND_ (float)(rand()) / RAND_MAX
-
 int main()
 {
 	std::string filepath = STOCK_PATH;
 	Plotter plt(filepath);
-	/*char c;
-	for (int i = 0; i < 100; ++i)
-	{
-		float x = RAND_;
-		float y = RAND_;
-		float z = RAND_;
-		std::cin >> c;
-		plt.addPoint(x, y, z);
-	}*/
-
 	OurVector<3> a;
 	a.setValue(1);
-
+	a[2] = 0.0001f;
 	Aircraft aircraft(a);
 	aircraft.calculateNewSpeed();
 	Field obj(aircraft);
