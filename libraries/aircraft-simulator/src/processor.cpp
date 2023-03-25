@@ -16,6 +16,10 @@ void Processor::process()
             tdoas[k++] = std::abs(_towers_toa[i].top() - _towers_toa[j].top());
         }
     }
-
+    OurVector<3> pos;
+    pos[0] = 100;
+    pos[2] = 100;
+    pos[3] = 100;
+    _solver.getJacobian(pos);
     //_TDOA.push_back(tdoas);
 }

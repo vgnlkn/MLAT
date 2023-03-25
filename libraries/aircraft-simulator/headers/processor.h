@@ -7,6 +7,7 @@
 #include <map>
 #include <set>
 #include <tower.h>
+#include <equation_solver.h>
 
 class Processor
 {
@@ -19,8 +20,12 @@ public:
     std::stack<float>& operator[](uint16_t id) { return _towers_toa[id]; }
 
     Tower getTower(uint16_t id) { return _towers[id]; }
-    void setTower(uint16_t id, const Tower& tower) { _towers[id] = tower; }
-
+    void setTower(uint16_t id, const Tower& tower) 
+    { 
+        _towers[id] = tower; 
+        _towers_coordinates[id] = tower.getPosition();
+        _solver.setTowersCoordinates(_towers_coordinates);
+    }
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
     * using overdeterminated system of nonlinear equation
@@ -34,7 +39,10 @@ public:
 private:
     std::map<uint16_t, std::stack<float>> _towers_toa;
     std::map<uint16_t, Tower> _towers;
+    std::map<uint16_t, OurVector<3>> _towers_coordinates;
+    EquationSolver _solver;
     //std::vector<OurVector<6>> _TDOA;
 };
 
-#endif 
+#endif
+

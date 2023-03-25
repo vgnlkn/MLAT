@@ -1,4 +1,4 @@
-#include <field.h>
+﻿#include <field.h>
 #include <aircraft.h>
 #include <chrono>
 #include <thread>
@@ -29,7 +29,7 @@ void Field::startMovement()
         _aircraft.checkSpeed();
 
         for (uint16_t j = 0; j < _tower_count; ++j)
-        {
+        {   // мне не очень нравится что здесь происходит
             std::stack<float> stack = _processor[_towers[j].getID()];
             stack.push(_aircraft.sendSignal(_towers[j], _current_position));
             _processor.addTOA(_towers[j].getID(), stack);
