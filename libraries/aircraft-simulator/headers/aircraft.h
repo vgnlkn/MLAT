@@ -5,11 +5,15 @@
 #include <tower.h>
 #include <cmath>
 
+#include <cmath>
+#include <set>
+
+
 class Aircraft
 {
 public:
     //! Empty constructor
-    Aircraft();
+    Aircraft() { _towers.reserve(4); };
     //! Copy constructor
     Aircraft(const Aircraft& other);
     //! Constructor with acceleration
@@ -17,9 +21,9 @@ public:
 
     //! Methods to work with speed
     //! Get speed of the _aircraft
-    OurVector<3> getSpeed() { return _state.getCol(0); }
+    [[nodiscard]] OurVector<3> getSpeed() const { return _state.getCol(0); }
     //! Get acceleration of the _aircraft
-    OurVector<3> getAcceleration() { return _state.getCol(1); }
+    [[nodiscard]] OurVector<3> getAcceleration() const { return _state.getCol(1); }
     //! Set speed of the _aircraft
     void setSpeed(const OurVector<3>& speed);
     //! Set acceleration of the _aircraft
@@ -30,8 +34,17 @@ public:
     void checkSpeed();
     //! Check acceleration of the _aircraft
     void checkAcceleration();
+
+    //! Methods to work with signals
+    //! Sends signal to tower
+    float sendSignal(Tower tower, const OurVector<3>& current_position);
+
+    //! Methods to work with towers
+    //! Sets new tower
+    void setNewTower(const Tower& tower) { _towers.push_back(tower); }
+    [[nodiscard]] std::vector<Tower> getTowers() const { return _towers; }
 private:
-    Tower* _towers;
+    std::vector<Tower> _towers;
     OurMatrix<3, 2> _state;
 };
 

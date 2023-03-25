@@ -13,14 +13,14 @@ public:
     Field();
     //! Constructor with start position
     explicit Field(const OurVector<3>& start)
-            :  _coordinates(new OurVector<3>[1000]), _times(new float[1000]), _current_position(start), _plt(nullptr) {}
+            :  _coordinates(new OurVector<3>[1000]), _towers(new Tower[4]),
+               _times(new float[1000]), _current_position(start), number(4) {}
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft)
-            : _aircraft(aircraft), _coordinates(new OurVector<3>[1000]), _times(new float[1000]) {}
+            : _aircraft(aircraft), _coordinates(new OurVector<3>[1000]),
+              _towers(new Tower[1000]), _times(new float[1000]), number(4) {}
     //! Destructor
     ~Field();
-
-    void setPlotter(Plotter* plt) { _plt = plt; }
 
     //! Methods responsible for the movement of the _aircraft
     //! Start movement
@@ -33,6 +33,13 @@ public:
     //! Returns element of _coordinates
     OurVector<3> getCoordinate(uint16_t i) { return _coordinates[i]; }
 
+    //! Sets towers on the field
+    void setTowers();
+    //! Sets towers on the aircraft
+    void setAircraftTowers();
+
+    //! Getter of _processor
+    [[nodiscard]] Processor getProcessor() const { return _processor; }
 private:
     //! Aircraft
     Aircraft _aircraft;
@@ -41,6 +48,12 @@ private:
     //! Arrays of data
     OurVector<3>* _coordinates;
     float* _times;
+    //! All towers in the field
+    Tower* _towers;
+    //! Number of towers
+    uint16_t number;
+    //! Class that manage tower time
+    Processor _processor;
     //! Plotter object
     Plotter* _plt;
 };

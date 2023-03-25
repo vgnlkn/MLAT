@@ -2,6 +2,7 @@
 
 Aircraft::Aircraft(const OurVector<3> &acceleration)
 {
+    _towers.reserve(4);
     for (uint8_t i = 0; i < 3; ++i)
     {
         _state[i][1] = acceleration[i];
@@ -10,11 +11,9 @@ Aircraft::Aircraft(const OurVector<3> &acceleration)
 
 Aircraft::Aircraft(const Aircraft &other)
 {
+    _towers.reserve(4);
     _state = other._state;
 }
-
-
-Aircraft::Aircraft() : _towers(new Tower[4]) {}
 
 void Aircraft::setSpeed(const OurVector<3> &speed)
 {
@@ -60,4 +59,9 @@ void Aircraft::checkAcceleration()
             _state[i][1] = 2.5f;
         }
     }
+}
+
+float Aircraft::sendSignal(Tower tower, const OurVector<3>& current_position)
+{
+    return tower.calculateTime(current_position);
 }
