@@ -36,7 +36,7 @@ void Field::startMovement()
             set.insert(_aircraft.sendSignal(_towers[j], _current_position));
             _processor.addTOA(_towers[j].getID(), set);
         }
-        // it doesn't realize :)
+        // it is not implemented :)
         //_processor.calculateTDOA();
         if (_plt)
         {
