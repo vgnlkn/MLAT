@@ -3,16 +3,16 @@
 #include <chrono>
 #include <thread>
 
-Field::Field() : _coordinates(new OurVector<3>[1000]),
-_times(new float[1000]), _towers(new Tower[7])
+Field::Field() : 
+    _towers(new Tower[TOWERS_COUNT]),
+    _plt(nullptr),
+    _tower_count(TOWERS_COUNT)
 {
     _current_position[2] = 10;
 }
 
 Field::~Field()
 {
-    delete[] _coordinates;
-    delete[] _times;
     delete[] _towers;
 }
 
@@ -21,22 +21,20 @@ void Field::startMovement()
     setTowers();
     setAircraftTowers();
     _aircraft.checkAcceleration();
-    for(int i=0;;++i)
+    for (int i = 0;; ++i)
     {
         _current_position = _current_position + _aircraft.getSpeed() * (60.f / kilometer);
         checkHeight();
         _aircraft.calculateNewSpeed();
         _aircraft.checkSpeed();
 
-        _times[i] = 60.f * i;
-        _coordinates[i] = _current_position;
-        for (uint16_t j = 0; j < number; ++j)
+        for (uint16_t j = 0; j < _tower_count; ++j)
         {
             std::stack<float> stack = _processor[_towers[j].getID()];
             stack.push(_aircraft.sendSignal(_towers[j], _current_position));
             _processor.addTOA(_towers[j].getID(), stack);
         }
-        _processor.calculateTDOA();
+        _processor.process();
         if (_plt)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -105,7 +103,7 @@ void Field::setTowers()
 
 void Field::setAircraftTowers()
 {
-    for (uint16_t i = 0; i < number; ++i)
+    for (uint16_t i = 0; i < _tower_count; ++i)
     {
         _aircraft.setNewTower(_towers[i]);
     }

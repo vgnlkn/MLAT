@@ -3,9 +3,10 @@
 
 #include <vector.h>
 #include <cstring>
-#include <c++/9/complex>
+#include <stack>
+#include <cmath>
 
-const float waveSpeed = 300000.f;
+static const float waveSpeed = 300000.f;
 
 class Tower
 {
@@ -14,16 +15,12 @@ public:
     Tower() = default;
     //! Copy constructor
     Tower(const Tower& other);
-
     //! Overloading operator==
     bool operator==(const Tower& other) const { return _id == other._id && _position == other._position; }
-
     //! Overloading operator=
     Tower& operator=(const Tower& other);
-
     //! Receives a signal
     float calculateTime(const OurVector<3>& current_position);
-
     //! Getter for _position
     [[nodiscard]] OurVector<3> getPosition() const { return _position; }
     //! Setter for _position

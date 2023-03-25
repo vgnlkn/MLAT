@@ -12,7 +12,7 @@ int main()
 	Plotter plt(filepath);
 	OurVector<3> a;
 	a.setValue(1);
-	a[2] = 0.01f;
+	a[2] = 0.001f;
 	Aircraft aircraft(a);
 	aircraft.calculateNewSpeed();
 	Field obj(aircraft);

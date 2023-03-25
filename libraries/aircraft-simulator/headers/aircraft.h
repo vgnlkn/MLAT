@@ -4,10 +4,7 @@
 #include <matrix.h>
 #include <tower.h>
 #include <cmath>
-
-#include <cmath>
 #include <set>
-
 
 class Aircraft
 {

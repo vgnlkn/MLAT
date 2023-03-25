@@ -2,21 +2,20 @@
 
 void Processor::addTOA(uint16_t id, const std::stack<float> &TOA)
 {
-    _map[id] = TOA;
+    _towers_toa[id] = TOA;
 }
 
-void Processor::calculateTDOA()
+void Processor::process()
 {
-    OurVector<6> vector;
+    OurVector<EQUATIONS_COUNT> tdoas;
     uint16_t k = 0;
-    for (uint16_t i = 0; i < 3; ++i)
+    for (uint16_t i = 0; i < TOWERS_COUNT; ++i)
     {
-        for (uint16_t j = i + 1; j < 4; ++j)
+        for (uint16_t j = i + 1; j < TOWERS_COUNT - 1; ++j)
         {
-            vector[k] = std::abs(_map[i].top() - _map[j].top());
-            ++k;
+            tdoas[k++] = std::abs(_towers_toa[i].top() - _towers_toa[j].top());
         }
     }
 
-    _TDOA.push_back(vector);
+    //_TDOA.push_back(tdoas);
 }
