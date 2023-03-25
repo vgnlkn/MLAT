@@ -14,15 +14,18 @@ class Processor
 public:
     Processor() = default;
 
-    //! Calculate TDOA for one iteration
-    void addTOA(uint16_t id, const std::set<float>& TDOA);
+    //! Calculate TOA for one iteration
+    void addTOA(uint16_t id, const std::stack<float>& TOA);
     //! Overloading operator[]
-    std::set<float>& operator[](uint16_t id) { return _map[id]; }
+    std::stack<float>& operator[](uint16_t id) { return _map[id]; }
 
     //! Calculate TDOA on the last iteration
     void calculateTDOA();
+
+    //! Getter for _TDOA;
+    [[nodiscard]] std::vector<OurVector<6>> getTDOA() const { return _TDOA; }
 private:
-    std::map<uint16_t, std::set<float>> _map;
+    std::map<uint16_t, std::stack<float>> _map;
     std::vector<OurVector<6>> _TDOA;
 };
 

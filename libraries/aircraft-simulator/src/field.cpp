@@ -32,12 +32,11 @@ void Field::startMovement()
         _coordinates[i] = _current_position;
         for (uint16_t j = 0; j < number; ++j)
         {
-            std::set<float> set = _processor[_towers[j].getID()];
-            set.insert(_aircraft.sendSignal(_towers[j], _current_position));
-            _processor.addTOA(_towers[j].getID(), set);
+            std::stack<float> stack = _processor[_towers[j].getID()];
+            stack.push(_aircraft.sendSignal(_towers[j], _current_position));
+            _processor.addTOA(_towers[j].getID(), stack);
         }
-        // it is not implemented :)
-        //_processor.calculateTDOA();
+        _processor.calculateTDOA();
         if (_plt)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
