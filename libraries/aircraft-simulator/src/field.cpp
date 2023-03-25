@@ -33,6 +33,7 @@ void Field::startMovement()
             std::stack<float> stack = _processor[_towers[j].getID()];
             stack.push(_aircraft.sendSignal(_towers[j], _current_position));
             _processor.addTOA(_towers[j].getID(), stack);
+            _processor.setTower(j, _towers[j]);
         }
         _processor.process();
         if (_plt)

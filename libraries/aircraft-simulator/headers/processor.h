@@ -18,6 +18,9 @@ public:
     //! Overloading operator[]
     std::stack<float>& operator[](uint16_t id) { return _towers_toa[id]; }
 
+    Tower getTower(uint16_t id) { return _towers[id]; }
+    void setTower(uint16_t id, const Tower& tower) { _towers[id] = tower; }
+
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
     * using overdeterminated system of nonlinear equation
@@ -30,6 +33,7 @@ public:
     //[[nodiscard]] std::vector<OurVector<6>> getTDOA() const { return _TDOA; }
 private:
     std::map<uint16_t, std::stack<float>> _towers_toa;
+    std::map<uint16_t, Tower> _towers;
     //std::vector<OurVector<6>> _TDOA;
 };
 

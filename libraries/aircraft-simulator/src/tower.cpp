@@ -30,3 +30,5 @@ float Tower::calculateTime(const OurVector<3> &current_position)
 
     return distance / waveSpeed;
 }
+
+

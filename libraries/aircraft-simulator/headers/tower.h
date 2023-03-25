@@ -19,6 +19,8 @@ public:
     bool operator==(const Tower& other) const { return _id == other._id && _position == other._position; }
     //! Overloading operator=
     Tower& operator=(const Tower& other);
+    //! Overloading operator<
+    bool operator<(const Tower& other) const { return _id < other._id; }
     //! Receives a signal
     float calculateTime(const OurVector<3>& current_position);
     //! Getter for _position
