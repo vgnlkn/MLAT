@@ -13,7 +13,7 @@ void Processor::process()
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            tdoas[k++] = std::abs(_towers_toa[i].top() - _towers_toa[j].top());
+            tdoas[k++] = _towers_toa[i].top() - _towers_toa[j].top();
         }
     }
 
@@ -25,6 +25,10 @@ void Processor::process()
         if (coords[0] == coords[0]&& coords[1] == coords[1] && coords[2] == coords[2])
         {
             _plt->addPoint(coords[0], coords[1], coords[2]);
+        }
+        else
+        {
+           // std::cout << std::endl;
         }
     }
 

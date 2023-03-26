@@ -2,8 +2,8 @@
 #include <cmath>
 #include <cassert>
 
-#define LIGHT_SPEED 3e8
-#define MAX_ITERARATIONS_COUNT 10
+#define LIGHT_SPEED 3e5
+#define MAX_ITERARATIONS_COUNT 1
 
 OurMatrix<EQUATIONS_COUNT, 3> EquationSolver::getJacobian(OurVector<3>& position)
 {
@@ -57,20 +57,31 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
 
     for (int iteration = 0; iteration < MAX_ITERARATIONS_COUNT; ++iteration)
     {
+        auto jacobian = this->getJacobian(_initial_coordinates);
+        //std::cout << "================================\n";
+        //std::cout << jacobian << "\n\n";
+        //std::cout << jacobian * jacobian.pseudoInverse() * jacobian << "\n\n\n";
         uint8_t k = 0;
         for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
         {
             for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
             {
+                if (_initial_tdoas[k] < 0)
+                {
+                    jacobian[k] = -jacobian[k];
+                    _initial_tdoas[k] = _initial_tdoas[k] < 0 ? -_initial_tdoas[k] : _initial_tdoas[k];
+                }
+                //std::cout << equation(_initial_coordinates, i, j) << std::endl;
                 discrepancy[k] = equation(_initial_coordinates, i, j) - _initial_tdoas[k] * LIGHT_SPEED;
                 k++;
             }
         }
         
-        _initial_coordinates = _initial_coordinates - this->getJacobian(_initial_coordinates).pseudoInverse() * discrepancy;
+        //std::cout << jacobian.pseudoInverse() * discrepancy << std::endl;
+        _initial_coordinates = _initial_coordinates + jacobian.pseudoInverse() * discrepancy;
+        //std::cout << _initial_coordinates << std::endl;
     }
     _initial_tdoas = tdoas;
-    std::cout << _initial_coordinates << std::endl;
     return _initial_coordinates;
 }
 
