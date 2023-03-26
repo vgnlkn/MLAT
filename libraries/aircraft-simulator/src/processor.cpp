@@ -20,6 +20,8 @@ void Processor::process()
     pos[0] = 100;
     pos[1] = 100;
     pos[2] = 100;
-    OurMatrix<EQUATIONS_COUNT, 3> jac = _solver.getJacobian(pos);
+    OurMatrix<3, EQUATIONS_COUNT> jac_pseudo = _solver.getJacobian(pos).pseudoInverse();
+
+
     //_TDOA.push_back(tdoas);
 }

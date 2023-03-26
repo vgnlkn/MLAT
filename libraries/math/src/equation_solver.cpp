@@ -10,9 +10,7 @@ OurMatrix<EQUATIONS_COUNT, 3> EquationSolver::getJacobian(OurVector<3>& position
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            //std::cout << (int)k+1 << ' ' << (int)i+1 << ' ' << (int)j+1 << std::endl;
             jacobian[k++] = getJacobianRow(position, i, j);
-            //k++;
         }
     }
     return jacobian;
@@ -21,14 +19,17 @@ OurMatrix<EQUATIONS_COUNT, 3> EquationSolver::getJacobian(OurVector<3>& position
 void EquationSolver::setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates)
 {
     _towers_coordinates = tower_coordinates;
-    /*uint8_t k = 0;
-    for (int i = 0; i < TOWERS_COUNT - 1; ++i)
+}
+
+auto EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
+{
+    for (uint16_t i = 0; i < TOWERS_COUNT; ++i)
     {
-        for (int j = 0; j < TOWERS_COUNT - 1; ++j)
+        for (uint16_t j = i + 1; j < TOWERS_COUNT - 1; ++j)
         {
-            _distances_between_towers[k++] = distance(tower_coordinates[i], tower_coordinates[j]);
+            //tdoas[k++] = std::abs(_towers_toa[i].top() - _towers_toa[j].top());
         }
-    }*/
+    }
 }
 
 float EquationSolver::distance(const OurVector<3> from, const OurVector<3> to)
