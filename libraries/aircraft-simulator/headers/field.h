@@ -37,7 +37,7 @@ public:
     //! Sets towers on the aircraft
     void setAircraftTowers();
     //! Setting plotter
-    void setPlotter(Plotter* plt) { _plt = plt; }
+    void setPlotter(Plotter* plt) { _plt = plt; _processor.setPlotter(plt); }
     //! Getter of _processor
     [[nodiscard]] Processor getProcessor() const { return _processor; }
 private:

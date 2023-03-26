@@ -15,9 +15,9 @@ public:
 
     OurMatrix<EQUATIONS_COUNT, 3> getJacobian(OurVector<3>& position);
     void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates);
-    void setInitialParams(const OurVector<3>& initial_coordinates);
+    void setInitialParams(const OurVector<3>& initial_coordinates, const OurVector<EQUATIONS_COUNT>& initial_tdoas);
 
-    auto solve(OurVector<EQUATIONS_COUNT>& tdoas);
+    OurVector<3> solve(OurVector<EQUATIONS_COUNT>& tdoas);
 private:
     float distance(const OurVector<3> from, const OurVector<3> to);
     OurVector<3> getJacobianRow(OurVector<3>& position, uint8_t tower_i, uint8_t tower_j);

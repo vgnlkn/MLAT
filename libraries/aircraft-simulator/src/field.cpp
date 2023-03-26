@@ -36,10 +36,10 @@ void Field::startMovement()
             _processor.setTower(j, _towers[j]);
         }
         _processor.process();
-        if (_plt)
+       // if (_plt)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            _plt->addPoint(_current_position[0], _current_position[1], _current_position[2]);
+          //  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            //_plt->addPoint(_current_position[0], _current_position[1], _current_position[2]);
         }
     }
 }
