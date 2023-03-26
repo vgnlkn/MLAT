@@ -18,29 +18,58 @@ Field::~Field()
 
 void Field::startMovement()
 {
+    initialize();
+
+    std::stack<float> stack;
+    for (int i = 0;; ++i)
+    {
+        updateAircraftPosition();
+        checkHeight();
+        updateAircraftSpeed();
+        sendSignalsToTowers(stack);
+        processSignals();
+        updatePlot();
+    }
+}
+
+void Field::initialize()
+{
     setTowers();
     setAircraftTowers();
     _aircraft.checkAcceleration();
-    for (int i = 0;; ++i)
-    {
-        _current_position = _current_position + _aircraft.getSpeed() * (60.f / kilometer);
-        checkHeight();
-        _aircraft.calculateNewSpeed();
-        _aircraft.checkSpeed();
+}
 
-        for (uint16_t j = 0; j < _tower_count; ++j)
-        {   // мне не очень нравится что здесь происходит
-            std::stack<float> stack = _processor[_towers[j].getID()];
-            stack.push(_aircraft.sendSignal(_towers[j], _current_position));
-            _processor.addTOA(_towers[j].getID(), stack);
-            _processor.setTower(j, _towers[j]);
-        }
-        _processor.process();
-        if (_plt)
-        {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            _plt->addPoint(_current_position[0], _current_position[1], _current_position[2]);
-        }
+void Field::updateAircraftPosition()
+{
+    _current_position = _current_position +
+            _aircraft.getSpeed() * (60.f / kilometer);
+}
+
+void Field::updateAircraftSpeed()
+{
+    _aircraft.calculateNewSpeed();
+    _aircraft.checkSpeed();
+}
+
+void Field::sendSignalsToTowers(std::stack<float>& stack)
+{
+    for (uint16_t j = 0; j < _tower_count; ++j)
+    {
+        Tower& tower = _towers[j];
+        stack = _processor[tower.getID()];
+        stack.push(_aircraft.sendSignal(tower, _current_position));
+        _processor.addTOA(tower.getID(), stack);
+        _processor.setTower(tower.getID(), tower);
+    }
+}
+
+void Field::updatePlot()
+{
+    if (_plt)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        _plt->addPoint(_current_position[0], _current_position[1],
+                       _current_position[2]);
     }
 }
 
@@ -48,26 +77,36 @@ void Field::checkHeight()
 {
     if (_current_position[2] > 11.5f && _aircraft.getSpeed()[2] > 0.f)
     {
-        OurVector<3> new_speed = _aircraft.getSpeed();
-        new_speed[2] /= 16;
-
-        OurVector<3> new_acceleration = _aircraft.getAcceleration();
-        new_acceleration[2] = new_acceleration[2] < 0.f ? new_acceleration[2] : -new_acceleration[2];
-
-        _aircraft.setSpeed(new_speed);
-        _aircraft.setAcceleration(new_acceleration);
+        decreaseVerticalSpeed();
     }
     if (_aircraft.getSpeed()[2] < -1.f)
     {
-        OurVector<3> new_speed = _aircraft.getSpeed();
-        new_speed[2] = 0;
-
-        OurVector<3> new_acceleration = _aircraft.getAcceleration();
-        new_acceleration[2] = 0;
-
-        _aircraft.setSpeed(new_speed);
-        _aircraft.setAcceleration(new_acceleration);
+        stopVerticalSpeed();
     }
+}
+
+void Field::decreaseVerticalSpeed()
+{
+    OurVector<3> new_speed = _aircraft.getSpeed();
+    new_speed[2] /= 16;
+
+    OurVector<3> new_acceleration = _aircraft.getAcceleration();
+    new_acceleration[2] = new_acceleration[2] < 0.f ? new_acceleration[2] : -new_acceleration[2];
+
+    _aircraft.setSpeed(new_speed);
+    _aircraft.setAcceleration(new_acceleration);
+}
+
+void Field::stopVerticalSpeed()
+{
+    OurVector<3> new_speed = _aircraft.getSpeed();
+    new_speed[2] = 0;
+
+    OurVector<3> new_acceleration = _aircraft.getAcceleration();
+    new_acceleration[2] = 0;
+
+    _aircraft.setSpeed(new_speed);
+    _aircraft.setAcceleration(new_acceleration);
 }
 
 void Field::setTowers()
