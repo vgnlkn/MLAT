@@ -18,8 +18,8 @@ void Processor::process()
     }
     OurVector<3> pos;
     pos[0] = 100;
+    pos[1] = 100;
     pos[2] = 100;
-    pos[3] = 100;
-    _solver.getJacobian(pos);
+    OurMatrix<EQUATIONS_COUNT, 3> jac = _solver.getJacobian(pos);
     //_TDOA.push_back(tdoas);
 }

@@ -10,11 +10,11 @@ OurMatrix<EQUATIONS_COUNT, 3> EquationSolver::getJacobian(OurVector<3>& position
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            std::cout << (int)k << ' ' << (int)i << ' ' << (int)j << std::endl;
+            //std::cout << (int)k+1 << ' ' << (int)i+1 << ' ' << (int)j+1 << std::endl;
             jacobian[k++] = getJacobianRow(position, i, j);
+            //k++;
         }
     }
-    //std::cout << jacobian;
     return jacobian;
 }
 
