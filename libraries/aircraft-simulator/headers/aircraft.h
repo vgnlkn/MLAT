@@ -6,6 +6,11 @@
 #include <cmath>
 #include <set>
 
+/*! \class Aircraft
+ *  \brief Class describing the aircraft.
+ *  Describes the aircraft's airspeed, its acceleration
+ *  and the towers connected to it.
+*/
 class Aircraft
 {
 public:
@@ -39,9 +44,12 @@ public:
     //! Methods to work with towers
     //! Sets new tower
     void setNewTower(const Tower& tower) { _towers.push_back(tower); }
+    //! Get array of towers
     [[nodiscard]] std::vector<Tower> getTowers() const { return _towers; }
 private:
+    //! Towers that connected to the aircraft
     std::vector<Tower> _towers;
+    //! first column - speed of the aircraft, second - acceleration
     OurMatrix<3, 2> _state;
 };
 
