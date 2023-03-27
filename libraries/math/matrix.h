@@ -1,4 +1,4 @@
-#ifndef MLAT_MATRIX_H
+﻿#ifndef MLAT_MATRIX_H
 #define MLAT_MATRIX_H
 
 #include <iostream>
@@ -351,6 +351,7 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
 
     OurMatrix<col, row, type> Q_transposed = QR.first.getTransposed();
     OurMatrix<col, col, type> R_inversed = QR.second;
+    // ниже костыль, который был нужен для адекватного псевдообращения
 
     //for (int i = 0; i < col; ++i)
     //{
