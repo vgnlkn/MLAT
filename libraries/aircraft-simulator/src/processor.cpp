@@ -33,3 +33,10 @@ void Processor::process()
 
     //_TDOA.push_back(tdoas);
 }
+
+void Processor::setTower(uint16_t id, const Tower& tower)
+{
+    _towers[id] = tower;
+    _towers_coordinates[id] = tower.getPosition();
+    _solver.setTowersCoordinates(_towers_coordinates);
+}

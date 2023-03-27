@@ -10,6 +10,12 @@
 #include <equation_solver.h>
 #include <plotter.h>
 
+/*! \class Processor
+*   \brief Class manages TOA towers
+*   Сlass that calculates TDOA, using the received TOA
+*   from each of the towers. Also, this class is
+*   associated with the class that solves the task.
+*/
 class Processor
 {
 public:
@@ -33,7 +39,9 @@ public:
     //! Overloading operator[]
     std::stack<float>& operator[](uint16_t id) { return _towers_toa[id]; }
 
+    //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
+
     void setTower(uint16_t id, const Tower& tower) 
     { 
         _towers[id] = tower; 
@@ -45,6 +53,11 @@ public:
     {
         _plt = plt;
     }
+
+    //! Set tower in _towers using object of tower and tower's id
+    void setTower(uint16_t id, const Tower& tower);
+
+
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
     * using overdeterminated system of nonlinear equation
