@@ -79,7 +79,7 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
         
         //std::cout << jacobian.pseudoInverse() * discrepancy << std::endl;
         _initial_coordinates = _initial_coordinates + jacobian.pseudoInverse() * discrepancy;
-        //std::cout << _initial_coordinates << std::endl;
+        std::cout << _initial_coordinates << std::endl;
     }
     _initial_tdoas = tdoas;
     return _initial_coordinates;
@@ -93,7 +93,7 @@ float EquationSolver::distance(const OurVector<3> from, const OurVector<3> to)
 OurVector<3> EquationSolver::getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<3> jacobian_row;
-    auto numerator = [](float tower_coordinate, float plane_coordinate) { return tower_coordinate - plane_coordinate; };
+    auto numerator = [](float tower_coordinate, float plane_coordinate) { return plane_coordinate - tower_coordinate; };
     auto denumerator = [=](uint8_t index, float x, float y, float z)
     {
         return std::sqrt(
@@ -109,8 +109,8 @@ OurVector<3> EquationSolver::getJacobianRow(OurVector<3>& coordinate, uint8_t to
 
     for (int column = 0; column < 3; ++column)
     {
-        jacobian_row[column] = numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denumerator_i +
-            numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denumerator_j;
+        jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denumerator_i -
+            numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denumerator_j);
     }
     return jacobian_row;
 }

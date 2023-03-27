@@ -17,7 +17,6 @@ void Processor::process()
         }
     }
 
-    //std::cout << tdoas << std::endl;
     auto coords = _solver.solve(tdoas);
     if (_plt)
     {

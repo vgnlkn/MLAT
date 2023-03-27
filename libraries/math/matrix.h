@@ -352,13 +352,13 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
     OurMatrix<col, row, type> Q_transposed = QR.first.getTransposed();
     OurMatrix<col, col, type> R_inversed = QR.second;
 
-    for (int i = 0; i < col; ++i)
-    {
-        for (int j = 0; j < col; ++j)
-        {
-            QR.second[i][j] = QR.second[i][j] && std::abs(QR.second[i][j]) < 1e-5 ? 1 : QR.second[i][j];
-        }
-    }
+    //for (int i = 0; i < col; ++i)
+    //{
+    //    for (int j = 0; j < col; ++j)
+    //    {
+    //       // QR.second[i][j] = QR.second[i][j] && std::abs(QR.second[i][j]) < 1e-5 ? 1 : QR.second[i][j];
+    //    }
+    //}
    
 
     float sum;

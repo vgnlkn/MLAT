@@ -23,7 +23,7 @@ void Field::startMovement()
     _aircraft.checkAcceleration();
     for (int i = 0;; ++i)
     {
-        _current_position = _current_position + _aircraft.getSpeed() * (60.f / kilometer);
+        _current_position = _current_position + _aircraft.getSpeed() * (/*60*/1.f / kilometer);
         checkHeight();
         _aircraft.calculateNewSpeed();
         _aircraft.checkSpeed();
@@ -36,9 +36,10 @@ void Field::startMovement()
             _processor.setTower(j, _towers[j]);
         }
         _processor.process();
-       // if (_plt)
+        if (_plt)
         {
           //  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+          //  std::cout << _current_position << std::endl;
             //_plt->addPoint(_current_position[0], _current_position[1], _current_position[2]);
         }
     }
