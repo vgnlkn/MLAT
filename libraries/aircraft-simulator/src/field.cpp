@@ -16,13 +16,12 @@ void Field::startMovement()
 {
     initialize();
 
-    std::stack<float> stack;
     for (int i = 0;; ++i)
     {
         updateAircraftPosition();
         checkHeight();
         updateAircraftSpeed();
-        sendSignalsToTowers(stack);
+        sendSignalsToTowers();
         processSignals();
         updatePlot();
     }
@@ -47,14 +46,14 @@ void Field::updateAircraftSpeed()
     _aircraft.checkSpeed();
 }
 
-void Field::sendSignalsToTowers(std::stack<float>& stack)
+void Field::sendSignalsToTowers()
 {
+    float toa;
     for (uint16_t j = 0; j < _tower_count; ++j)
     {
         Tower& tower = _towers[j];
-        stack = _processor[tower.getID()];
-        stack.push(_aircraft.sendSignal(tower, _current_position));
-        _processor.addTOA(tower.getID(), stack);
+        toa = _aircraft.sendSignal(tower, _current_position);
+        _processor.addTOA(tower.getID(), toa);
         _processor.setTower(tower.getID(), tower);
     }
 }

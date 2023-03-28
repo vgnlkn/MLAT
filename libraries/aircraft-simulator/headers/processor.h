@@ -22,9 +22,9 @@ public:
     Processor();
 
     //! Adding TOA for one iteration
-    void addTOA(uint16_t id, const std::stack<float>& TOA);
+    void addTOA(uint16_t id, float TOA);
     //! Overloading operator[]
-    std::stack<float>& operator[](uint16_t id) { return _towers_toa[id]; }
+    float& operator[](uint16_t id) { return _towers_toa[id]; }
 
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
@@ -42,7 +42,7 @@ public:
     */
     void process();
 private:
-    std::map<uint16_t, std::stack<float>> _towers_toa;
+    std::map<uint16_t, float> _towers_toa;
     std::map<uint16_t, Tower> _towers;
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
     EquationSolver _solver;

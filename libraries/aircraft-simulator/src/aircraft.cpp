@@ -2,7 +2,7 @@
 
 Aircraft::Aircraft(const OurVector<3> &acceleration)
 {
-    _towers.reserve(4);
+    _towers.reserve(TOWERS_COUNT);
     for (uint8_t i = 0; i < 3; ++i)
     {
         _state[i][1] = acceleration[i];
@@ -11,7 +11,7 @@ Aircraft::Aircraft(const OurVector<3> &acceleration)
 
 Aircraft::Aircraft(const Aircraft &other)
 {
-    _towers.reserve(4);
+    _towers.reserve(TOWERS_COUNT);
     _state = other._state;
 }
 

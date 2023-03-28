@@ -56,7 +56,7 @@ public:
     //! Sets towers on the field
     void setTowers();
     //! Send signals to towers
-    void sendSignalsToTowers(std::stack<float>& stack);
+    void sendSignalsToTowers();
     //! Sets towers on the aircraft
     void setAircraftTowers();
 

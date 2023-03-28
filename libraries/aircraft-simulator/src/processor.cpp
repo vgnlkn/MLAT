@@ -11,10 +11,19 @@ Processor::Processor()
     init_tdoas[3] = 0.0308624;
     init_tdoas[4] = 0.0265525;
     init_tdoas[5] = 0.00430991;
+
+    /*int k = 0;
+    for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
+    {
+        for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
+        {
+            in
+        }
+    } */
     _solver.setInitialParams(init, init_tdoas);
 }
 
-void Processor::addTOA(uint16_t id, const std::stack<float> &TOA)
+void Processor::addTOA(uint16_t id, float TOA)
 {
     _towers_toa[id] = TOA;
 }
@@ -27,7 +36,7 @@ void Processor::process()
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            tdoas[k++] = _towers_toa[i].top() - _towers_toa[j].top();
+            tdoas[k++] = _towers_toa[i] - _towers_toa[j];
         }
     }
 

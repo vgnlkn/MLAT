@@ -15,7 +15,7 @@ class Aircraft
 {
 public:
     //! Empty constructor
-    Aircraft() { _towers.reserve(4); };
+    Aircraft() { _towers.reserve(TOWERS_COUNT); };
     //! Copy constructor
     Aircraft(const Aircraft& other);
     //! Constructor with acceleration
