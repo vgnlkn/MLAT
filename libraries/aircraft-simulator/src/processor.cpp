@@ -11,15 +11,6 @@ Processor::Processor()
     init_tdoas[3] = 0.0308624;
     init_tdoas[4] = 0.0265525;
     init_tdoas[5] = 0.00430991;
-
-    /*int k = 0;
-    for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
-    {
-        for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
-        {
-            in
-        }
-    } */
     _solver.setInitialParams(init, init_tdoas);
 }
 
