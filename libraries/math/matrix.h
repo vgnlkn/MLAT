@@ -1,11 +1,13 @@
-#ifndef MLAT_MATRIX_H
+﻿#ifndef MLAT_MATRIX_H
 #define MLAT_MATRIX_H
 
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <utility>
 #include <algorithm>
 #include <typeinfo>
+#include <cmath>
 #include "vector.h"
 
 /*! \class OurMatrix
@@ -36,10 +38,19 @@ public:
     void setZero() { this->setValue(0.f); }
     //! Gets transposed copy of matrix
     OurMatrix<col, row, type> getTransposed() const;
+    
+    //! Computing the pseudo inversed matrix
+    OurMatrix<col, row, type> pseudoInverse() const;
+    //! Computing the QR-decomposition of current matrix
+    std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> QRDecomposition() const;
+    //! Computing the LUP-factorization of current matrix
+    void LUPFactorization(OurVector<row>& P);
+
     //! Classical matrix multiplication algorithm
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
     friend OurMatrix<row1, col2, T> classicAlgMultiplication(const OurMatrix<row1, col1, T>& first,
                                                              const OurMatrix<row2, col2, T>& second);
+
 
     //! Set value on column
     void setColumn(uint8_t col_index, type value);
@@ -55,9 +66,7 @@ public:
     void transpose();
     //! Strassen's algorithm
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
-    friend OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first,
-                                                const OurMatrix<row2, col2, T>& second);
-
+    friend OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first, const OurMatrix<row2, col2, T>& second);
     //! Get row size
     [[nodiscard]] inline uint8_t getRowNumber() const { return row; }
     //! Get column size
@@ -103,6 +112,46 @@ private:
     OurVector<col, type>* _matrix;
 
 };
+
+
+template<uint8_t row, uint8_t col, typename type>
+void OurMatrix<row, col, type>::LUPFactorization(OurVector<row>& P)
+{
+    const uint8_t n = row;
+    for(uint8_t i = 0; i < n; i++)
+    {
+        P[i] = i;
+    }
+
+    for(uint8_t k = 0; k < n; k++)
+    {
+        double p = 0;
+        int kp = k;
+        for(uint8_t i = k; i < n; i++)
+        {
+            if(std::abs(_matrix[i][k]) > p)
+            {
+                p = std::abs(_matrix[i][k]);
+                kp = i;
+            }
+        }
+
+        if(kp != k)
+        {
+            std::swap(P[k], P[kp]);
+            std::swap(_matrix[k], _matrix[kp]);
+        }
+
+        for(uint8_t i = k + 1; i < n; i++)
+        {
+            _matrix[i][k] /= _matrix[k][k];
+            for(uint8_t j = k + 1; j < n; j++)
+            {
+                _matrix[i][j] -= _matrix[i][k] * _matrix[k][j];
+            }
+        }
+    }
+}
 
 
 template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
@@ -331,6 +380,73 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::getTransposed() cons
         }
     }
     return transposed;
+}
+
+template<uint8_t row, uint8_t col, typename type>
+inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() const
+{
+    std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> QR = this->QRDecomposition();
+
+    OurMatrix<col, row, type> Q_transposed = QR.first.getTransposed();
+    OurMatrix<col, col, type> R_inversed = QR.second;
+
+    float sum;
+    for (int i = col - 1; i >= 0; i--) 
+    {
+        R_inversed[i][i] = 1 / QR.second[i][i];
+        for (int j = i - 1; j >= 0; j--) 
+        {
+            sum = 0;
+            for (int k = j + 1; k <= i; k++) 
+            {
+                sum += QR.second[j][k] * R_inversed[k][i];
+            }
+            R_inversed[j][i] = -sum / QR.second[j][j];
+        }
+    }
+
+    
+    return R_inversed * Q_transposed;
+}
+
+template<uint8_t row, uint8_t col, typename type>
+inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix<row, col, type>::QRDecomposition() const
+{
+    OurMatrix<row, col, type> Q;
+    OurMatrix<col, col, type> R;
+    for (int j = 0; j < col; j++) 
+    {
+        for (int i = 0; i < row; i++)
+        {
+            Q[i][j] = _matrix[i][j];
+        }
+        for (int k = 0; k < j; k++)
+        {
+            float dot = 0;
+            for (int i = 0; i < row; i++)
+            {
+                dot += Q[i][k] * _matrix[i][j];
+            }
+            R[k][j] = dot;
+            for (int i = 0; i < row; i++)
+            {
+                Q[i][j] -= R[k][j] * Q[i][k];
+            }
+        }
+        float norm = 0;
+        for (int i = 0; i < row; i++)
+        {
+            norm += Q[i][j] * Q[i][j];
+        }
+        norm = std::sqrt(norm);
+        for (int i = 0; i < row; i++)
+        {
+            Q[i][j] /= norm;
+        }
+        R[j][j] = norm;
+    }
+
+    return std::make_pair(Q, R);
 }
 
 template<uint8_t row, uint8_t col, typename type>

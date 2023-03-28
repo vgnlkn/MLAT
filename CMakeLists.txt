@@ -3,6 +3,7 @@ project(MLAT VERSION 0.1)
 
 include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 include(CheckCXXCompilerFlag)
+add_compile_definitions(TOWERS_COUNT=4 EQUATIONS_COUNT=6)
 add_subdirectory(applications)
 add_subdirectory(libraries)
 

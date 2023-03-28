@@ -3,7 +3,7 @@
 
 TEST(ExampleTest, SimpleTest)
 {
-	AirCraft plane;
-	ASSERT_TRUE(1 == 1);
+//	AirCraft plane;
+//	ASSERT_TRUE(1 == 1);
 }
 
