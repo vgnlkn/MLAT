@@ -43,7 +43,8 @@ public:
     OurMatrix<col, row, type> pseudoInverse() const;
     //! Computing the QR-decomposition of current matrix
     std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> QRDecomposition() const;
-
+    //! Computing the LUP-factorization of current matrix
+    void LUPFactorization(OurVector<row>& P);
 
     //! Classical matrix multiplication algorithm
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
@@ -111,6 +112,46 @@ private:
     OurVector<col, type>* _matrix;
 
 };
+
+
+template<uint8_t row, uint8_t col, typename type>
+void OurMatrix<row, col, type>::LUPFactorization(OurVector<row>& P)
+{
+    const uint8_t n = row;
+    for(uint8_t i = 0; i < n; i++)
+    {
+        P[i] = i;
+    }
+
+    for(uint8_t k = 0; k < n; k++)
+    {
+        double p = 0;
+        int kp = k;
+        for(uint8_t i = k; i < n; i++)
+        {
+            if(std::abs(_matrix[i][k]) > p)
+            {
+                p = std::abs(_matrix[i][k]);
+                kp = i;
+            }
+        }
+
+        if(kp != k)
+        {
+            std::swap(P[k], P[kp]);
+            std::swap(_matrix[k], _matrix[kp]);
+        }
+
+        for(uint8_t i = k + 1; i < n; i++)
+        {
+            _matrix[i][k] /= _matrix[k][k];
+            for(uint8_t j = k + 1; j < n; j++)
+            {
+                _matrix[i][j] -= _matrix[i][k] * _matrix[k][j];
+            }
+        }
+    }
+}
 
 
 template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
