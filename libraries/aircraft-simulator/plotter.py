@@ -5,18 +5,16 @@ import sys
 fig = plt.figure()
 ax = plt.axes(projection='3d')
 
-x_arr, y_arr, z_arr = [], [], []
-
 
 def animate(i):
     data1 = open(sys.argv[1], 'r').read()
     lines1 = data1.split('\n')
-    xs1, ys1, zs1 = [], [], []
 
     data2 = open(sys.argv[2], 'r').read()
     lines2 = data2.split('\n')
-    xs2, ys2, zs2 = [], [], []
 
+    xs1, ys1, zs1 = [], [], []
+    xs2, ys2, zs2 = [], [], []
     for line1, line2 in zip(lines1, lines2):
         if line1 == '' or line2 == '':
             break
@@ -25,10 +23,6 @@ def animate(i):
         xs1.append(float(x1))
         ys1.append(float(y1))
         zs1.append(float(z1))
-
-        x_arr.append(float(x1))
-        y_arr.append(float(y1))
-        z_arr.append(float(z1))
 
         xs2.append(float(x2))
         ys2.append(float(y2))
@@ -48,8 +42,20 @@ def animate(i):
 ani = animation.FuncAnimation(fig, animate, interval=10)
 plt.show()
 
+data = open(sys.argv[1], 'r').read()
+lines = data.split('\n')
+
+arr_x, arr_y, arr_z = [], [], []
+for line in lines:
+    if line == '':
+        break
+    x, y, z = line.split()
+    arr_x.append(float(x))
+    arr_y.append(float(y))
+    arr_z.append(float(z))
+
 # Create a line plot for xoy
-plt.plot(x_arr, y_arr, label='xoy')
+plt.plot(arr_x, arr_y, label='xoy')
 
 # Add labels and a title
 plt.xlabel('x')
@@ -63,7 +69,7 @@ plt.legend()
 plt.show()
 
 # Create a line plot for xoz
-plt.plot(x_arr, z_arr, label='xoz')
+plt.plot(arr_x, arr_z, label='xoz')
 
 # Add labels and a title
 plt.xlabel('x')
@@ -77,7 +83,7 @@ plt.legend()
 plt.show()
 
 # Create a line plot for yoz
-plt.plot(y_arr, z_arr, label='yoz')
+plt.plot(arr_y, arr_z, label='yoz')
 
 # Add labels and a title
 plt.xlabel('y')
