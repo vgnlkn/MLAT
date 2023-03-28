@@ -3,17 +3,13 @@
 #include <chrono>
 #include <thread>
 
-Field::Field() : 
-    _towers(new Tower[TOWERS_COUNT]),
-    _plt(nullptr),
-    _tower_count(TOWERS_COUNT)
+
+Field::Field() :
+        _towers(new Tower[TOWERS_COUNT]),
+        _plt_mlat(nullptr), _plt_flight(nullptr),
+        _tower_count(TOWERS_COUNT)
 {
     _current_position[2] = 10;
-}
-
-Field::~Field()
-{
-    delete[] _towers;
 }
 
 void Field::startMovement()
@@ -42,7 +38,7 @@ void Field::initialize()
 void Field::updateAircraftPosition()
 {
     _current_position = _current_position +
-            _aircraft.getSpeed() * (60.f / kilometer);
+                        _aircraft.getSpeed() * (1.f / kilometer);
 }
 
 void Field::updateAircraftSpeed()
@@ -55,25 +51,6 @@ void Field::sendSignalsToTowers(std::stack<float>& stack)
 {
     for (uint16_t j = 0; j < _tower_count; ++j)
     {
-        _current_position = _current_position + _aircraft.getSpeed() * (/*60*/1.f / kilometer);
-        checkHeight();
-        _aircraft.calculateNewSpeed();
-        _aircraft.checkSpeed();
-
-        for (uint16_t j = 0; j < _tower_count; ++j)
-        {   // мне не очень нравится что здесь происходит
-            std::stack<float> stack = _processor[_towers[j].getID()];
-            stack.push(_aircraft.sendSignal(_towers[j], _current_position));
-            _processor.addTOA(_towers[j].getID(), stack);
-            _processor.setTower(j, _towers[j]);
-        }
-        _processor.process();
-        if (_plt)
-        {
-          //  std::this_thread::sleep_for(std::chrono::milliseconds(10));
-          //  std::cout << _current_position << std::endl;
-            //_plt->addPoint(_current_position[0], _current_position[1], _current_position[2]);
-        }
         Tower& tower = _towers[j];
         stack = _processor[tower.getID()];
         stack.push(_aircraft.sendSignal(tower, _current_position));
@@ -84,12 +61,11 @@ void Field::sendSignalsToTowers(std::stack<float>& stack)
 
 void Field::updatePlot()
 {
-    if (_plt)
+    if (_plt_flight)
     {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        _plt->addPoint(_current_position[0], _current_position[1],
-                       _current_position[2]);
-
+        _plt_flight->addPoint(_current_position[0], _current_position[1],
+                              _current_position[2]);
     }
 }
 

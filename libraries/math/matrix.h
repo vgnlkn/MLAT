@@ -7,6 +7,7 @@
 #include <utility>
 #include <algorithm>
 #include <typeinfo>
+#include <cmath>
 #include "vector.h"
 
 /*! \class OurMatrix
@@ -117,10 +118,10 @@ OurMatrix<row1, col2, T> operator*(const OurMatrix<row1, col1, T>& first, const 
 {
     assert(col1 == row2);
 
-    /*if (row1 == col1 == row2 == col2)
+    if (row1 == col1 == row2 == col2)
     {
         return strassenAlg(first, second);
-    }*/
+    }
     return classicAlgMultiplication(first, second);
 }
 
@@ -345,22 +346,8 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
 {
     std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> QR = this->QRDecomposition();
 
-    //std::cout << "\n\n\n";
-    //std::cout << QR.first << "\n\n" << QR.second << "\n\n" << QR.first * QR.second<<'\n';
-
-
     OurMatrix<col, row, type> Q_transposed = QR.first.getTransposed();
     OurMatrix<col, col, type> R_inversed = QR.second;
-    // ниже костыль, который был нужен для адекватного псевдообращения
-
-    //for (int i = 0; i < col; ++i)
-    //{
-    //    for (int j = 0; j < col; ++j)
-    //    {
-    //       // QR.second[i][j] = QR.second[i][j] && std::abs(QR.second[i][j]) < 1e-5 ? 1 : QR.second[i][j];
-    //    }
-    //}
-   
 
     float sum;
     for (int i = col - 1; i >= 0; i--) 
@@ -379,30 +366,6 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
 
     
     return R_inversed * Q_transposed;
-    
-
-
-
-
-
-
-
-    //// Invert the upper triangular matrix R
-    //float sum = 0;
-    //for (int i = col - 1; i >= 0; i--) 
-    //{
-    //    R_inversed[i][i] = 1 / QR.second[i][i];
-    //    for (int j = i - 1; j >= 0; j--)
-    //    {
-    //        sum = 0;
-    //        for (int k = j + 1; k <= i; k++)
-    //        {
-    //            sum += QR.second[j][k] * R_inversed[k][i];
-    //        }
-    //        R_inversed[j][i] = -sum / R_inversed[j][j];
-    //    }
-    //}
-    //return R_inversed * Q_transposed;
 }
 
 template<uint8_t row, uint8_t col, typename type>
@@ -412,7 +375,6 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
     OurMatrix<col, col, type> R;
     for (int j = 0; j < col; j++) 
     {
-        // Calculate the jth column of Q and the jth row of R
         for (int i = 0; i < row; i++)
         {
             Q[i][j] = _matrix[i][j];
@@ -435,7 +397,7 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
         {
             norm += Q[i][j] * Q[i][j];
         }
-        norm = sqrt(norm);
+        norm = std::sqrt(norm);
         for (int i = 0; i < row; i++)
         {
             Q[i][j] /= norm;

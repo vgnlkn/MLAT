@@ -24,7 +24,8 @@ void EquationSolver::setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower
     _towers_coordinates = tower_coordinates;
 }
 
-void EquationSolver::setInitialParams(const OurVector<3>& initial_coordinates, const OurVector<EQUATIONS_COUNT>& initial_tdoas)
+void EquationSolver::setInitialParams(const OurVector<3>& initial_coordinates,
+                                      const OurVector<EQUATIONS_COUNT>& initial_tdoas)
 {
     _initial_coordinates = initial_coordinates;
     _initial_tdoas = initial_tdoas;
@@ -36,9 +37,7 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
 
     auto equation = [=](const OurVector<3>& at, uint8_t tower_i, uint8_t tower_j)
     {
-        // {x_i - x, y_i - y, z_i - z}
         auto coordinates_delta_i = _towers_coordinates[tower_i] - at;
-        // d_i = (x_i - x)^2 + (y_i - y)^2 + (z_i - z)^2
         double d_i = 0;
         for (uint8_t i = 0; i < 3; ++i)
         {
@@ -58,9 +57,6 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     for (int iteration = 0; iteration < MAX_ITERARATIONS_COUNT; ++iteration)
     {
         auto jacobian = this->getJacobian(_initial_coordinates);
-        //std::cout << "================================\n";
-        //std::cout << jacobian << "\n\n";
-        //std::cout << jacobian * jacobian.pseudoInverse() * jacobian << "\n\n\n";
         uint8_t k = 0;
         for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
         {
@@ -71,15 +67,12 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
                     jacobian[k] = -jacobian[k];
                     _initial_tdoas[k] = _initial_tdoas[k] < 0 ? -_initial_tdoas[k] : _initial_tdoas[k];
                 }
-                //std::cout << equation(_initial_coordinates, i, j) << std::endl;
                 discrepancy[k] = equation(_initial_coordinates, i, j) - _initial_tdoas[k] * LIGHT_SPEED;
                 k++;
             }
         }
         
-        //std::cout << jacobian.pseudoInverse() * discrepancy << std::endl;
         _initial_coordinates = _initial_coordinates + jacobian.pseudoInverse() * discrepancy;
-        std::cout << _initial_coordinates << std::endl;
     }
     _initial_tdoas = tdoas;
     return _initial_coordinates;

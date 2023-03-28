@@ -23,16 +23,16 @@ public:
     explicit Field(const OurVector<3>& start): 
         _towers(new Tower[TOWERS_COUNT]),
         _current_position(start), 
-        _plt(nullptr),
+        _plt_mlat(nullptr), _plt_flight(nullptr),
         _tower_count(TOWERS_COUNT) {}
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft): 
         _aircraft(aircraft), 
         _towers(new Tower[TOWERS_COUNT]),
-        _plt(nullptr),
+        _plt_mlat(nullptr), _plt_flight(nullptr),
         _tower_count(TOWERS_COUNT) {}
     //! Destructor
-    ~Field();
+    ~Field() { if (_towers) delete[] _towers; };
 
     //! Methods responsible for the movement of the _aircraft
     //! Start movement
@@ -61,8 +61,10 @@ public:
     void setAircraftTowers();
 
     //! Methods to work with plotter
-    //! Setting plotter
-    void setPlotter(Plotter* plt) { _plt = plt; _processor.setPlotter(plt); }
+    //! Setting MLAT plotter
+    void setPlotterMLAT(Plotter* plt) { _plt_mlat = plt; _processor.setPlotter(plt); }
+    //! Setting flight plotter
+    void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
     //! Getter of _processor
     void updatePlot();
     //! Process Signals
@@ -80,7 +82,9 @@ private:
     //! Class that manage tower time
     Processor _processor;
     //! Plotter object
-    Plotter* _plt;
+    Plotter* _plt_mlat;
+    //! Plotter object
+    Plotter* _plt_flight;
 };
 
 
