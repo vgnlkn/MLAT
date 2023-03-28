@@ -5,6 +5,7 @@
 ## Сборка
 ```bash
 sudo apt-get install libgtest-dev
+pip3 install matplotlib
 mkdir build
 cd build
 > conan_paths.cmake
@@ -12,6 +13,7 @@ cmake ..
 ```
 При сборке под windows, необходимо установить менеджер зависимостей conan версии 1.56.0
 ```
+pip3 install matplotlib
 mkdir build && cd build
 conan install ..
 cmake ..
