@@ -4,6 +4,7 @@
 Для С++ присутствует единственная зависимость GTest - фрэймворк для юнит-тестов. Для Python, который используется для визуализации данных требуется matplotlib.
 ## Сборка
 ```bash
+sudo apt-get install libgmock-dev
 sudo apt-get install libgtest-dev
 pip3 install matplotlib
 mkdir build
