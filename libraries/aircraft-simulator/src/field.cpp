@@ -31,6 +31,8 @@ void Field::initialize()
 {
     setTowers();
     setAircraftTowers();
+    sendSignalsToTowers();
+    _processor.initSolver();
     _aircraft.checkAcceleration();
 }
 
@@ -109,7 +111,7 @@ void Field::setTowers()
     OurVector<3> tower_position;
     tower_position[0] = -1500;
     tower_position[1] = 400;
-    tower_position[2] = 50;
+    tower_position[2] = 1000;
 
     _towers[0].setID(0);
     _towers[0].setPosition(tower_position);
@@ -123,14 +125,14 @@ void Field::setTowers()
 
     tower_position[0] = 5000;
     tower_position[1] = 12000;
-    tower_position[2] = 100;
+    tower_position[2] = 1000;
 
     _towers[2].setID(2);
     _towers[2].setPosition(tower_position);
 
     tower_position[0] = 11000;
     tower_position[1] = -4000;
-    tower_position[2] = 250;
+    tower_position[2] = 1000;
 
     _towers[3].setID(3);
     _towers[3].setPosition(tower_position);
