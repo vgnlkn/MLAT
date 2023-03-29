@@ -85,4 +85,7 @@ $$
 где *J<sub>f<sub>* - матрица Якоби для системы *f*. А произведение матриц в вычитаемом есть псевдообратная матрица к матрице Якоби, которую можно вычислить с помощью QR разложения.
 
 ## Литература
-
+1. [Вычисление сингулярного разложения матриц. Афанасьева А. А.](https://core.ac.uk/download/pdf/336869551.pdf)
+2. [Gauss–Newton algorithm, wikipedia.](https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm)
+3. [Moore–Penrose inverse, wikipedia, chapter Construction.](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse)
+4. [SVD, wikipedia.](https://en.wikipedia.org/wiki/Singular_value_decomposition)
