@@ -19,17 +19,21 @@
 class Processor
 {
 public:
-    Processor();
-
+    //! Initialize solver
+    void initSolver();
     //! Adding TOA for one iteration
     void addTOA(uint16_t id, float TOA);
+    //! Calculates TDOA
+    void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Overloading operator[]
     float& operator[](uint16_t id) { return _towers_toa[id]; }
 
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
-
+    //! Setter for _plt
     void setPlotter(Plotter* plt) { _plt = plt; }
+    //! Adds a point to the graph
+    void addPoint(const OurVector<3>& coords);
 
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
