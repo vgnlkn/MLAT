@@ -1,9 +1,5 @@
 #include <equation_solver.h>
-#include <cmath>
-#include <cassert>
 
-#define LIGHT_SPEED 3e5
-#define MAX_ITERARATIONS_COUNT 1
 
 OurMatrix<EQUATIONS_COUNT, 3> EquationSolver::getJacobian(OurVector<3>& position)
 {

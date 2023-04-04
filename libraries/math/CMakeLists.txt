@@ -7,7 +7,7 @@ add_library (Math
     equation_solver.h
     matrix.h
     src/equation_solver.cpp
-)
+        ../../applications/utilities/defines.h)
 
 find_package(GTest)
 if (${GTest_FOUND})
