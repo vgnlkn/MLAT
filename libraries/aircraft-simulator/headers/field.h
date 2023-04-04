@@ -4,6 +4,8 @@
 #include <aircraft.h>
 #include <plotter.h>
 #include <processor.h>
+#include <chrono>
+#include <thread>
 
 const float kilometer = 1000.f;
 

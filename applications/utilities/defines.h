@@ -1,0 +1,9 @@
+#ifndef MLAT_DEFINES_H
+#define MLAT_DEFINES_H
+
+#define TOWERS_COUNT 4
+#define EQUATIONS_COUNT 6
+#define LIGHT_SPEED 3e5
+#define MAX_ITERARATIONS_COUNT 1
+
+#endif

@@ -1,7 +1,4 @@
 #include <field.h>
-#include <aircraft.h>
-#include <chrono>
-#include <thread>
 
 
 Field::Field() :

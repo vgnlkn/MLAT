@@ -2,9 +2,11 @@
 #define EQUATION_SOLVER_H
 
 #include <vector.h>
-//#include <array>
 #include <matrix.h>
+#include "../../../applications/utilities/defines.h"
 #include <map>
+#include <cmath>
+#include <cassert>
 
 class EquationSolver 
 {
