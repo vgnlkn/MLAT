@@ -1,11 +1,8 @@
-#include <fstream>
 #include <iostream>
-#include <stdlib.h>
 #include <plotter.h>
 #include <vector.h>
 #include <aircraft.h>
 #include <field.h>
-#include <matrix.h>
 
 int main()
 {
