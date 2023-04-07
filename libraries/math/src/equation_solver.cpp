@@ -83,7 +83,7 @@ OurVector<3> EquationSolver::getJacobianRow(OurVector<3>& coordinate, uint8_t to
 {
     OurVector<3> jacobian_row;
     auto numerator = [](float tower_coordinate, float plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denumerator = [=](uint8_t index, float x, float y, float z)
+    auto denominator = [=](uint8_t index, float x, float y, float z)
     {
         return std::sqrt(
             std::pow(_towers_coordinates[index][0] - x, 2) +
@@ -92,14 +92,14 @@ OurVector<3> EquationSolver::getJacobianRow(OurVector<3>& coordinate, uint8_t to
         );
     };
     
-    float denumerator_i = denumerator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
-    float denumerator_j = denumerator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
-    assert(denumerator_i && denumerator_j);
+    float denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
+    float denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
+    assert(denominator_i && denominator_j);
 
     for (int column = 0; column < 3; ++column)
     {
-        jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denumerator_i -
-            numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denumerator_j);
+        jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denominator_i -
+                                numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denominator_j);
     }
     return jacobian_row;
 }

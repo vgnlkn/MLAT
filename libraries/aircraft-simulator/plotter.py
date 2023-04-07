@@ -36,9 +36,9 @@ def animate(i):
     ax.plot(xs1, ys1, zs1, label='Inverse problem')
     ax.plot(xs2, ys2, zs2, label='Direct problem')
 
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_zlabel('z')
+    ax.set_xlabel('x, km')
+    ax.set_ylabel('y, km')
+    ax.set_zlabel('z, km')
     ax.set_title('MLAT')
     ax.legend()
 
@@ -62,6 +62,8 @@ plt.plot(arr_x2, label='Real')
 
 # Add labels and a title
 plt.title('Coordinates of the aircraft on the Ox')
+plt.xlabel('km')
+plt.ylabel('km')
 
 # Display the legend
 plt.legend()
@@ -74,6 +76,8 @@ plt.plot(arr_y1, label='MLAT')
 plt.plot(arr_y2, label='Real')
 
 plt.title('Coordinates of the aircraft on the Oy')
+plt.xlabel('km')
+plt.ylabel('km')
 
 # Display the legend
 plt.legend()
@@ -86,6 +90,8 @@ plt.plot(arr_z1, label='MLAT')
 plt.plot(arr_z2, label='Real')
 
 plt.title('Coordinates of the aircraft on the Oz')
+plt.xlabel('km')
+plt.ylabel('km')
 
 # Display the legend
 plt.legend()
