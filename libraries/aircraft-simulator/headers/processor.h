@@ -9,6 +9,7 @@
 #include <tower.h>
 #include <equation_solver.h>
 #include <plotter.h>
+#include <random>
 
 /*! \class Processor
 *   \brief Class manages TOA towers
@@ -37,6 +38,9 @@ public:
 
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
+
+    //! Generate random value for noise
+    [[nodiscard]] double addNoise() const;
 
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position

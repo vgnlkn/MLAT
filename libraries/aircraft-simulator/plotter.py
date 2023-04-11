@@ -56,45 +56,51 @@ arr_x1, arr_y1, arr_z1 = [], [], []
 arr_x2, arr_y2, arr_z2 = [], [], []
 read(arr_x1, arr_y1, arr_z1, arr_x2, arr_y2, arr_z2, lines, lines2)
 
-# Create a line plot for xoy
-plt.plot(arr_x1, label='MLAT')
-plt.plot(arr_x2, label='Real')
 
-# Add labels and a title
-plt.title('Coordinates of the aircraft on the axis x')
-plt.ylabel('km')
-plt.xlabel('iteration number')
+def draw2D(arr1: list, arr2: list, title: str) -> None:
+    plt.plot(arr1, label='MLAT')
+    plt.plot(arr2, label='Real')
 
-# Display the legend
-plt.legend()
+    plt.title(title)
 
-# Show the plot
-plt.show()
+    plt.ylabel('km')
+    plt.xlabel('iteration number')
 
-# Create a line plot for Oy
-plt.plot(arr_y1, label='MLAT')
-plt.plot(arr_y2, label='Real')
+    # Display the legend
+    plt.legend()
 
-plt.title('Coordinates of the aircraft on the axis y')
-plt.ylabel('km')
-plt.xlabel('iteration number')
+    # Show the plot
+    plt.show()
 
-# Display the legend
-plt.legend()
 
-# Show the plot
-plt.show()
+def count_diff(arr1: list, arr2: list) -> list:
+    diff = list()
 
-# Create a line plot for Oz
-plt.plot(arr_z1, label='MLAT')
-plt.plot(arr_z2, label='Real')
+    for i in range(min(len(arr1), len(arr2))):
+        diff.append(abs(arr1[i] - arr2[i]))
 
-plt.title('Coordinates of the aircraft on the axis z')
-plt.ylabel('km')
-plt.xlabel('iteration number')
+    return diff
 
-# Display the legend
-plt.legend()
 
-# Show the plot
-plt.show()
+def draw_diff(arr1: list, arr2: list, title: str) -> None:
+    diff = count_diff(arr1, arr2)
+    iterations = [int(i) for i in range(len(diff))]
+
+    plt.figure()
+    plt.title(title)
+    plt.scatter(iterations, diff, label='modulus of difference')
+
+    plt.ylabel('km')
+    plt.xlabel('iteration number')
+    plt.legend()
+    plt.show()
+
+
+draw2D(arr_x1, arr_x2, 'Coordinates of the aircraft on the axis x')
+draw_diff(arr_x1, arr_x2, 'Modulus of difference on the axis x')
+
+draw2D(arr_y1, arr_y2, 'Coordinates of the aircraft on the axis y')
+draw_diff(arr_y1, arr_y2, 'Modulus of difference on the axis y')
+
+draw2D(arr_z1, arr_z2, 'Coordinates of the aircraft on the axis z')
+draw_diff(arr_z1, arr_z2, 'Modulus of difference on the axis z')

@@ -39,7 +39,7 @@ void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            tdoas[k++] = _towers_toa[i] - _towers_toa[j];
+            tdoas[k++] = _towers_toa[i] - _towers_toa[j] + addNoise();
         }
     }
 }
@@ -54,4 +54,15 @@ void Processor::addPoint(const OurVector<3>& coords)
             _plt->addPoint(coords[0], coords[1], coords[2]);
         }
     }
+}
+
+double Processor::addNoise() const
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(-0.00000001, 0.00000001);
+
+    double randomNum = dis(gen);
+
+    return randomNum;
 }
