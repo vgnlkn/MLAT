@@ -15,7 +15,7 @@ public:
 	inline Plotter(const std::string& filepath) : _file(new std::ofstream(filepath)) {}
 	inline ~Plotter() { if (_file) { delete _file; } }
     //! Insert point to the file
-	void addPoint(float x, float y, float z);
+	void addPoint(double x, double y, double z);
 private:
     //! Result file with points
 	std::ofstream* _file;

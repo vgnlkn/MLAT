@@ -10,7 +10,7 @@ void Processor::initSolver()
     _solver.setInitialParams(init, tdoas);
 }
 
-void Processor::addTOA(uint16_t id, float TOA)
+void Processor::addTOA(uint16_t id, double TOA)
 {
     _towers_toa[id] = TOA;
 }

@@ -39,7 +39,7 @@ public:
 
     //! Methods to work with signals
     //! Sends signal to tower
-    float sendSignal(Tower tower, const OurVector<3>& current_position);
+    double sendSignal(Tower tower, const OurVector<3>& current_position);
 
     //! Methods to work with towers
     //! Sets new tower

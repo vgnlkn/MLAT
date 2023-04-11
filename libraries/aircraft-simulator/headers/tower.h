@@ -7,7 +7,7 @@
 #include <stack>
 #include <cmath>
 
-static const float waveSpeed = 300000.f;
+static const double waveSpeed = 300000.f;
 
 
 /*! \class Tower
@@ -31,7 +31,7 @@ public:
     bool operator<(const Tower& other) const { return _id < other._id; }
 
     //! Receives a signal
-    float calculateTime(const OurVector<3>& current_position);
+    double calculateTime(const OurVector<3>& current_position);
     //! Getter for _position
     [[nodiscard]] OurVector<3> getPosition() const { return _position; }
     //! Setter for _position

@@ -7,7 +7,7 @@
 #include <chrono>
 #include <thread>
 
-const float kilometer = 1000.f;
+const double kilometer = 1000.f;
 
 
 /*! \class Field

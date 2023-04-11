@@ -17,7 +17,7 @@ OurMatrix<EQUATIONS_COUNT, 3> EquationSolver::getJacobian(OurVector<3>& position
 
 void EquationSolver::setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates)
 {
-    _towers_coordinates = tower_coordinates;
+    _towers_coordinates = std::move(tower_coordinates);
 }
 
 void EquationSolver::setInitialParams(const OurVector<3>& initial_coordinates,
@@ -74,7 +74,7 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     return _initial_coordinates;
 }
 
-float EquationSolver::distance(const OurVector<3> from, const OurVector<3> to)
+double EquationSolver::distance(const OurVector<3>& from, const OurVector<3>& to)
 {
     return std::sqrt(std::pow(from[0] - to[0], 2) + std::pow(from[1] - to[1], 2) + std::pow(from[2] - to[2], 2));
 }
@@ -82,8 +82,8 @@ float EquationSolver::distance(const OurVector<3> from, const OurVector<3> to)
 OurVector<3> EquationSolver::getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<3> jacobian_row;
-    auto numerator = [](float tower_coordinate, float plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [=](uint8_t index, float x, float y, float z)
+    auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
+    auto denominator = [=](uint8_t index, double x, double y, double z)
     {
         return std::sqrt(
             std::pow(_towers_coordinates[index][0] - x, 2) +
@@ -92,8 +92,8 @@ OurVector<3> EquationSolver::getJacobianRow(OurVector<3>& coordinate, uint8_t to
         );
     };
     
-    float denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
-    float denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
+    double denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
+    double denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
     assert(denominator_i && denominator_j);
 
     for (int column = 0; column < 3; ++column)

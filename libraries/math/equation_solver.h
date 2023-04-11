@@ -7,6 +7,7 @@
 #include <map>
 #include <cmath>
 #include <cassert>
+#include <utility>
 
 class EquationSolver 
 {
@@ -21,7 +22,7 @@ public:
 
     OurVector<3> solve(OurVector<EQUATIONS_COUNT>& tdoas);
 private:
-    float distance(const OurVector<3> from, const OurVector<3> to);
+    double distance(const OurVector<3>& from, const OurVector<3>& to);
     OurVector<3> getJacobianRow(OurVector<3>& position, uint8_t tower_i, uint8_t tower_j);
 
 private:

@@ -4,10 +4,7 @@
 Field::Field() :
         _towers(new Tower[TOWERS_COUNT]),
         _plt_mlat(nullptr), _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT)
-{
-    _current_position[2] = 10;
-}
+        _tower_count(TOWERS_COUNT) {}
 
 void Field::startMovement()
 {
@@ -36,7 +33,7 @@ void Field::initialize()
 void Field::updateAircraftPosition()
 {
     _current_position = _current_position +
-                        _aircraft.getSpeed() * (1.f / kilometer);
+                        _aircraft.getSpeed() * (0.1f / kilometer);
 }
 
 void Field::updateAircraftSpeed()
@@ -47,7 +44,7 @@ void Field::updateAircraftSpeed()
 
 void Field::sendSignalsToTowers()
 {
-    float toa;
+    double toa;
     for (uint16_t j = 0; j < _tower_count; ++j)
     {
         Tower& tower = _towers[j];
@@ -108,28 +105,28 @@ void Field::setTowers()
     OurVector<3> tower_position;
     tower_position[0] = -1500;
     tower_position[1] = 400;
-    tower_position[2] = 1000;
+    tower_position[2] = 1200;
 
     _towers[0].setID(0);
     _towers[0].setPosition(tower_position);
 
     tower_position[0] = 2000;
-    tower_position[1] = 3000;
-    tower_position[2] = 1000;
+    tower_position[1] = -3000;
+    tower_position[2] = 0;
 
     _towers[1].setID(1);
     _towers[1].setPosition(tower_position);
 
-    tower_position[0] = 5000;
+    tower_position[0] = -5000;
     tower_position[1] = 12000;
-    tower_position[2] = 1000;
+    tower_position[2] = -900;
 
     _towers[2].setID(2);
     _towers[2].setPosition(tower_position);
 
     tower_position[0] = 11000;
     tower_position[1] = -4000;
-    tower_position[2] = 1000;
+    tower_position[2] = 2000;
 
     _towers[3].setID(3);
     _towers[3].setPosition(tower_position);

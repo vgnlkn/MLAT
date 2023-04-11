@@ -16,7 +16,7 @@
 * Allowed all base operations with matrixes, except determinant calculation
 * and getting inversed matrix.
 */
-template<uint8_t row, uint8_t col, typename type=float>
+template<uint8_t row, uint8_t col, typename type=double>
 class OurMatrix
 {
 public:
@@ -27,9 +27,9 @@ public:
     //! Copy constructor
     OurMatrix(const OurMatrix& other);
     //! Get row
-    OurVector<col, type> getRow(const uint8_t row_index) const;
+    OurVector<col, type> getRow(uint8_t row_index) const;
     //! Get column
-    OurVector<row, type> getCol(const uint8_t col_index) const;
+    OurVector<row, type> getCol(uint8_t col_index) const;
     //! Replace all fields
     void swap(OurMatrix& other) { std::swap(this->_matrix, other._matrix); };
     //! Set value val to each matrix element
@@ -93,7 +93,7 @@ public:
     OurVector<row, type> operator*(const OurVector<col, type>& other) const;
     //! Overloading multiplying with single number(number is first)
     template<uint8_t row_, uint8_t col_, typename T>
-    friend OurMatrix<row_, col_, T> operator*(float number, OurMatrix<row_, col_, T>& vector);
+    friend OurMatrix<row_, col_, T> operator*(double number, OurMatrix<row_, col_, T>& vector);
     //! Overloading multiplying with vector (vector first)
     template<uint8_t row_, uint8_t col_, typename T>
     friend OurVector<col_, T> operator*(const OurVector<row_, T>& vector, const OurMatrix<row_, col_, T>& matrix);
@@ -291,7 +291,7 @@ void OurMatrix<row, col, type>::setRow(uint8_t row_index, type value)
 }
 
 template<uint8_t row_, uint8_t col_, typename T>
-inline OurMatrix<row_, col_, T> operator*(float number, OurMatrix<row_, col_, T>& vector)
+inline OurMatrix<row_, col_, T> operator*(double number, OurMatrix<row_, col_, T>& vector)
 {
     return vector * number;
 }
@@ -300,7 +300,7 @@ template<uint8_t row_, uint8_t col_, typename T>
 inline OurVector<col_, T> operator*(const OurVector<row_, T>& vector, const OurMatrix<row_, col_, T>& matrix)
 {
     OurVector<col_, T> product;
-    float sum = 0;
+    double sum = 0;
     for (int8_t x = 0; x < col_; ++x)
     {
         for (int8_t y = 0; y < row_; ++y)
@@ -390,7 +390,7 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
     OurMatrix<col, row, type> Q_transposed = QR.first.getTransposed();
     OurMatrix<col, col, type> R_inversed = QR.second;
 
-    float sum;
+    double sum;
     for (int i = col - 1; i >= 0; i--) 
     {
         R_inversed[i][i] = 1 / QR.second[i][i];
@@ -422,7 +422,7 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
         }
         for (int k = 0; k < j; k++)
         {
-            float dot = 0;
+            double dot = 0;
             for (int i = 0; i < row; i++)
             {
                 dot += Q[i][k] * _matrix[i][j];
@@ -433,7 +433,7 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
                 Q[i][j] -= R[k][j] * Q[i][k];
             }
         }
-        float norm = 0;
+        double norm = 0;
         for (int i = 0; i < row; i++)
         {
             norm += Q[i][j] * Q[i][j];

@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 #include <vector.h>
 
+
 TEST(VectorTests, SimpleArithmetic)
 {
 	// init

@@ -22,11 +22,11 @@ public:
     //! Initialize solver
     void initSolver();
     //! Adding TOA for one iteration
-    void addTOA(uint16_t id, float TOA);
+    void addTOA(uint16_t id, double TOA);
     //! Calculates TDOA
     void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Overloading operator[]
-    float& operator[](uint16_t id) { return _towers_toa[id]; }
+    double& operator[](uint16_t id) { return _towers_toa[id]; }
 
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
@@ -46,7 +46,7 @@ public:
     */
     void process();
 private:
-    std::map<uint16_t, float> _towers_toa;
+    std::map<uint16_t, double> _towers_toa;
     std::map<uint16_t, Tower> _towers;
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
     EquationSolver _solver;

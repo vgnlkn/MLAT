@@ -2,11 +2,12 @@
 #include <gtest/gtest.h>
 #include <matrix.h>
 
+
 TEST(MatrixTests, SimpleArithmetic)
 {
     // init
-    OurMatrix<2, 3, float> a;
-    OurMatrix<3, 2, float> b;
+    OurMatrix<2, 3> a;
+    OurMatrix<3, 2> b;
 
     float k = 1.f;
     for (int i = 0; i < 2; ++i)
@@ -28,8 +29,8 @@ TEST(MatrixTests, SimpleArithmetic)
     }
 
     // copy constructor & operator ==
-    OurMatrix<2, 3, float> a_copy = a;
-    OurMatrix<3, 2, float> b_copy = b;
+    OurMatrix<2, 3> a_copy = a;
+    OurMatrix<3, 2> b_copy = b;
 
     for (int i = 0; i < 2; ++i)
     {
@@ -52,12 +53,12 @@ TEST(MatrixTests, SimpleArithmetic)
 
 
     // operator +
-    OurMatrix<2, 3, float> c = a;
+    OurMatrix<2, 3> c = a;
     c.setColumn(1, 5);
     c.setRow(0, 3);
     auto c_copy = c;
 
-    OurMatrix<2, 3, float> d = a + c;
+    OurMatrix<2, 3> d = a + c;
     for (int i = 0; i < 2; ++i)
     {
         for (int j = 0; j < 3; ++j)
@@ -99,7 +100,7 @@ TEST(MatrixTests, SimpleArithmetic)
 
     // operator *
     // a * b
-    OurMatrix<2, 2, float> m1 = a * b;
+    OurMatrix<2, 2> m1 = a * b;
     ASSERT_TRUE(a == a_copy);
     ASSERT_TRUE(b == b_copy);
 
@@ -121,7 +122,7 @@ TEST(MatrixTests, SimpleArithmetic)
 
     // b * a
 
-    OurMatrix<3, 3, float> m2 = b * a;
+    OurMatrix<3, 3> m2 = b * a;
     ASSERT_TRUE(a == a_copy);
     ASSERT_TRUE(b == b_copy);
 
@@ -303,7 +304,7 @@ TEST(MatrixTests, MultiSum)
 TEST(MatrixTests, MultiProduct)
 {
     // square matrix
-    OurMatrix<3, 3, float> a, b, c, d, res;
+    OurMatrix<3, 3> a, b, c, d, res;
 
     for (int i = 0; i < 3; ++i)
     {
@@ -315,7 +316,7 @@ TEST(MatrixTests, MultiProduct)
             d[i][j] = (i + j + 4);
         }
     }
-    OurMatrix<3, 3, float> a_copy, b_copy, c_copy, d_copy;
+    OurMatrix<3, 3> a_copy, b_copy, c_copy, d_copy;
     a_copy = a;
     b_copy = b;
     c_copy = c;
@@ -328,7 +329,7 @@ TEST(MatrixTests, MultiProduct)
     ASSERT_TRUE(c == c_copy);
     ASSERT_TRUE(d == d_copy);
 
-    OurMatrix<3, 3, float> result;
+    OurMatrix<3, 3> result;
 
     result[0][0] = 6186;
     result[0][1] = 7392;
@@ -349,11 +350,11 @@ TEST(MatrixTests, MultiProduct)
     }
 
     // different sizes
-    OurMatrix<2, 2, float> m1, m1_copy;
-    OurMatrix<2, 3, float> m2, m2_copy;
-    OurMatrix<3, 2, float> m3, m3_copy;
-    OurMatrix<2, 1, float> m4, m4_copy;
-    OurMatrix<2, 1, float> ans, answer;
+    OurMatrix<2, 2> m1, m1_copy;
+    OurMatrix<2, 3> m2, m2_copy;
+    OurMatrix<3, 2> m3, m3_copy;
+    OurMatrix<2, 1> m4, m4_copy;
+    OurMatrix<2, 1> ans, answer;
 
     for (int i = 0; i < 2; ++i)
     {
@@ -407,7 +408,7 @@ TEST(MatrixTests, MultiProduct)
 
 TEST(MatrixTests, AdvancedArithmetic_1)
 {
-    OurMatrix<3, 3, float> a, b, c, d, res;
+    OurMatrix<3, 3> a, b, c, d, res;
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 3; ++j)
@@ -419,13 +420,13 @@ TEST(MatrixTests, AdvancedArithmetic_1)
         }
     }
 
-    OurMatrix<3, 3, float> a_copy, b_copy, c_copy, d_copy;
+    OurMatrix<3, 3> a_copy, b_copy, c_copy, d_copy;
     a_copy = a;
     b_copy = b;
     c_copy = c;
     d_copy = d;
 
-    OurMatrix<3, 3, float> multiplication;
+    OurMatrix<3, 3> multiplication;
     multiplication[0][0] = 3800;
     multiplication[0][1] = 4700;
     multiplication[0][2] = 5600;
@@ -453,7 +454,7 @@ TEST(MatrixTests, AdvancedArithmetic_1)
 
 TEST(MatrixTests, AdvancedArithmetic_2)
 {
-    OurMatrix<3, 3, float> a, b, c, d, res, ans;
+    OurMatrix<3, 3> a, b, c, d, res, ans;
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 3; ++j)
@@ -465,7 +466,7 @@ TEST(MatrixTests, AdvancedArithmetic_2)
         }
     }
 
-    OurMatrix<3, 3, float> a_copy, b_copy, c_copy, d_copy;
+    OurMatrix<3, 3> a_copy, b_copy, c_copy, d_copy;
     a_copy = a;
     b_copy = b;
     c_copy = c;
@@ -499,7 +500,7 @@ TEST(MatrixTests, AdvancedArithmetic_2)
 
 TEST(MatrixTests, AdvancedArithmetic_3)
 {
-    OurMatrix<3, 3, float> a, b, c, d, res;
+    OurMatrix<3, 3> a, b, c, d, res;
     for (int i = 0; i < 3; ++i)
     {
         for (int j = 0; j < 3; ++j)
@@ -511,7 +512,7 @@ TEST(MatrixTests, AdvancedArithmetic_3)
         }
     }
 
-    OurMatrix<3, 3, float> a_copy, b_copy, c_copy, d_copy;
+    OurMatrix<3, 3> a_copy, b_copy, c_copy, d_copy;
     a_copy = a;
     b_copy = b;
     c_copy = c;
@@ -524,7 +525,7 @@ TEST(MatrixTests, AdvancedArithmetic_3)
     assert(c == c_copy);
     assert(d == d_copy);
 
-    OurMatrix<3, 3, float> ans;
+    OurMatrix<3, 3> ans;
 
     ans[0][0] = 103;
     ans[0][1] = 121;
