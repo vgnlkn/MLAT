@@ -62,8 +62,8 @@ plt.plot(arr_x2, label='Real')
 
 # Add labels and a title
 plt.title('Coordinates of the aircraft on the axis x')
-plt.xlabel('km')
-plt.ylabel('iteration number')
+plt.ylabel('km')
+plt.xlabel('iteration number')
 
 # Display the legend
 plt.legend()
@@ -76,8 +76,8 @@ plt.plot(arr_y1, label='MLAT')
 plt.plot(arr_y2, label='Real')
 
 plt.title('Coordinates of the aircraft on the axis y')
-plt.xlabel('km')
-plt.ylabel('iteration number')
+plt.ylabel('km')
+plt.xlabel('iteration number')
 
 # Display the legend
 plt.legend()
@@ -90,8 +90,8 @@ plt.plot(arr_z1, label='MLAT')
 plt.plot(arr_z2, label='Real')
 
 plt.title('Coordinates of the aircraft on the axis z')
-plt.xlabel('km')
-plt.ylabel('iteration number')
+plt.ylabel('km')
+plt.xlabel('iteration number')
 
 # Display the legend
 plt.legend()
