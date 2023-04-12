@@ -34,12 +34,16 @@ void Processor::setTower(uint16_t id, const Tower& tower)
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
 {
+    auto noize = [=](int i) -> double
+    {
+        return _towers_toa[i] * _noise->generate();
+    };
     uint16_t k = 0;
     for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            tdoas[k++] = _towers_toa[i] - _towers_toa[j] + addNoise();
+            tdoas[k++] = _towers_toa[i] + noize(i) - _towers_toa[j] + noize(j);
         }
     }
 }
@@ -54,15 +58,4 @@ void Processor::addPoint(const OurVector<3>& coords)
             _plt->addPoint(coords[0], coords[1], coords[2]);
         }
     }
-}
-
-double Processor::addNoise() const
-{
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> dis(-0.00000001, 0.00000001);
-
-    double randomNum = dis(gen);
-
-    return randomNum;
 }
