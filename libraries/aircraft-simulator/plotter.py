@@ -88,7 +88,7 @@ def draw_diff(arr1: list, arr2: list, title: str) -> None:
 
     plt.figure()
     plt.title(title)
-    plt.scatter(iterations, diff, label='modulus of difference')
+    plt.scatter(iterations, diff, label='modulus of difference', s=2)
 
     plt.ylabel('km')
     plt.xlabel('iteration number')
