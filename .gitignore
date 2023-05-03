@@ -7,3 +7,5 @@ conaninfo.txt
 graph_info.json
 libraries/aircraft-simulator/plotter.txt
 
+!/applications/simulator/plotter.txt
+!/libraries/aircraft-simulator/plotter.txt
