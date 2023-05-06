@@ -85,6 +85,8 @@ $$
 
 где *J<sub>f<sub>* - матрица Якоби для системы *f*. А произведение матриц в вычитаемом есть псевдообратная матрица к матрице Якоби, которую можно вычислить с помощью QR разложения.
 
+![image](https://user-images.githubusercontent.com/48962685/236623043-0d819765-4db5-4434-837c-a63fc0a9261c.png)
+
 ## Литература
 1. [Вычисление сингулярного разложения матриц. Афанасьева А. А.](https://core.ac.uk/download/pdf/336869551.pdf)
 2. [Gauss–Newton algorithm, wikipedia.](https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm)
