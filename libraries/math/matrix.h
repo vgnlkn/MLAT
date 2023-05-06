@@ -71,6 +71,8 @@ public:
     [[nodiscard]] inline uint8_t getRowNumber() const { return row; }
     //! Get column size
     [[nodiscard]] inline uint8_t getColNumber() const { return col; }
+    //! Find inverse matrix
+    OurMatrix<col, row, type> getInverse() const;
 
     //! OPERATOR OVERLOADINGS
     //! Overloading operator==
@@ -106,13 +108,75 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const OurMatrix<row_, col_, T>& matrix);
 
 private:
-    void checkParams(const OurMatrix& other);
+    void checkParams(const OurMatrix& other) const;
 
 private:
     OurVector<col, type>* _matrix;
 
 };
 
+template<uint8_t row, uint8_t col, typename type>
+OurMatrix<col, row, type> OurMatrix<row, col, type>::getInverse() const
+{
+    checkParams(*this);
+    assert(row == col);
+
+    OurMatrix<row, 2*col, type> augmented_matrix;
+    augmented_matrix.setZero();
+
+    for (uint8_t i = 0; i < row; ++i)
+    {
+        for (uint8_t j = 0; j < col; ++j)
+        {
+            augmented_matrix[i][j] = (*this)[i][j];
+        }
+        augmented_matrix[i][i + col] = 1;
+    }
+
+    for (uint8_t i = 0; i < col; ++i)
+    {
+        if (augmented_matrix[i][i] == 0)
+        {
+            for (uint8_t j = i + 1; j < row; ++j)
+            {
+                if (augmented_matrix[j][i] != 0)
+                {
+                    std::swap(augmented_matrix[i], augmented_matrix[j]);
+                    break;
+                }
+            }
+        }
+
+        type pivot = augmented_matrix[i][i];
+        for (uint8_t j = i; j < 2 * col; ++j)
+        {
+            augmented_matrix[i][j] /= pivot;
+        }
+
+        for (uint8_t j = 0; j < row; ++j)
+        {
+            if (j != i)
+            {
+                type factor = augmented_matrix[j][i];
+                for (uint8_t k = i; k < 2 * col; ++k)
+                {
+                    augmented_matrix[j][k] -= factor * augmented_matrix[i][k];
+                }
+            }
+        }
+    }
+
+    OurMatrix<col, row, type> inverse_matrix;
+    for (uint8_t i = 0; i < col; ++i)
+    {
+        for (uint8_t j = row; j < 2 * col; ++j)
+        {
+            inverse_matrix[i][j - row] = augmented_matrix[i][j];
+        }
+    }
+
+    return inverse_matrix;
+}
 
 template<uint8_t row, uint8_t col, typename type>
 void OurMatrix<row, col, type>::LUPFactorization(OurVector<row>& P)
@@ -547,8 +611,7 @@ inline OurVector<row, type> OurMatrix<row, col, type>::operator*(const OurVector
 }
 
 template<uint8_t row, uint8_t col, typename type>
-inline void OurMatrix<row, col, type>::checkParams(const OurMatrix& other)
-{
+inline void OurMatrix<row, col, type>::checkParams(const OurMatrix& other) const {
     assert(std::is_arithmetic<type>() &&
            typeid(_matrix).name() == typeid(other._matrix).name());
 }

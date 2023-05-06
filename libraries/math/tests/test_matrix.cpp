@@ -553,3 +553,46 @@ TEST(MatrixTests, AdvancedArithmetic_3)
         }
     }
 }
+
+TEST(MatrixTests, TestInverseMatrix)
+{
+    OurMatrix<3, 3, double> a, ans;
+
+    ans[0][0] = 1.0;
+    ans[0][1] = 0.0;
+    ans[0][2] = 2.0;
+    ans[1][0] = 2.0;
+    ans[1][1] = -1.0;
+    ans[1][2] = 1.0;
+    ans[2][0] = 1.0;
+    ans[2][1] = 3.0;
+    ans[2][2] = -1.0;
+
+    ans[0][0] = -2.0;
+    ans[0][1] = 6.0;
+    ans[0][2] = 2.0;
+    ans[1][0] = 3.0;
+    ans[1][1] = -3.0;
+    ans[1][2] = 3.0;
+    ans[2][0] = 7.0;
+    ans[2][1] = -3.0;
+    ans[2][2] = -1.0;
+
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ans[i][j] /= 1.0/12.0;
+        }
+    }
+
+    OurMatrix<3, 3, double> res = a.getInverse();
+
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ASSERT_EQ(res[i][j], ans[i][j]);
+        }
+    }
+}
