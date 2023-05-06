@@ -135,7 +135,7 @@ OurMatrix<col, row, type> OurMatrix<row, col, type>::getInverse() const
 
     for (uint8_t i = 0; i < col; ++i)
     {
-        if (augmented_matrix[i][i] == 0)
+        if ((*this)[i][i] == 0)
         {
             for (uint8_t j = i + 1; j < row; ++j)
             {
