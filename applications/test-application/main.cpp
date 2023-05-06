@@ -1,49 +1,61 @@
 #include <matrix.h>
 #include <vector.h>
 #include <iostream>
+#include <motion_filter.h>
+
+
+class Motion
+{
+public:
+	Motion(double x0, double v0, double a0):
+		x(x0), v(v0), a(a0)
+	{
+
+	}
+
+	void update(double time_delta)
+	{
+		x += v * time_delta + a * time_delta * time_delta * 0.5;
+		v += a;
+	}
+
+public:
+	double x, v, a;
+};
 
 int main()
 {
-	std::cout << "Hello world" << std::endl;
-	OurMatrix<3, 4> m;
-	std::cout << m << std::endl;
-	std::cout << std::endl;
+	std::vector<double> x, v, a;
+	const int iterarions = 100;
+	double time_delta = 0.5;
+	Motion motion(0, 0, 1);
+	MotionFilter mfilter;
+	OurVector<3> state, filtered;
 
-	OurMatrix<3, 4> n;
-	std::cout <<n << std::endl;
-	std::cout << std::endl;
+	for (int i = 0; i < iterarions; ++i)
+	{
+		motion.update(time_delta);
+		state[0] = motion.x;
+		state[1] = motion.v;
+		state[2] = motion.a;
+		filtered = mfilter.filter(state);
 
-	OurMatrix<3, 4> k = m + n;
-	std::cout << k << std::endl;
-	std::cout << std::endl;
-	std::cout << k * 5 << std::endl;
-	std::cout << std::endl;
+		/*x.push_back(motion.x);
+		v.push_back(motion.v);
+		a.push_back(motion.a);*/
 
-	std::cout << 10*k*5 << std::endl;
-	std::cout << std::endl;
+		x.push_back(filtered[0]);
+		v.push_back(filtered[1]);
+		a.push_back(filtered[2]);
+	}
 
-	OurVector<4> vec;
-	for (int i = 0; i < 4; ++i)
-		vec[i] = i;
-	std::cout << "VEC_1: " << vec << std::endl;
+	double* xp = x.data();
+	double* vp = v.data();
+	double* ap = a.data();
 
-	
 
-	auto vec2 = k * vec;
-	std::cout << "k * VEC_1: " << vec2 << std::endl;
-	std::cout << std::endl;
-	OurVector<3> vec_3;
-	for (int i = 0; i < 3; ++i)
-		vec_3[i] = i;
-	auto vec4 = vec_3 * k;
-	std::cout << std::endl;
 
-	std::cout << k << std::endl;
-	std::cout << std::endl;
 
-	std::cout << "VEC_3: " << vec_3 << std::endl;
-	std::cout << std::endl;
-	std::cout << "VECC: " << vec4 << std::endl;
-	std::cout << std::endl;
+
 	return 0;
 }

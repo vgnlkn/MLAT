@@ -18,7 +18,7 @@ public:
     void setNoiseCovarianceMatrix(OurMatrix<N, N> other) { _noise_covariance_matrix = other; }
 
     void predict(double time_delta);
-    void correct(const OurVector<3>& state_vector);
+    OurVector<N> correct(const OurVector<3>& state_vector);
 private:
     OurVector<N> _system_vector;              // x
     OurMatrix<N, N> _state_transition_matrix; // F
@@ -40,7 +40,7 @@ void KalmanFilter<N>::predict(double time_delta)
 
 
 template<uint8_t N>
-void KalmanFilter<N>::correct(const OurVector<3> &state_vector)
+OurVector<N> KalmanFilter<N>::correct(const OurVector<3> &state_vector)
 {
     OurMatrix<N, N> identity_matrix;
     identity_matrix.setIdentity();
@@ -50,6 +50,8 @@ void KalmanFilter<N>::correct(const OurVector<3> &state_vector)
     OurVector<N> Y = state_vector - _observation_matrix * _system_vector;
     _system_vector = _system_vector + K * Y;
     _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
+
+    return _system_vector;
 }
 
 
