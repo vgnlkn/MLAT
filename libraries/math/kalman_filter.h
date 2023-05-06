@@ -3,21 +3,34 @@
 
 #include <matrix.h>
 
+/*! \class KalmanFilter
+*   \brief Class describing Kalman Filter
+* А class that implements a Kalman filter for evaluating output values
+*/
 template<uint8_t N>
 class KalmanFilter
 {
 public:
+    //! Default constructor
     KalmanFilter() = default;
 
-    void setSystemVector(OurVector<N> other) { _system_vector = other; }
+    //! Setter for _system_vector
+    void setSystemVector(const OurVector<N>& other) { _system_vector = other; }
 
-    void setStateMatrix(OurMatrix<N, N> other) { _state_transition_matrix = other; }
-    void setObservationMatrix(OurMatrix<N, 1> other) { _observation_matrix = other; }
-    void setErrorCovarianceMatrix(OurMatrix<N, N> other) { _error_covariance_matrix = other; }
-    void setStateCovarianceMatrix(OurMatrix<N, N> other) { _state_covariance_matrix = other; }
-    void setNoiseCovarianceMatrix(OurMatrix<N, N> other) { _noise_covariance_matrix = other; }
+    //! Setter for _state_transition_matrix
+    void setStateMatrix(const OurMatrix<N, N>& other) { _state_transition_matrix = other; }
+    //! Setter for _observation_matrix
+    void setObservationMatrix(const OurMatrix<N, 1>& other) { _observation_matrix = other; }
+    //! Setter for _error_covariance_matrix
+    void setErrorCovarianceMatrix(const OurMatrix<N, N>& other) { _error_covariance_matrix = other; }
+    //! Setter for _state_covariance_matrix
+    void setStateCovarianceMatrix(const OurMatrix<N, N>& other) { _state_covariance_matrix = other; }
+    //! Setter for _noise_covariance_matrix
+    void setNoiseCovarianceMatrix(const OurMatrix<N, N>& other) { _noise_covariance_matrix = other; }
 
+    //! Predicts model values
     void predict(double time_delta);
+    //! Corrects model values
     void correct(const OurVector<3>& state_vector);
 private:
     OurVector<N> _system_vector;              // x
