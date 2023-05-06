@@ -90,3 +90,4 @@ $$
 2. [Gauss–Newton algorithm, wikipedia.](https://en.wikipedia.org/wiki/Gauss%E2%80%93Newton_algorithm)
 3. [Moore–Penrose inverse, wikipedia, chapter Construction.](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse)
 4. [SVD, wikipedia.](https://en.wikipedia.org/wiki/Singular_value_decomposition)
+5. [A New Approach to Linear Filtering and Prediction Problems](http://www.cs.unc.edu/~welch/kalman/media/pdf/Kalman1960.pdf)
