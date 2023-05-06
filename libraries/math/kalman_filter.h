@@ -33,8 +33,8 @@ template<uint8_t N>
 void KalmanFilter<N>::predict(double time_delta)
 {
     _system_vector = _state_transition_matrix * _system_vector + _observation_matrix * time_delta;
-    _state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix * _state_covariance_matrix
-                               + _error_covariance_matrix;
+    _state_covariance_matrix = _state_transition_matrix *
+            _state_covariance_matrix * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
 
 }
 
@@ -42,7 +42,14 @@ void KalmanFilter<N>::predict(double time_delta)
 template<uint8_t N>
 void KalmanFilter<N>::correct(const OurVector<3> &state_vector)
 {
-
+    OurMatrix<N, N> identity_matrix;
+    identity_matrix.setIdentity();
+    OurMatrix<N, N> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
+            + _noise_covariance_matrix;
+    OurMatrix<N, N> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
+    OurVector<N> Y = state_vector - _observation_matrix * _system_vector;
+    _system_vector = _system_vector + K * Y;
+    _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 }
 
 
