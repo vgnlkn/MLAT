@@ -27,15 +27,10 @@ MotionFilter::MotionFilter()
 	OurMatrix<3, 1> observation_matrix;
 	observation_matrix[0][0] = 1;
 	_filter.setObservationMatrix(observation_matrix);
-
-
-
 }
 
 auto MotionFilter::filter(OurVector<3> calculated_state)
 {
 	_filter.predict(time_delta);
 	return _filter.correct(calculated_state);
-
-
 }
