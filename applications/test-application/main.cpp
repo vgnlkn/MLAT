@@ -30,9 +30,8 @@ int main()
 
     std::random_device rd{};
     std::mt19937 gen{rd()};
-    std::normal_distribution<> d{1e-9, 1e-10};
+    std::normal_distribution<> d{1e-4, 1e-5};
 	std::vector<double> x, v, a;
-
 
 	const int iterarions = 100;
 	double time_delta = 0.5;
@@ -49,11 +48,19 @@ int main()
         motion.v += d(gen);
         motion.x += d(gen);
 
+        noise_values.push_back(motion);
+
 		state = mfilter.filter(observation);
 		x.push_back(state[0]);
 		v.push_back(state[1]);
 		a.push_back(state[2]);
 	}
+
+    for (auto i : noise_values)
+        std::cout << i.x << " " << i.v << " " << i.a << "\n";
+
+    for (auto j : real_values)
+        std::cout << j.x << " " << j.v << " " << j.a << "\n";
 
 	double* xp = x.data();
 	double* vp = v.data();
