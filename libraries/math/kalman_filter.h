@@ -20,13 +20,14 @@ public:
     //! Setter for _state_transition_matrix
     void setStateMatrix(const OurMatrix<dim_state, dim_state>& other) { _state_transition_matrix = other; }
     //! Setter for _observation_matrix
-    void setObservationMatrix(const OurMatrix<dim_state, dim_observation>& other) { _observation_matrix = other; }
+    void setObservationMatrix(const OurMatrix<dim_observation, dim_state>& other) { _observation_matrix = other; }
     //! Setter for _error_covariance_matrix
     void setErrorCovarianceMatrix(const OurMatrix<dim_state, dim_state>& other) { _error_covariance_matrix = other; }
     //! Setter for _state_covariance_matrix
     void setStateCovarianceMatrix(const OurMatrix<dim_state, dim_state>& other) { _state_covariance_matrix = other; }
     //! Setter for _noise_covariance_matrix
-    void setNoiseCovarianceMatrix(const OurMatrix<dim_state, dim_state>& other) { _noise_covariance_matrix = other; }
+    void setNoiseCovarianceMatrix(const OurMatrix<dim_observation, dim_observation>& other)
+    { _noise_covariance_matrix = other; }
 
     //! Predicts model values
     void predict(double time_delta);
@@ -40,21 +41,21 @@ private:
     OurMatrix<dim_state, dim_state> _state_transition_matrix;  // F
     OurMatrix<dim_state, dim_state> _error_covariance_matrix;  // Q
     OurMatrix<dim_state, dim_state> _state_covariance_matrix;  // P
-    OurMatrix<dim_state, dim_state> _noise_covariance_matrix;  // R
-    OurMatrix<dim_state, dim_observation> _observation_matrix; // H
+    OurMatrix<dim_observation, dim_observation> _noise_covariance_matrix;  // R
+    OurMatrix<dim_observation, dim_state> _observation_matrix; // H
 };
 
 template<uint8_t dim_state, uint8_t dim_observation>
 OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<dim_observation> &state_vector) {
     OurMatrix<dim_state, dim_state> identity_matrix;
     identity_matrix.setIdentity();
-    auto S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
-            + _noise_covariance_matrix;
-    auto K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
-    auto Y = state_vector - (_system_vector * _observation_matrix);
-    std::cout << "K = " << "\tY" << Y.getSize();
-    //_system_vector = _system_vector + (K * Y);
-    //_state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
+    OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
+                                                    + _noise_covariance_matrix;
+    OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
+
+    OurVector<dim_observation> Y = state_vector - (_observation_matrix * _system_vector);
+    _system_vector = _system_vector + (K * Y);
+    _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 
     return _system_vector;
 }

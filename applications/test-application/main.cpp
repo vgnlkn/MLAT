@@ -30,7 +30,7 @@ int main()
 	double time_delta = 0.5;
 	Motion motion(0, 0, 1);
 	MotionFilter mfilter;
-	OurVector<3> state, filtered;
+	OurVector<1> state, filtered;
 
 	for (int i = 0; i < iterarions; ++i)
 	{
@@ -38,7 +38,7 @@ int main()
 		state[0] = motion.x;
 		state[1] = motion.v;
 		state[2] = motion.a;
-		filtered = mfilter.filter(state);
+		//filtered = mfilter.filter(state);
 
 		/*x.push_back(motion.x);
 		v.push_back(motion.v);
