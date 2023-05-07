@@ -11,9 +11,15 @@ public:
 
 	OurVector<3> filter(OurVector<1> calculated_state);
 
+protected:
+    void calculateStateMatrix(double time_delta);
+    
+
+
 private:
 	//! Фильтр
 	KalmanFilter<3, 1> _filter;
+	OurMatrix<3, 3> _state;
 
 };
 

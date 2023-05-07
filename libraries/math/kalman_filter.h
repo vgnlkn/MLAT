@@ -51,6 +51,7 @@ OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const Our
     identity_matrix.setIdentity();
     OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
                                                     + _noise_covariance_matrix;
+    auto sinv = S.getInverse();
     OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
 
     OurVector<dim_observation> Y = state_vector - (_observation_matrix * _system_vector);
@@ -73,17 +74,17 @@ void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
 template<uint8_t dim_state, uint8_t dim_observation>
 void KalmanFilter<dim_state, dim_observation>::calculateStateMatrix(double time_delta)
 {
-    for (uint8_t i = 0; i < dim_state; ++i)
+   /* for (uint8_t i = 0; i < dim_state; ++i)
     {
-        _observation_matrix[i][i] = 1;
+        _state_transition_matrix[i][i] = 1;
     }
 
     for (uint8_t i = 0; i < dim_state - 1; ++i)
     {
-        _observation_matrix[i][i + 1] = time_delta;
+        _state_transition_matrix[i][i + 1] = time_delta;
     }
 
-    _observation_matrix[0][2] = 0.5 * time_delta * time_delta;
+    _state_transition_matrix[0][2] = 0.5 * time_delta * time_delta;*/
 }
 
 

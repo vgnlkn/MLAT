@@ -30,23 +30,16 @@ int main()
 	double time_delta = 0.5;
 	Motion motion(0, 0, 1);
 	MotionFilter mfilter;
-	OurVector<1> state, filtered;
-
+	OurVector<1> observation;
+	OurVector<3> state;
 	for (int i = 0; i < iterarions; ++i)
 	{
 		motion.update(time_delta);
-		state[0] = motion.x;
-		state[1] = motion.v;
-		state[2] = motion.a;
-		//filtered = mfilter.filter(state);
 
-		/*x.push_back(motion.x);
-		v.push_back(motion.v);
-		a.push_back(motion.a);*/
-
-		x.push_back(filtered[0]);
-		v.push_back(filtered[1]);
-		a.push_back(filtered[2]);
+		state = mfilter.filter(observation);
+		x.push_back(state[0]);
+		v.push_back(state[1]);
+		a.push_back(state[2]);
 	}
 
 	double* xp = x.data();
