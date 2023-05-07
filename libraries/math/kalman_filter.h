@@ -31,7 +31,7 @@ public:
     //! Predicts model values
     void predict(double time_delta);
     //! Corrects model values
-    OurVector<dim_state> correct(const OurVector<3>& state_vector);
+    OurVector<dim_state> correct(const OurVector<dim_observation>& state_vector);
 private:
     void calculateStateMatrix(double time_delta);
 
@@ -45,15 +45,16 @@ private:
 };
 
 template<uint8_t dim_state, uint8_t dim_observation>
-OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<3> &state_vector) {
+OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<dim_observation> &state_vector) {
     OurMatrix<dim_state, dim_state> identity_matrix;
     identity_matrix.setIdentity();
-    OurMatrix<dim_state, dim_state> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
-                                        + _noise_covariance_matrix;
-    OurMatrix<dim_state, dim_state> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
-    OurVector<dim_state> Y = state_vector - (_system_vector * _observation_matrix);
-    _system_vector = _system_vector + (K * Y);
-    _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
+    auto S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
+            + _noise_covariance_matrix;
+    auto K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
+    auto Y = state_vector - (_system_vector * _observation_matrix);
+    std::cout << "K = " << "\tY" << Y.getSize();
+    //_system_vector = _system_vector + (K * Y);
+    //_state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 
     return _system_vector;
 }

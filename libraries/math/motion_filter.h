@@ -9,11 +9,11 @@ public:
 	MotionFilter();
 	~MotionFilter() = default;
 
-	OurVector<3> filter(OurVector<3> calculated_state);
+	OurVector<3> filter(OurVector<1> calculated_state);
 
 private:
 	//! Фильтр
-	KalmanFilter<3> _filter;
+	KalmanFilter<3, 1> _filter;
 
 };
 
