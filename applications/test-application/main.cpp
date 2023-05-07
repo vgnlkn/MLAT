@@ -1,6 +1,7 @@
 #include <matrix.h>
 #include <vector.h>
 #include <iostream>
+#include <random>
 #include <motion_filter.h>
 
 
@@ -25,7 +26,14 @@ public:
 
 int main()
 {
+    std::vector<Motion> real_values, noise_values;
+
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::normal_distribution<> d{1e-9, 1e-10};
 	std::vector<double> x, v, a;
+
+
 	const int iterarions = 100;
 	double time_delta = 0.5;
 	Motion motion(0, 0, 1);
@@ -35,6 +43,11 @@ int main()
 	for (int i = 0; i < iterarions; ++i)
 	{
 		motion.update(time_delta);
+        real_values.push_back(motion);
+
+        motion.a += d(gen);
+        motion.v += d(gen);
+        motion.x += d(gen);
 
 		state = mfilter.filter(observation);
 		x.push_back(state[0]);
@@ -45,9 +58,6 @@ int main()
 	double* xp = x.data();
 	double* vp = v.data();
 	double* ap = a.data();
-
-
-
 
 
 	return 0;
