@@ -26,7 +26,7 @@ public:
 
 int main()
 {
-    std::vector<Motion> real_values, noise_values;
+    std::vector<double> real_values, noise_values;
 
     std::random_device rd{};
     std::mt19937 gen{rd()};
@@ -42,25 +42,19 @@ int main()
 	for (int i = 0; i < iterarions; ++i)
 	{
 		motion.update(time_delta);
-        real_values.push_back(motion);
+        real_values.push_back(motion.x);
 
-        motion.a += d(gen);
-        motion.v += d(gen);
         motion.x += d(gen);
 
-        noise_values.push_back(motion);
+        noise_values.push_back(motion.x);
+
+        observation[0] = motion.x;
 
 		state = mfilter.filter(observation);
 		x.push_back(state[0]);
 		v.push_back(state[1]);
 		a.push_back(state[2]);
 	}
-
-    for (auto i : noise_values)
-        std::cout << i.x << " " << i.v << " " << i.a << "\n";
-
-    for (auto j : real_values)
-        std::cout << j.x << " " << j.v << " " << j.a << "\n";
 
 	double* xp = x.data();
 	double* vp = v.data();
