@@ -5,7 +5,8 @@ conanbuildinfo.cmake
 conanbuildinfo.txt
 conaninfo.txt
 graph_info.json
-libraries/aircraft-simulator/plotter.txt
+applications/utilities/plotters/mlat.txt
 
-!/applications/simulator/plotter.txt
-!/libraries/aircraft-simulator/plotter.txt
+!/applications/utilities/plotters/real.txt
+!/applications/utilities/plotters/mlat.txt
+!/applications/utilities/plotters/filter.txt
