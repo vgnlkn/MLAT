@@ -6,6 +6,7 @@
 * А class that implements a Kalman filter for evaluating output values
 */
 #include <matrix.h>
+#include <iostream>
 
 template<uint8_t dim_state, uint8_t dim_observation>
 class KalmanFilter
@@ -33,8 +34,6 @@ public:
     void predict(double time_delta);
     //! Corrects model values
     OurVector<dim_state> correct(const OurVector<dim_observation>& state_vector);
-private:
-    void calculateStateMatrix(double time_delta);
 
 private:
     OurVector<dim_state> _system_vector;                       // x
@@ -46,45 +45,29 @@ private:
 };
 
 template<uint8_t dim_state, uint8_t dim_observation>
-OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<dim_observation> &state_vector) {
-    OurMatrix<dim_state, dim_state> identity_matrix;
-    identity_matrix.setIdentity();
-    OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
-                                                    + _noise_covariance_matrix;
-    auto sinv = S.getInverse();
-    OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
-
-    OurVector<dim_observation> Y = state_vector - (_observation_matrix * _system_vector);
-    _system_vector = _system_vector + (K * Y);
-    _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
-
-    return _system_vector;
-}
-
-template<uint8_t dim_state, uint8_t dim_observation>
 void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
 {
-    calculateStateMatrix(time_delta);
-
     _system_vector = _state_transition_matrix * _system_vector;
     _state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix
                                * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
 }
 
 template<uint8_t dim_state, uint8_t dim_observation>
-void KalmanFilter<dim_state, dim_observation>::calculateStateMatrix(double time_delta)
+OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<dim_observation> &state_vector) 
 {
-   /* for (uint8_t i = 0; i < dim_state; ++i)
-    {
-        _state_transition_matrix[i][i] = 1;
-    }
+    //std::cout << _state_covariance_matrix << std::endl;
+    //std::cout << std::endl;
+    OurMatrix<dim_state, dim_state> identity_matrix;
+    identity_matrix.setIdentity();
+    OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
+                                                    + _noise_covariance_matrix;
+    OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
+    //std::cout << S << std::endl;
+    OurVector<dim_observation> Y = state_vector - (_observation_matrix * _system_vector);
+    _system_vector = _system_vector + (K * Y);
+    _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 
-    for (uint8_t i = 0; i < dim_state - 1; ++i)
-    {
-        _state_transition_matrix[i][i + 1] = time_delta;
-    }
-
-    _state_transition_matrix[0][2] = 0.5 * time_delta * time_delta;*/
+    return _system_vector;
 }
 
 

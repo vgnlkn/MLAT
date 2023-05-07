@@ -8,7 +8,7 @@ class MotionFilter
 public:
 	MotionFilter();
 	~MotionFilter() = default;
-
+	void setInitial(OurVector<3>& init) { _filter.setSystemVector(init); }
 	OurVector<3> filter(OurVector<1> calculated_state);
 
 protected:
