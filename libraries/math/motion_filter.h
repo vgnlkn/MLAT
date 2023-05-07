@@ -9,8 +9,7 @@ public:
 	MotionFilter();
 	~MotionFilter() = default;
 
-	auto filter(OurVector<3> calculated_state);
-
+	OurVector<3> filter(OurVector<3> calculated_state);
 
 private:
 	//! Фильтр

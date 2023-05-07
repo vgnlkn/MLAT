@@ -24,12 +24,12 @@ MotionFilter::MotionFilter()
 	covariance_noise.setZero();
 	_filter.setNoiseCovarianceMatrix(covariance_noise);
 
-	OurMatrix<3, 1> observation_matrix;
+	OurMatrix<3, 9> observation_matrix;
 	observation_matrix[0][0] = 1;
 	_filter.setObservationMatrix(observation_matrix);
 }
 
-auto MotionFilter::filter(OurVector<3> calculated_state)
+OurVector<3> MotionFilter::filter(OurVector<3> calculated_state)
 {
 	_filter.predict(time_delta);
 	return _filter.correct(calculated_state);

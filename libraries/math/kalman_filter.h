@@ -7,7 +7,7 @@
 */
 #include <matrix.h>
 
-template<uint8_t N>
+template<uint8_t dim_state, uint8_t dim_observation>
 class KalmanFilter
 {
 public:
@@ -15,56 +15,74 @@ public:
     KalmanFilter() = default;
 
     //! Setter for _system_vector
-    void setSystemVector(const OurVector<N>& other) { _system_vector = other; }
+    void setSystemVector(const OurVector<dim_state>& other) { _system_vector = other; }
 
     //! Setter for _state_transition_matrix
-    void setStateMatrix(const OurMatrix<N, N>& other) { _state_transition_matrix = other; }
+    void setStateMatrix(const OurMatrix<dim_state, dim_state>& other) { _state_transition_matrix = other; }
     //! Setter for _observation_matrix
-    void setObservationMatrix(const OurMatrix<N, 1>& other) { _observation_matrix = other; }
+    void setObservationMatrix(const OurMatrix<dim_state, dim_observation>& other) { _observation_matrix = other; }
     //! Setter for _error_covariance_matrix
-    void setErrorCovarianceMatrix(const OurMatrix<N, N>& other) { _error_covariance_matrix = other; }
+    void setErrorCovarianceMatrix(const OurMatrix<dim_state, dim_state>& other) { _error_covariance_matrix = other; }
     //! Setter for _state_covariance_matrix
-    void setStateCovarianceMatrix(const OurMatrix<N, N>& other) { _state_covariance_matrix = other; }
+    void setStateCovarianceMatrix(const OurMatrix<dim_state, dim_state>& other) { _state_covariance_matrix = other; }
     //! Setter for _noise_covariance_matrix
-    void setNoiseCovarianceMatrix(const OurMatrix<N, N>& other) { _noise_covariance_matrix = other; }
+    void setNoiseCovarianceMatrix(const OurMatrix<dim_state, dim_state>& other) { _noise_covariance_matrix = other; }
 
     //! Predicts model values
     void predict(double time_delta);
     //! Corrects model values
-    OurVector<N> correct(const OurVector<3>& state_vector);
+    OurVector<dim_state> correct(const OurVector<3>& state_vector);
 private:
-    OurVector<N> _system_vector;              // x
-    OurMatrix<N, N> _state_transition_matrix; // F
-    OurMatrix<N, N> _error_covariance_matrix; // Q
-    OurMatrix<N, N> _state_covariance_matrix; // P
-    OurMatrix<N, 1> _observation_matrix;      // H
-    OurMatrix<N, N> _noise_covariance_matrix; // R
+    void calculateStateMatrix(double time_delta);
+
+private:
+    OurVector<dim_state> _system_vector;                       // x
+    OurMatrix<dim_state, dim_state> _state_transition_matrix;  // F
+    OurMatrix<dim_state, dim_state> _error_covariance_matrix;  // Q
+    OurMatrix<dim_state, dim_state> _state_covariance_matrix;  // P
+    OurMatrix<dim_state, dim_state> _noise_covariance_matrix;  // R
+    OurMatrix<dim_state, dim_observation> _observation_matrix; // H
 };
 
-
-template<uint8_t N>
-void KalmanFilter<N>::predict(double time_delta)
-{
-    _system_vector = _state_transition_matrix * _system_vector;
-    _state_covariance_matrix = _state_transition_matrix *
-                               _state_covariance_matrix * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
-
-}
-
-
-template<uint8_t N>
-OurVector<N> KalmanFilter<N>::correct(const OurVector<3> &state_vector)
-{
-    OurMatrix<N, N> identity_matrix;
+template<uint8_t dim_state, uint8_t dim_observation>
+OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<3> &state_vector) {
+    OurMatrix<dim_state, dim_state> identity_matrix;
     identity_matrix.setIdentity();
-    OurMatrix<N, N> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
-                        + _noise_covariance_matrix;
-    OurMatrix<N, N> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
-    OurVector<N> Y = state_vector - _observation_matrix * _system_vector;
+    OurMatrix<dim_state, dim_state> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
+                                        + _noise_covariance_matrix;
+    OurMatrix<dim_state, dim_state> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
+    OurVector<dim_state> Y = state_vector - (_system_vector * _observation_matrix);
     _system_vector = _system_vector + (K * Y);
     _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 
     return _system_vector;
 }
+
+template<uint8_t dim_state, uint8_t dim_observation>
+void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
+{
+    calculateStateMatrix(time_delta);
+
+    _system_vector = _state_transition_matrix * _system_vector;
+    _state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix
+                               * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
+}
+
+template<uint8_t dim_state, uint8_t dim_observation>
+void KalmanFilter<dim_state, dim_observation>::calculateStateMatrix(double time_delta)
+{
+    for (uint8_t i = 0; i < dim_state; ++i)
+    {
+        _observation_matrix[i][i] = 1;
+    }
+
+    for (uint8_t i = 0; i < dim_state - 1; ++i)
+    {
+        _observation_matrix[i][i + 1] = time_delta;
+    }
+
+    _observation_matrix[0][2] = 0.5 * time_delta * time_delta;
+}
+
 
 #endif // MLAT_KALMAN_FILTER_H
