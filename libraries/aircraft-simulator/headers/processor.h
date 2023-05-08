@@ -10,6 +10,7 @@
 #include <equation_solver.h>
 #include <plotter.h>
 #include <random>
+#include <motion_filter.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -59,6 +60,9 @@ public:
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
 
+    //! Set samplerate
+    void setSampleRate(double sample_rate);
+
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
     * using overdeterminated system of nonlinear equation
@@ -67,12 +71,20 @@ public:
     */
     void process();
 private:
+    //! TOA
     std::map<uint16_t, double> _towers_toa;
+    //! Towers
     std::map<uint16_t, Tower> _towers;
+    //! Towers position
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
+    //! Solver for non-linear equation system
     EquationSolver _solver;
+    //! Object which draws plots
     Plotter* _plt;
+    //! Noise generator
     NoizeGenerator* _noise;
+    //! Estimation
+    MlatEstimation _estim;
 };
 
 

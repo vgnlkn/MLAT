@@ -1,5 +1,5 @@
 #include <processor.h>
-
+#include <iostream>
 
 void Processor::initSolver()
 {
@@ -22,7 +22,15 @@ void Processor::process()
     calculateTDOA(tdoas);
 
     OurVector<3> coords = _solver.solve(tdoas);
+    OurVector<9> aircraft_trajectory_estimation = 
+        _estim.estimatedState(coords);
+
+    coords[0] = aircraft_trajectory_estimation[0];
+    coords[1] = aircraft_trajectory_estimation[3];
+    coords[2] = aircraft_trajectory_estimation[6];
+    std::cout << coords << std::endl;
     addPoint(coords);
+    
 }
 
 void Processor::setTower(uint16_t id, const Tower& tower)
@@ -30,6 +38,11 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _towers[id] = tower;
     _towers_coordinates[id] = tower.getPosition();
     _solver.setTowersCoordinates(_towers_coordinates);
+}
+
+void Processor::setSampleRate(double sample_rate)
+{
+    _estim.updateStateMatrix(sample_rate);
 }
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)

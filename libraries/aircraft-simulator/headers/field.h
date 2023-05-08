@@ -26,13 +26,21 @@ public:
         _towers(new Tower[TOWERS_COUNT]),
         _current_position(start), 
         _plt_mlat(nullptr), _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT) {}
+        _tower_count(TOWERS_COUNT),
+        _sample_rate(0.1f / kilometer)
+    {
+        _processor.setSampleRate(_sample_rate);
+    }
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft): 
         _aircraft(aircraft), 
         _towers(new Tower[TOWERS_COUNT]),
         _plt_mlat(nullptr), _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT) {}
+        _tower_count(TOWERS_COUNT),
+        _sample_rate(0.1f / kilometer)
+    {
+        _processor.setSampleRate(_sample_rate);
+    }
     //! Destructor
     ~Field() { if (_towers) delete[] _towers; };
 
@@ -87,6 +95,8 @@ private:
     Plotter* _plt_mlat;
     //! Plotter object
     Plotter* _plt_flight;
+    //! Sample rate
+    double _sample_rate;
 };
 
 

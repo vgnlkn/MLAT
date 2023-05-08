@@ -4,7 +4,11 @@
 Field::Field() :
         _towers(new Tower[TOWERS_COUNT]),
         _plt_mlat(nullptr), _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT) {}
+        _tower_count(TOWERS_COUNT),
+        _sample_rate(0.1f / kilometer)
+{
+    _processor.setSampleRate(_sample_rate);
+}
 
 void Field::startMovement()
 {
@@ -33,7 +37,7 @@ void Field::initialize()
 void Field::updateAircraftPosition()
 {
     _current_position = _current_position +
-                        _aircraft.getSpeed() * (0.1f / kilometer);
+                        _aircraft.getSpeed() * _sample_rate;
 }
 
 void Field::updateAircraftSpeed()
