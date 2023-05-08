@@ -1,49 +1,77 @@
 #include <matrix.h>
 #include <vector.h>
 #include <iostream>
+#include <random>
+#include <cmath>
+#include <motion_filter.h>
+
+
+class Motion
+{
+public:
+	Motion(double x0, double v0, double a0):
+		x(x0), v(v0), a(a0)
+	{
+
+	}
+
+	void update(double time_delta)
+	{
+		x += v * time_delta + a * time_delta * time_delta * 0.5;
+		v += a * time_delta;
+	}
+
+public:
+	double x, v, a;
+};
 
 int main()
 {
-	std::cout << "Hello world" << std::endl;
-	OurMatrix<3, 4> m;
-	std::cout << m << std::endl;
-	std::cout << std::endl;
+    std::vector<double> real_values, noise_values;
 
-	OurMatrix<3, 4> n;
-	std::cout <<n << std::endl;
-	std::cout << std::endl;
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::normal_distribution<> d{0, 1e-5};
+	std::vector<double> x, v, a;
 
-	OurMatrix<3, 4> k = m + n;
-	std::cout << k << std::endl;
-	std::cout << std::endl;
-	std::cout << k * 5 << std::endl;
-	std::cout << std::endl;
+	const int iterarions = 1e5;
+	double time_delta = 1e-4;
+	Motion motion(0, 0, 10);
+	MotionFilter mfilter;
+	OurVector<1> observation;
+	OurVector<3> state;
+	state[0] = motion.x;
+	state[1] = motion.v;
+	state[2] = motion.a;
+	//mfilter.setInitial(state);
+	//motion.update(time_delta);
+	for (int i = 0; i < iterarions; ++i)
+	{
 
-	std::cout << 10*k*5 << std::endl;
-	std::cout << std::endl;
+        real_values.push_back(motion.x);
+        motion.x += d(gen);
+		motion.update(time_delta);
 
-	OurVector<4> vec;
-	for (int i = 0; i < 4; ++i)
-		vec[i] = i;
-	std::cout << "VEC_1: " << vec << std::endl;
+        noise_values.push_back(motion.x);
 
-	
+        observation[0] = motion.x;
 
-	auto vec2 = k * vec;
-	std::cout << "k * VEC_1: " << vec2 << std::endl;
-	std::cout << std::endl;
-	OurVector<3> vec_3;
-	for (int i = 0; i < 3; ++i)
-		vec_3[i] = i;
-	auto vec4 = vec_3 * k;
-	std::cout << std::endl;
+		state = mfilter.filter(observation);
+		x.push_back(state[0]);
+		v.push_back(state[1]);
+		a.push_back(state[2]);
+	}
 
-	std::cout << k << std::endl;
-	std::cout << std::endl;
+//	std::cout << (*(v.end() - 1) / 3)* (*(v.end() - 1) / 3) << std::endl;
+	double* xp = x.data();
+	double* xr = real_values.data();
+	double* vp = v.data();
+	double* ap = a.data();
 
-	std::cout << "VEC_3: " << vec_3 << std::endl;
-	std::cout << std::endl;
-	std::cout << "VECC: " << vec4 << std::endl;
-	std::cout << std::endl;
+	for (int i = 0; i < real_values.size(); ++i)
+	{
+		std::cout << std::abs(real_values[i] - x[i]) << std::endl;
+	}
+
 	return 0;
 }

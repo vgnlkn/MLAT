@@ -7,7 +7,11 @@ add_library (Math
     equation_solver.h
     matrix.h
     src/equation_solver.cpp
-        ../../applications/utilities/defines.h)
+        ../../applications/utilities/defines.h 
+	kalman_filter.h
+	motion_filter.h
+    src/motion_filter.cpp
+)
 
 find_package(GTest)
 if (${GTest_FOUND})
