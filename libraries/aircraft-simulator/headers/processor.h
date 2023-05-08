@@ -38,7 +38,7 @@ class Processor
 {
 public:
     //! Constructor
-    inline Processor() : _plt(nullptr), _noise(new NoizeGenerator) {}
+    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _noise(new NoizeGenerator) {}
     //! Destructor
     inline ~Processor() { if (_noise) { delete _noise; } }
     //! Initialize solver
@@ -52,10 +52,10 @@ public:
 
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
-    //! Setter for _plt
-    void setPlotter(Plotter* plt) { _plt = plt; }
-    //! Adds a point to the graph
-    void addPoint(const OurVector<3>& coords);
+    //! Setter for _plt_mlat
+    void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
+    //! Setter for _plt_filter
+    void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
 
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
@@ -79,8 +79,10 @@ private:
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
     //! Solver for non-linear equation system
     EquationSolver _solver;
-    //! Object which draws plots
-    Plotter* _plt;
+    //! Object which draws plots with direct problem
+    Plotter* _plt_mlat;
+    //! Object which draws plots with inverse problem
+    Plotter* _plt_filter;
     //! Noise generator
     NoizeGenerator* _noise;
     //! Estimation

@@ -25,7 +25,7 @@ public:
     explicit Field(const OurVector<3>& start): 
         _towers(new Tower[TOWERS_COUNT]),
         _current_position(start), 
-        _plt_mlat(nullptr), _plt_flight(nullptr),
+        _plt_flight(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(0.1f / kilometer)
     {
@@ -35,7 +35,7 @@ public:
     explicit Field(const Aircraft& aircraft): 
         _aircraft(aircraft), 
         _towers(new Tower[TOWERS_COUNT]),
-        _plt_mlat(nullptr), _plt_flight(nullptr),
+        _plt_flight(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(0.1f / kilometer)
     {
@@ -72,7 +72,9 @@ public:
 
     //! Methods to work with plotter
     //! Setting MLAT plotter
-    void setPlotterMLAT(Plotter* plt) { _plt_mlat = plt; _processor.setPlotter(plt); }
+    void setPlotterMLAT(Plotter* plt) { _processor.setPlotterMlat(plt); }
+    //! Setting Filter plotter
+    void setPlotterFilter(Plotter* plt) { _processor.setPlotterFilter(plt); }
     //! Setting flight plotter
     void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
     //! Getter of _processor
@@ -92,7 +94,7 @@ private:
     //! Class that manage tower time
     Processor _processor;
     //! Plotter object
-    Plotter* _plt_mlat;
+    // Plotter* _plt_mlat;
     //! Plotter object
     Plotter* _plt_flight;
     //! Sample rate

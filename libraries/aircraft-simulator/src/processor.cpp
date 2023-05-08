@@ -17,6 +17,18 @@ void Processor::addTOA(uint16_t id, double TOA)
 
 void Processor::process()
 {
+    auto addPoint = [](const OurVector<3>& coords, Plotter* plt)
+    {
+        if (plt)
+        {
+            if (coords[0] == coords[0] && coords[1] == coords[1]
+                && coords[2] == coords[2])
+            {
+                plt->addPoint(coords[0], coords[1], coords[2]);
+            }
+        }
+    };
+
     OurVector<EQUATIONS_COUNT> tdoas;
     uint16_t k = 0;
     calculateTDOA(tdoas);
@@ -25,12 +37,13 @@ void Processor::process()
     OurVector<9> aircraft_trajectory_estimation = 
         _estim.estimatedState(coords);
 
-    coords[0] = aircraft_trajectory_estimation[0];
-    coords[1] = aircraft_trajectory_estimation[3];
-    coords[2] = aircraft_trajectory_estimation[6];
-    std::cout << coords << std::endl;
-    addPoint(coords);
-    
+    OurVector<3> filter_coords;
+    filter_coords[0] = aircraft_trajectory_estimation[0];
+    filter_coords[1] = aircraft_trajectory_estimation[3];
+    filter_coords[2] = aircraft_trajectory_estimation[6];
+
+    addPoint(coords, _plt_mlat);
+    addPoint(filter_coords, _plt_filter);
 }
 
 void Processor::setTower(uint16_t id, const Tower& tower)
@@ -57,18 +70,6 @@ void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
             tdoas[k++] = _towers_toa[i] + noize(i) - _towers_toa[j] + noize(j);
-        }
-    }
-}
-
-void Processor::addPoint(const OurVector<3>& coords)
-{
-    if (_plt)
-    {
-        if (coords[0] == coords[0] && coords[1] == coords[1]
-            && coords[2] == coords[2])
-        {
-            _plt->addPoint(coords[0], coords[1], coords[2]);
         }
     }
 }

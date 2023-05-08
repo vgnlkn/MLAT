@@ -8,5 +8,6 @@ add_executable (simulator
 target_link_libraries (simulator AircraftSimulator)
 target_link_libraries (simulator Math)
 
-target_compile_definitions(simulator PUBLIC STOCK_PATH1="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/mlat.txt")
-target_compile_definitions(simulator PUBLIC STOCK_PATH2="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/real.txt")
+target_compile_definitions(simulator PUBLIC STOCK_PATH_MLAT="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/mlat.txt")
+target_compile_definitions(simulator PUBLIC STOCK_PATH_REAL="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/real.txt")
+target_compile_definitions(simulator PUBLIC STOCK_PATH_FILTER="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/filter.txt")

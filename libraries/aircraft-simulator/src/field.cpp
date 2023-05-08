@@ -3,7 +3,7 @@
 
 Field::Field() :
         _towers(new Tower[TOWERS_COUNT]),
-        _plt_mlat(nullptr), _plt_flight(nullptr),
+        _plt_flight(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(0.1f / kilometer)
 {
