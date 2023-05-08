@@ -35,7 +35,7 @@ void Aircraft::calculateNewSpeed()
 {
     for (uint8_t i = 0; i < 3; ++i)
     {
-        _state[i][0] += _state[i][1];
+        _state[i][0] += _state[i][1] * _time_delta;
     }
 }
 

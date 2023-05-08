@@ -6,6 +6,7 @@
 #include <cmath>
 #include <set>
 
+
 /*! \class Aircraft
  *  \brief Class describing the aircraft.
  *  Describes the aircraft's airspeed, its acceleration
@@ -36,6 +37,11 @@ public:
     void checkSpeed();
     //! Check acceleration of the _aircraft
     void checkAcceleration();
+    //! Setter for time_delta
+    void setTimeDelta(double dt) {
+        _time_delta = 1e-4;
+        //dt; 
+    }
 
     //! Methods to work with signals
     //! Sends signal to tower
@@ -51,6 +57,8 @@ private:
     std::vector<Tower> _towers;
     //! first column - speed of the aircraft, second - acceleration
     OurMatrix<3, 2> _state;
+    //! Time delta between measurements
+    double _time_delta;
 };
 
 

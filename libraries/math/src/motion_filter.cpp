@@ -51,7 +51,7 @@ MlatEstimation::MlatEstimation()
 {
 	//! P
 	OurMatrix<9, 9> covariance_state;
-	covariance_state.setDiagonalValue(1e2);
+	covariance_state.setDiagonalValue(1e4);
 	_filter.setStateCovarianceMatrix(covariance_state);
 
 	//! Q
@@ -61,7 +61,7 @@ MlatEstimation::MlatEstimation()
 	//! R
 	OurMatrix<3, 3> covariance_noise;
 	// эта матрица очень важна
-	covariance_noise.setDiagonalValue(1e2);
+	covariance_noise.setDiagonalValue(0.000001);
 	_filter.setNoiseCovarianceMatrix(covariance_noise);
 
 	//! H

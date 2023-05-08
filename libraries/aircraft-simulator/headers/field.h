@@ -7,7 +7,8 @@
 #include <chrono>
 #include <thread>
 
-const double kilometer = 1000.f;
+static const double kilometer = 1000.f;
+static const double k_sample_rate = 0.1f / kilometer;
 
 
 /*! \class Field
@@ -27,9 +28,10 @@ public:
         _current_position(start), 
         _plt_flight(nullptr),
         _tower_count(TOWERS_COUNT),
-        _sample_rate(0.1f / kilometer)
+        _sample_rate(k_sample_rate)
     {
         _processor.setSampleRate(_sample_rate);
+        _aircraft.setTimeDelta(_sample_rate);
     }
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft): 
@@ -37,9 +39,10 @@ public:
         _towers(new Tower[TOWERS_COUNT]),
         _plt_flight(nullptr),
         _tower_count(TOWERS_COUNT),
-        _sample_rate(0.1f / kilometer)
+        _sample_rate(k_sample_rate)
     {
         _processor.setSampleRate(_sample_rate);
+        _aircraft.setTimeDelta(_sample_rate);
     }
     //! Destructor
     ~Field() { if (_towers) delete[] _towers; };
