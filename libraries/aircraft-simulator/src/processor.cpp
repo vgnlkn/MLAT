@@ -1,6 +1,9 @@
 #include <processor.h>
 #include <iostream>
 
+static const uint32_t k_duration_interval = 100;
+static const uint32_t k_duration_overstatement = 0.2 * k_duration_interval;
+
 void Processor::initSolver()
 {
     OurVector<3> init;
@@ -46,13 +49,14 @@ void Processor::process()
 
     if (_iteration % 100 == 0)
     {
+        _overstatement = 0;
         _mlat_average.setValue(0);
         _mlat_min = coords;
         _mlat_max = coords;
         _kalman_average.setValue(0);
         _iteration = 1;
     }
-
+   
     for (int i = 0; i < 3; ++i)
     {
         if (coords[i] < _mlat_min[i])
@@ -65,8 +69,13 @@ void Processor::process()
         }
         if (std::abs(_mlat_average[i] - _kalman_average[i]) > _iteration++ * std::abs(_mlat_min[i] - _mlat_max[i]))
         {
-            std::cout << "Restart filter." << std::endl;
+            _overstatement++;
         }
+    }
+
+    if (_overstatement > k_duration_overstatement)
+    {
+        std::cout << "Restart filter." << std::endl;
     }
 
     addPoint(coords, _plt_mlat);

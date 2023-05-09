@@ -93,6 +93,8 @@ private:
     OurVector<3> _mlat_min, _mlat_max;
     //! Counter for iterations
     uint32_t _iteration;
+    //! Overstatement
+    uint32_t _overstatement;
 
 };
 
