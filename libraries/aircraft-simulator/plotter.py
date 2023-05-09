@@ -6,7 +6,7 @@ fig = plt.figure()
 ax = plt.axes(projection='3d')
 
 
-def read(data_mlat, data_real, data_filter):
+def read(data_mlat: list, data_real: list, data_filter: list):
     xs1, ys1, zs1 = [], [], []
     xs2, ys2, zs2 = [], [], []
     xs3, ys3, zs3 = [], [], []
@@ -30,6 +30,26 @@ def read(data_mlat, data_real, data_filter):
         zs3.append(float(z3))
 
     return xs1, ys1, zs1, xs2, ys2, zs2, xs3, ys3, zs3
+
+
+def read_speed(data_filter_speed: list, data_real_speed: list):
+    xs1, ys1, zs1 = [], [], []
+    xs2, ys2, zs2 = [], [], []
+    for line1, line2 in zip(data_filter_speed, data_real_speed):
+        if line1 == '' or line2 == '':
+            break
+        x1, y1, z1 = line1.split()
+        x2, y2, z2 = line2.split()
+
+        xs1.append(float(x1))
+        ys1.append(float(y1))
+        zs1.append(float(z1))
+
+        xs2.append(float(x2))
+        ys2.append(float(y2))
+        zs2.append(float(z2))
+
+    return xs1, ys1, zs1, xs2, ys2, zs2
 
 
 def animate(i):
@@ -57,9 +77,14 @@ plt.show()
 data_mlat = open(sys.argv[1], 'r').read().split('\n')
 data_real = open(sys.argv[2], 'r').read().split('\n')
 data_filter = open(sys.argv[3], 'r').read().split('\n')
+data_filter_speed = open(sys.argv[4], 'r').read().split('\n')
+data_real_speed = open(sys.argv[5], 'r').read().split('\n')
 
 arr_x_mlat, arr_y_mlat, arr_z_mlat, arr_x_real, arr_y_real, \
     arr_z_real, arr_x_filter, arr_y_filter, arr_z_filter = read(data_mlat, data_real, data_filter)
+
+x_filter_speed, y_filter_speed, z_filter_speed, x_real_speed, y_real_speed, z_real_speed \
+    = read_speed(data_filter_speed, data_real_speed)
 
 
 def draw2D(arr_mlat, arr_real, arr_filter, title):
@@ -102,6 +127,27 @@ def draw_diff(first_arr, second_arr, title):
     plt.show()
 
 
+def draw2D_speed(arr_filter: list, arr_real: list, coordinate: str) -> None:
+    plt.plot(arr_real, label='Real')
+    plt.plot(arr_filter, label='Filter')
+
+    plt.title(f'{coordinate} speed')
+
+    plt.ylabel('m/s')
+    plt.xlabel('iteration number')
+
+    # Display the legend
+    plt.legend()
+
+    # Show the plot
+    plt.show()
+
+
+draw2D_speed(x_filter_speed, x_real_speed, 'x')
+draw2D_speed(y_filter_speed, y_real_speed, 'y')
+draw2D_speed(z_filter_speed, z_real_speed, 'z')
+
+'''
 draw2D(arr_x_mlat, arr_x_real, arr_x_filter, 'Coordinates of the aircraft on the axis x')
 draw_diff(arr_x_mlat, arr_x_real, 'Modulus of difference on the axis x')
 
@@ -110,3 +156,4 @@ draw_diff(arr_y_mlat, arr_y_real, 'Modulus of difference on the axis y')
 
 draw2D(arr_z_mlat, arr_z_real, arr_z_filter, 'Coordinates of the aircraft on the axis z')
 draw_diff(arr_z_mlat, arr_z_real, 'Modulus of difference on the axis z')
+'''

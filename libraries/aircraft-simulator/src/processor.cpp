@@ -39,10 +39,17 @@ void Processor::process()
     OurVector<9> aircraft_trajectory_estimation = 
         _estim.estimatedState(coords);
 
-    OurVector<3> filter_coords;
-    filter_coords[0] = aircraft_trajectory_estimation[0];
-    filter_coords[1] = aircraft_trajectory_estimation[3];
-    filter_coords[2] = aircraft_trajectory_estimation[6];
+    auto fillVector = [=](OurVector<3>& vector, uint8_t i)
+    {
+        vector[0] = aircraft_trajectory_estimation[i];
+        vector[1] = aircraft_trajectory_estimation[i + 3];
+        vector[2] = aircraft_trajectory_estimation[i + 6];
+    };
+
+    OurVector<3> filter_coords, filter_speed;
+    fillVector(filter_coords, 0);
+    fillVector(filter_speed, 1);
+
 
     _mlat_average = coords + _mlat_average;
     _kalman_average = filter_coords + _kalman_average;
@@ -86,6 +93,7 @@ void Processor::process()
 
     addPoint(coords, _plt_mlat);
     addPoint(filter_coords, _plt_filter);
+    addPoint(filter_speed, _plt_filter_speed);
 }
 
 void Processor::setTower(uint16_t id, const Tower& tower)
