@@ -10,6 +10,7 @@
 #include <equation_solver.h>
 #include <plotter.h>
 #include <random>
+#include <motion_filter.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -37,7 +38,8 @@ class Processor
 {
 public:
     //! Constructor
-    inline Processor() : _plt(nullptr), _noise(new NoizeGenerator) {}
+    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr),
+    _plt_filter_speed(nullptr), _noise(new NoizeGenerator), _iteration(1) {}
     //! Destructor
     inline ~Processor() { if (_noise) { delete _noise; } }
     //! Initialize solver
@@ -51,13 +53,18 @@ public:
 
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
-    //! Setter for _plt
-    void setPlotter(Plotter* plt) { _plt = plt; }
-    //! Adds a point to the graph
-    void addPoint(const OurVector<3>& coords);
+    //! Setter for _plt_mlat
+    void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
+    //! Setter for _plt_filter
+    void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
+    //! Setter for _plt_filter_speed
+    void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
 
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
+
+    //! Set samplerate
+    void setSampleRate(double sample_rate);
 
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
@@ -67,12 +74,33 @@ public:
     */
     void process();
 private:
+    //! TOA
     std::map<uint16_t, double> _towers_toa;
+    //! Towers
     std::map<uint16_t, Tower> _towers;
+    //! Towers position
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
+    //! Solver for non-linear equation system
     EquationSolver _solver;
-    Plotter* _plt;
+    //! Object which draws plots with direct problem
+    Plotter* _plt_mlat;
+    //! Object which draws plots with inverse problem
+    Plotter* _plt_filter;
+    //! Array for speed plots(first - filter, second - real)
+    Plotter* _plt_filter_speed;
+    //! Noise generator
     NoizeGenerator* _noise;
+    //! Estimation
+    MlatEstimation _estim;
+    //! Average coordinates
+    OurVector<3> _mlat_average, _kalman_average;
+    //! Vectors, necessery to calculate amplitude
+    OurVector<3> _mlat_min, _mlat_max;
+    //! Counter for iterations
+    uint32_t _iteration;
+    //! Overstatement
+    uint32_t _overstatement;
+
 };
 
 
