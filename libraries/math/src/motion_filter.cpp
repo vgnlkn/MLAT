@@ -99,3 +99,11 @@ OurVector<9> MlatEstimation::estimatedState(OurVector<3>& observation)
 	_filter.predict(_time_delta);
 	return _filter.correct(observation);
 }
+
+void MlatEstimation::reset()
+{
+	//! P
+	OurMatrix<9, 9> covariance_state;
+	covariance_state.setDiagonalValue(1e4);
+	_filter.setStateCovarianceMatrix(covariance_state);
+}

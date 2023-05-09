@@ -44,6 +44,8 @@ public:
 	void initState(OurVector<9>& initial_state);
 	//! Estimated state
 	OurVector<9> estimatedState(OurVector<3>& observation);
+	//! Resetes covariance matrixes;
+	void reset();
 
 private:
 	//! Kalman Filter
