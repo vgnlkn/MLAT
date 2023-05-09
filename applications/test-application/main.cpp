@@ -43,8 +43,7 @@ int main()
 	state[0] = motion.x;
 	state[1] = motion.v;
 	state[2] = motion.a;
-	//mfilter.setInitial(state);
-	//motion.update(time_delta);
+
 	for (int i = 0; i < iterarions; ++i)
 	{
 
@@ -62,7 +61,6 @@ int main()
 		a.push_back(state[2]);
 	}
 
-//	std::cout << (*(v.end() - 1) / 3)* (*(v.end() - 1) / 3) << std::endl;
 	double* xp = x.data();
 	double* xr = real_values.data();
 	double* vp = v.data();

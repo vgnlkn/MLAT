@@ -85,15 +85,11 @@ void Field::checkHeight()
 
 void Field::decreaseVerticalSpeed()
 {
-    //OurVector<3> new_speed = _aircraft.getSpeed();
-
     OurVector<3> new_acceleration = _aircraft.getAcceleration();
     new_acceleration[2] = new_acceleration[2] > 1e-4 ? new_acceleration[2] / 1.5f : new_acceleration[2] - 1e-5;
 
     _aircraft.setAcceleration(new_acceleration);
     _aircraft.calculateNewSpeed();
-
-    //_aircraft.setSpeed(new_speed);
 }
 
 void Field::stopVerticalSpeed()

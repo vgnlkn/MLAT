@@ -1,8 +1,4 @@
 #include <processor.h>
-#include <iostream>
-
-static const uint32_t k_duration_interval = 100;
-static const uint32_t k_duration_overstatement = 0.05 * k_duration_interval;
 
 void Processor::initSolver()
 {
@@ -53,7 +49,6 @@ void Processor::process()
 
     _mlat_average = coords + _mlat_average;
     _kalman_average = filter_coords + _kalman_average;
-    std::cout << aircraft_trajectory_estimation[8] << std::endl;
     if (_iteration % 100 == 0)
     {
         _overstatement = 0;
@@ -82,7 +77,6 @@ void Processor::process()
 
     if (_overstatement > k_duration_overstatement)
     {
-        std::cout << _overstatement << ") Restart filter." << std::endl;
         aircraft_trajectory_estimation[8] = 0;
         aircraft_trajectory_estimation[5] = 0;
         aircraft_trajectory_estimation[2] = 0;

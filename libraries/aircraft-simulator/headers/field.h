@@ -7,9 +7,6 @@
 #include <chrono>
 #include <thread>
 
-static const double kilometer = 1000.f;
-static const double k_sample_rate = 1e-1;
-
 
 /*! \class Field
 *   \brief The class in which the flight is simulated.

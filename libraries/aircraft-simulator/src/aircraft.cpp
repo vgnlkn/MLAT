@@ -11,7 +11,7 @@ Aircraft::Aircraft(const OurVector<3> &acceleration) :
 }
 
 Aircraft::Aircraft(const Aircraft &other) :
-    _time_delta(1.)
+    _time_delta(1.f)
 {
     _towers.reserve(TOWERS_COUNT);
     _state = other._state;

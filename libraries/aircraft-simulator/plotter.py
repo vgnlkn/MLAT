@@ -87,7 +87,7 @@ x_filter_speed, y_filter_speed, z_filter_speed, x_real_speed, y_real_speed, z_re
     = read_speed(data_filter_speed, data_real_speed)
 
 
-def draw2D(arr_mlat, arr_real, arr_filter, title):
+def draw2D(arr_mlat: list, arr_real: list, arr_filter: list, title: str):
     plt.plot(arr_mlat, label='MLAT')
     plt.plot(arr_real, label='Real')
     plt.plot(arr_filter, label='Inverse problem')
@@ -104,7 +104,7 @@ def draw2D(arr_mlat, arr_real, arr_filter, title):
     plt.show()
 
 
-def count_diff(first_arr, second_arr):
+def count_diff(first_arr: list, second_arr: list) -> list:
     diff = []
 
     for i in range(min(len(first_arr), len(second_arr))):
@@ -113,7 +113,7 @@ def count_diff(first_arr, second_arr):
     return diff
 
 
-def draw_diff(first_arr, second_arr, title):
+def draw_diff(first_arr: list, second_arr: list, title: str):
     diff = count_diff(first_arr, second_arr)
     iterations = [int(i) for i in range(len(diff))]
 
@@ -127,25 +127,31 @@ def draw_diff(first_arr, second_arr, title):
     plt.show()
 
 
-def draw2D_speed(arr_filter: list, arr_real: list, coordinate: str) -> None:
-    plt.plot(arr_real, label='Real')
-    plt.plot(arr_filter, label='Filter')
+fig, axs = plt.subplots(3, 1, figsize=(8, 10))
 
-    plt.title(f'{coordinate} speed')
+# Plot for x
+axs[0].plot(x_real_speed, label='Real')
+axs[0].plot(x_filter_speed, label='Filter')
+axs[0].set_title('x speed')
+axs[0].set_ylabel('m/s')
+axs[0].legend()
 
-    plt.ylabel('m/s')
-    plt.xlabel('iteration number')
+# Plot for y
+axs[1].plot(y_real_speed, label='Real')
+axs[1].plot(y_filter_speed, label='Filter')
+axs[1].set_title('y speed')
+axs[1].set_ylabel('m/s')
+axs[1].legend()
 
-    # Display the legend
-    plt.legend()
+# Plot for z
+axs[2].plot(z_real_speed, label='Real')
+axs[2].plot(z_filter_speed, label='Filter')
+axs[2].set_title('z speed')
+axs[2].set_ylabel('m/s')
+axs[2].set_xlabel('iteration number')
+axs[2].legend()
 
-    # Show the plot
-    plt.show()
-
-
-draw2D_speed(x_filter_speed, x_real_speed, 'x')
-draw2D_speed(y_filter_speed, y_real_speed, 'y')
-draw2D_speed(z_filter_speed, z_real_speed, 'z')
+plt.show()
 
 '''
 draw2D(arr_x_mlat, arr_x_real, arr_x_filter, 'Coordinates of the aircraft on the axis x')

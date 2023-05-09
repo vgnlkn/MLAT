@@ -7,8 +7,6 @@
 #include <stack>
 #include <cmath>
 
-static const double waveSpeed = 300000.f;
-
 
 /*! \class Tower
 *   \brief Tower class

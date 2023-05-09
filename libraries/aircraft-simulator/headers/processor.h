@@ -18,7 +18,7 @@
 class NoizeGenerator
 {
 public:
-    inline NoizeGenerator(): _rd(), _gen(_rd()), _distribution(0, 0.000001) {}
+    inline NoizeGenerator(): _rd(), _gen(_rd()), _distribution(0, 1e-6) {}
     inline double generate() { return _distribution(_gen); }
 
 private:
