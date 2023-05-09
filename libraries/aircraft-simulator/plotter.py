@@ -42,7 +42,7 @@ def animate(i):
     ax.clear()
     ax.plot(xs1, ys1, zs1, label='MLAT', color='blue')
     ax.plot(xs2, ys2, zs2, label='Real values', color='red')
-    ax.plot(xs3, ys3, zs3, label='Inverse problem', color='yellow')
+    ax.plot(xs3, ys3, zs3, label='Inverse problem', color='black')
 
     ax.set_xlabel('x, km')
     ax.set_ylabel('y, km')

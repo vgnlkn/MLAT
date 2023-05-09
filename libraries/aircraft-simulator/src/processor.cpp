@@ -30,7 +30,6 @@ void Processor::process()
     };
 
     OurVector<EQUATIONS_COUNT> tdoas;
-    uint16_t k = 0;
     calculateTDOA(tdoas);
 
     OurVector<3> coords = _solver.solve(tdoas);

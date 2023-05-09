@@ -97,8 +97,6 @@ private:
     //! Class that manage tower time
     Processor _processor;
     //! Plotter object
-    // Plotter* _plt_mlat;
-    //! Plotter object
     Plotter* _plt_flight;
     //! Sample rate
     double _sample_rate;

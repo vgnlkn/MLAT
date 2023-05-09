@@ -38,10 +38,7 @@ public:
     //! Check acceleration of the _aircraft
     void checkAcceleration();
     //! Setter for time_delta
-    void setTimeDelta(double dt) {
-        _time_delta = 1e-4;
-        //dt; 
-    }
+    void setTimeDelta(double dt) { _time_delta = dt;}
 
     //! Methods to work with signals
     //! Sends signal to tower
