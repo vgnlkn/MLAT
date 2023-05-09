@@ -73,11 +73,11 @@ void Field::updatePlot()
 
 void Field::checkHeight()
 {
-    if (_current_position[2] > 11.5f && _aircraft.getSpeed()[2] > 0.f)
+    if (_current_position[2] > 10.f && _aircraft.getSpeed()[2] > 0.f)
     {
         decreaseVerticalSpeed();
     }
-    if (_aircraft.getSpeed()[2] < -1.f)
+    if (_aircraft.getSpeed()[2] < -0.1f)
     {
         stopVerticalSpeed();
     }
@@ -85,14 +85,15 @@ void Field::checkHeight()
 
 void Field::decreaseVerticalSpeed()
 {
-    OurVector<3> new_speed = _aircraft.getSpeed();
-    new_speed[2] /= 16;
+    //OurVector<3> new_speed = _aircraft.getSpeed();
 
     OurVector<3> new_acceleration = _aircraft.getAcceleration();
-    new_acceleration[2] = new_acceleration[2] < 0.f ? new_acceleration[2] : -new_acceleration[2];
+    new_acceleration[2] = new_acceleration[2] > 1e-4 ? new_acceleration[2] / 1.5f : new_acceleration[2] - 1e-5;
 
-    _aircraft.setSpeed(new_speed);
     _aircraft.setAcceleration(new_acceleration);
+    _aircraft.calculateNewSpeed();
+
+    //_aircraft.setSpeed(new_speed);
 }
 
 void Field::stopVerticalSpeed()
