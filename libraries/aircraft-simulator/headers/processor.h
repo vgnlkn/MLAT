@@ -38,7 +38,8 @@ class Processor
 {
 public:
     //! Constructor
-    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _noise(new NoizeGenerator), _iteration(1) {}
+    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr),
+    _plt_filter_speed(nullptr), _noise(new NoizeGenerator), _iteration(1) {}
     //! Destructor
     inline ~Processor() { if (_noise) { delete _noise; } }
     //! Initialize solver
@@ -56,6 +57,8 @@ public:
     void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
     //! Setter for _plt_filter
     void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
+    //! Setter for _plt_filter_speed
+    void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
 
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
@@ -83,6 +86,8 @@ private:
     Plotter* _plt_mlat;
     //! Object which draws plots with inverse problem
     Plotter* _plt_filter;
+    //! Array for speed plots(first - filter, second - real)
+    Plotter* _plt_filter_speed;
     //! Noise generator
     NoizeGenerator* _noise;
     //! Estimation

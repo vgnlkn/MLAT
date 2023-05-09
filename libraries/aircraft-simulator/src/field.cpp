@@ -66,6 +66,8 @@ void Field::updatePlot()
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         _plt_flight->addPoint(_current_position[0], _current_position[1],
                               _current_position[2]);
+        _plt_speed->addPoint(_aircraft.getSpeed()[0], _aircraft.getSpeed()[1],
+                             _aircraft.getSpeed()[2]);
     }
 }
 

@@ -27,6 +27,7 @@ public:
         _towers(new Tower[TOWERS_COUNT]),
         _current_position(start), 
         _plt_flight(nullptr),
+        _plt_speed(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
@@ -38,6 +39,7 @@ public:
         _aircraft(aircraft), 
         _towers(new Tower[TOWERS_COUNT]),
         _plt_flight(nullptr),
+        _plt_speed(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
@@ -78,8 +80,12 @@ public:
     void setPlotterMLAT(Plotter* plt) { _processor.setPlotterMlat(plt); }
     //! Setting Filter plotter
     void setPlotterFilter(Plotter* plt) { _processor.setPlotterFilter(plt); }
+    //! Setting Filter plotter speed
+    void setPlotterFilterSpeed(Plotter* plt) { _processor.setPlotterFilterSpeed(plt); }
     //! Setting flight plotter
     void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
+    //! Setting speed plotter
+    void setPlotterSpeed(Plotter* plt) { _plt_speed = plt; }
     //! Getter of _processor
     void updatePlot();
     //! Process Signals
@@ -96,8 +102,10 @@ private:
     uint16_t _tower_count;
     //! Class that manage tower time
     Processor _processor;
-    //! Plotter object
+    //! Plotter object for coordinates
     Plotter* _plt_flight;
+    //! Plotter object for speed
+    Plotter* _plt_speed;
     //! Sample rate
     double _sample_rate;
 };
