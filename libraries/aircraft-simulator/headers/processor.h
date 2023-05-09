@@ -38,7 +38,7 @@ class Processor
 {
 public:
     //! Constructor
-    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _noise(new NoizeGenerator) {}
+    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _noise(new NoizeGenerator), _iteration(1) {}
     //! Destructor
     inline ~Processor() { if (_noise) { delete _noise; } }
     //! Initialize solver
@@ -87,6 +87,13 @@ private:
     NoizeGenerator* _noise;
     //! Estimation
     MlatEstimation _estim;
+    //! Average coordinates
+    OurVector<3> _mlat_average, _kalman_average;
+    //! Vectors, necessery to calculate amplitude
+    OurVector<3> _mlat_min, _mlat_max;
+    //! Counter for iterations
+    uint32_t _iteration;
+
 };
 
 

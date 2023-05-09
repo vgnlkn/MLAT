@@ -41,6 +41,34 @@ void Processor::process()
     filter_coords[1] = aircraft_trajectory_estimation[3];
     filter_coords[2] = aircraft_trajectory_estimation[6];
 
+    _mlat_average = coords + _mlat_average;
+    _kalman_average = filter_coords + _kalman_average;
+
+    if (_iteration % 100 == 0)
+    {
+        _mlat_average.setValue(0);
+        _mlat_min = coords;
+        _mlat_max = coords;
+        _kalman_average.setValue(0);
+        _iteration = 1;
+    }
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (coords[i] < _mlat_min[i])
+        {
+            _mlat_min[i] = coords[i];
+        }
+        else if (coords[i] > _mlat_max[i])
+        {
+            _mlat_max[i] = coords[i];
+        }
+        if (std::abs(_mlat_average[i] - _kalman_average[i]) > _iteration++ * std::abs(_mlat_min[i] - _mlat_max[i]))
+        {
+            std::cout << "Restart filter." << std::endl;
+        }
+    }
+
     addPoint(coords, _plt_mlat);
     addPoint(filter_coords, _plt_filter);
 }

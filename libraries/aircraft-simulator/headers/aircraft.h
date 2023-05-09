@@ -16,7 +16,7 @@ class Aircraft
 {
 public:
     //! Empty constructor
-    Aircraft() { _towers.reserve(TOWERS_COUNT); };
+    Aircraft(): _time_delta(1.) { _towers.reserve(TOWERS_COUNT); };
     //! Copy constructor
     Aircraft(const Aircraft& other);
     //! Constructor with acceleration
@@ -38,7 +38,7 @@ public:
     //! Check acceleration of the _aircraft
     void checkAcceleration();
     //! Setter for time_delta
-    void setTimeDelta(double dt) { _time_delta = dt;}
+    void setTimeDelta(double dt) { _time_delta = dt; }
 
     //! Methods to work with signals
     //! Sends signal to tower
