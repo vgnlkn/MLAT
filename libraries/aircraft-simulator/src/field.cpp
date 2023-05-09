@@ -3,13 +3,8 @@
 
 Field::Field() :
         _towers(new Tower[TOWERS_COUNT]),
-        _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-{
-    _processor.setSampleRate(_sample_rate);
-    _aircraft.setTimeDelta(_sample_rate);
-}
+        _plt_mlat(nullptr), _plt_flight(nullptr),
+        _tower_count(TOWERS_COUNT) {}
 
 void Field::startMovement()
 {
@@ -38,7 +33,7 @@ void Field::initialize()
 void Field::updateAircraftPosition()
 {
     _current_position = _current_position +
-                        _aircraft.getSpeed() * _sample_rate;
+                        _aircraft.getSpeed() * (0.1f / kilometer);
 }
 
 void Field::updateAircraftSpeed()
@@ -66,8 +61,6 @@ void Field::updatePlot()
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         _plt_flight->addPoint(_current_position[0], _current_position[1],
                               _current_position[2]);
-        _plt_speed->addPoint(_aircraft.getSpeed()[0], _aircraft.getSpeed()[1],
-                             _aircraft.getSpeed()[2]);
     }
 }
 

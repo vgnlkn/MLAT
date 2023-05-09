@@ -7,8 +7,7 @@
 #include <chrono>
 #include <thread>
 
-static const double kilometer = 1000.f;
-static const double k_sample_rate = 1e-2;
+const double kilometer = 1000.f;
 
 
 /*! \class Field
@@ -26,26 +25,14 @@ public:
     explicit Field(const OurVector<3>& start): 
         _towers(new Tower[TOWERS_COUNT]),
         _current_position(start), 
-        _plt_flight(nullptr),
-        _plt_speed(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-    {
-        _processor.setSampleRate(_sample_rate);
-        _aircraft.setTimeDelta(_sample_rate);
-    }
+        _plt_mlat(nullptr), _plt_flight(nullptr),
+        _tower_count(TOWERS_COUNT) {}
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft): 
         _aircraft(aircraft), 
         _towers(new Tower[TOWERS_COUNT]),
-        _plt_flight(nullptr),
-        _plt_speed(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-    {
-        _processor.setSampleRate(_sample_rate);
-        _aircraft.setTimeDelta(_sample_rate);
-    }
+        _plt_mlat(nullptr), _plt_flight(nullptr),
+        _tower_count(TOWERS_COUNT) {}
     //! Destructor
     ~Field() { if (_towers) delete[] _towers; };
 
@@ -77,15 +64,9 @@ public:
 
     //! Methods to work with plotter
     //! Setting MLAT plotter
-    void setPlotterMLAT(Plotter* plt) { _processor.setPlotterMlat(plt); }
-    //! Setting Filter plotter
-    void setPlotterFilter(Plotter* plt) { _processor.setPlotterFilter(plt); }
-    //! Setting Filter plotter speed
-    void setPlotterFilterSpeed(Plotter* plt) { _processor.setPlotterFilterSpeed(plt); }
+    void setPlotterMLAT(Plotter* plt) { _plt_mlat = plt; _processor.setPlotter(plt); }
     //! Setting flight plotter
     void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
-    //! Setting speed plotter
-    void setPlotterSpeed(Plotter* plt) { _plt_speed = plt; }
     //! Getter of _processor
     void updatePlot();
     //! Process Signals
@@ -102,12 +83,10 @@ private:
     uint16_t _tower_count;
     //! Class that manage tower time
     Processor _processor;
-    //! Plotter object for coordinates
+    //! Plotter object
+    Plotter* _plt_mlat;
+    //! Plotter object
     Plotter* _plt_flight;
-    //! Plotter object for speed
-    Plotter* _plt_speed;
-    //! Sample rate
-    double _sample_rate;
 };
 
 
