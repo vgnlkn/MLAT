@@ -1,8 +1,11 @@
 ﻿#include <motion_filter.h>
 #include <matrix.h>
 
-
-
+static const double k_state = 1e4;
+static const double k_speed = 9000;
+static const double k_z_speed = 1e3;
+static const double k_acceleration = 10;
+static const double k_covariance_noise = 1e-6;
 
 MlatEstimation::MlatEstimation()
 {
