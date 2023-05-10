@@ -1,6 +1,7 @@
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/aircraft-simulator/headers)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../libraries/math)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/plotter)
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../utilities)
 
 add_executable (simulator
 	main.cpp

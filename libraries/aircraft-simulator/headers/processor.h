@@ -33,7 +33,6 @@ private:
 *   from each of the towers. Also, this class is
 *   associated with the class that solves the task.
 */
-
 class Processor
 {
 public:
