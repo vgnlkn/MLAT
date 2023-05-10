@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <typeinfo>
 #include <cmath>
+#include "vector.h"
 
 /*! \class OurMatrix
 *   \brief Class describing the matrix
