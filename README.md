@@ -93,3 +93,4 @@ $$
 3. [Moore–Penrose inverse, wikipedia, chapter Construction.](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse)
 4. [SVD, wikipedia.](https://en.wikipedia.org/wiki/Singular_value_decomposition)
 5. [A New Approach to Linear Filtering and Prediction Problems](http://www.cs.unc.edu/~welch/kalman/media/pdf/Kalman1960.pdf)
+6. [Построение параметров траектории с использованием фильтра Калмана с шагом коррекции по всем измерениям в РЛС дальнего обнаружения](https://www.researchgate.net/publication/313343865_POSTROENIE_PARAMETROV_TRAEKTORII_S_ISPOLZOVANIEM_FILTRA_KALMANA_S_SAGOM_KORREKCII_PO_VSEM_IZMERENIAM_V_RLS_DALNEGO_OBNARUZENIA_THE_KALMAN_FILTER_TRACK_PARAMETER_ESTIMATION_WITH_UPDATE_STEP_BY_ALL_ACCU)
