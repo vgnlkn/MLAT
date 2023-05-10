@@ -1,11 +1,7 @@
 ﻿#include <mlat_estimation.h>
 #include <matrix.h>
 
-static const double k_state = 1e4;
-static const double k_speed = 9000;
-static const double k_z_speed = 1e3;
-static const double k_acceleration = 10;
-static const double k_covariance_noise = 1e-6;
+static const double array_dispersion[] = {1e4, 9000, 1e3, 10, 1e-6};
 
 MlatEstimation::MlatEstimation()
 {
@@ -15,7 +11,7 @@ MlatEstimation::MlatEstimation()
 	_filter.setErrorCovarianceMatrix(covariance_error);
 
 	OurMatrix<3, 3> covariance_noise;
-	covariance_noise.setDiagonalValue(k_covariance_noise);
+	covariance_noise.setDiagonalValue(array_dispersion[4]);
 	_filter.setNoiseCovarianceMatrix(covariance_noise);
 
 	OurMatrix<3, 9> observation_matrix;
@@ -55,15 +51,15 @@ OurVector<9> MlatEstimation::estimatedState(OurVector<3>& observation)
 OurMatrix<9, 9> MlatEstimation::getCovarianceStateMatrix()
 {
     OurMatrix<9, 9> covariance_state;
-    covariance_state[0][0] = k_state;
-    covariance_state[1][1] = k_speed;
-    covariance_state[2][2] = k_acceleration;
-    covariance_state[3][3] = k_state;
-    covariance_state[4][4] = k_speed;
-    covariance_state[5][5] = k_acceleration;
-    covariance_state[6][6] = k_state;
-    covariance_state[7][7] = k_z_speed;
-    covariance_state[8][8] = k_acceleration;
+    covariance_state[0][0] = array_dispersion[0];
+    covariance_state[1][1] = array_dispersion[1];
+    covariance_state[2][2] = array_dispersion[3];
+    covariance_state[3][3] = array_dispersion[0];
+    covariance_state[4][4] = array_dispersion[1];
+    covariance_state[5][5] = array_dispersion[3];
+    covariance_state[6][6] = array_dispersion[0];
+    covariance_state[7][7] = array_dispersion[2];
+    covariance_state[8][8] = array_dispersion[3];
 
     return covariance_state;
 }
