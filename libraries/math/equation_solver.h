@@ -3,7 +3,7 @@
 
 #include <vector.h>
 #include <matrix.h>
-#include "../../../applications/utilities/defines.h"
+#include <defines.h>
 #include <map>
 #include <cmath>
 #include <cassert>
