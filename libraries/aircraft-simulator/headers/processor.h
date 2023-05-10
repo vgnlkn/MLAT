@@ -10,7 +10,7 @@
 #include <equation_solver.h>
 #include <plotter.h>
 #include <random>
-#include <motion_filter.h>
+#include <mlat_estimation.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution

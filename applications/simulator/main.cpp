@@ -22,11 +22,11 @@ int main()
 	Plotter plt_acceleration_filter(filepath_filter_acceleration);
 	Plotter plt_acceleration_real(filepath_real_acceleration);
 
-	OurVector<3> a;
-	a.setValue(1);
-	a[2] = 0.001f;
+	OurVector<3> acceleration;
+	acceleration.setValue(1);
+    acceleration[2] = 0.001f;
 
-	Aircraft aircraft(a);
+	Aircraft aircraft(acceleration);
 	aircraft.calculateNewSpeed();
 
 	Field obj(aircraft);

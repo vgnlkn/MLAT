@@ -7,7 +7,6 @@
 #include <stack>
 #include <cmath>
 
-
 /*! \class Tower
 *   \brief Tower class
 *   this class describes the id and position of the tower.

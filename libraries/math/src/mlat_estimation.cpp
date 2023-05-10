@@ -1,4 +1,4 @@
-﻿#include <motion_filter.h>
+﻿#include <mlat_estimation.h>
 #include <matrix.h>
 
 static const double k_state = 1e4;
@@ -64,4 +64,6 @@ OurMatrix<9, 9> MlatEstimation::getCovarianceStateMatrix()
     covariance_state[6][6] = k_state;
     covariance_state[7][7] = k_z_speed;
     covariance_state[8][8] = k_acceleration;
+
+    return covariance_state;
 }

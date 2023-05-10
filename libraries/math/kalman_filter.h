@@ -55,14 +55,11 @@ void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
 template<uint8_t dim_state, uint8_t dim_observation>
 OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<dim_observation> &state_vector) 
 {
-    //std::cout << _state_covariance_matrix << std::endl;
-    //std::cout << std::endl;
     OurMatrix<dim_state, dim_state> identity_matrix;
     identity_matrix.setIdentity();
     OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
                                                     + _noise_covariance_matrix;
     OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
-    //std::cout << S << std::endl;
     OurVector<dim_observation> Y = state_vector - (_observation_matrix * _system_vector);
     _system_vector = _system_vector + (K * Y);
     _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
