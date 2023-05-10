@@ -13,3 +13,5 @@ target_compile_definitions(simulator PUBLIC STOCK_PATH_REAL="${CMAKE_CURRENT_SOU
 target_compile_definitions(simulator PUBLIC STOCK_PATH_FILTER="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/filter.txt")
 target_compile_definitions(simulator PUBLIC STOCK_PATH_SPEED_FILTER="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/speed_filter.txt")
 target_compile_definitions(simulator PUBLIC STOCK_PATH_SPEED_REAL="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/speed_real.txt")
+target_compile_definitions(simulator PUBLIC STOCK_PATH_ACCELERATION_FILTER="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/acceleration_filter.txt")
+target_compile_definitions(simulator PUBLIC STOCK_PATH_ACCELERATION_REAL="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/acceleration_real.txt")

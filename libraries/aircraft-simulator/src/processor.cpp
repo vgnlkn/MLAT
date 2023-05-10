@@ -16,7 +16,21 @@ void Processor::addTOA(uint16_t id, double TOA)
 
 void Processor::process()
 {
-    auto addPoint = [](const OurVector<3>& coords, Plotter* plt)
+    OurVector<EQUATIONS_COUNT> tdoas;
+    calculateTDOA(tdoas);
+
+    OurVector<3> mlat_coords = _solver.solve(tdoas);
+    OurVector<9> aircraft_trajectory_estimation = 
+        _estim.estimatedState(mlat_coords);
+
+    auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
+    {
+        vector[0] = aircraft_trajectory_estimation[i];
+        vector[1] = aircraft_trajectory_estimation[i + 3];
+        vector[2] = aircraft_trajectory_estimation[i + 6];
+    };
+
+    auto addPoint = [](const OurVector<3>& coords, Plotter* plt) -> void
     {
         if (plt)
         {
@@ -28,46 +42,33 @@ void Processor::process()
         }
     };
 
-    OurVector<EQUATIONS_COUNT> tdoas;
-    calculateTDOA(tdoas);
-
-    OurVector<3> coords = _solver.solve(tdoas);
-    OurVector<9> aircraft_trajectory_estimation = 
-        _estim.estimatedState(coords);
-
-    auto fillVector = [=](OurVector<3>& vector, uint8_t i)
-    {
-        vector[0] = aircraft_trajectory_estimation[i];
-        vector[1] = aircraft_trajectory_estimation[i + 3];
-        vector[2] = aircraft_trajectory_estimation[i + 6];
-    };
-
-    OurVector<3> filter_coords, filter_speed;
+    OurVector<3> filter_coords, filter_speed, filter_acceleration;
     fillVector(filter_coords, 0);
     fillVector(filter_speed, 1);
+    fillVector(filter_acceleration, 2);
 
 
-    _mlat_average = coords + _mlat_average;
+    _mlat_average = mlat_coords + _mlat_average;
     _kalman_average = filter_coords + _kalman_average;
     if (_iteration % 100 == 0)
     {
         _overstatement = 0;
         _mlat_average.setValue(0);
-        _mlat_min = coords;
-        _mlat_max = coords;
+        _mlat_min = mlat_coords;
+        _mlat_max = mlat_coords;
         _kalman_average.setValue(0);
         _iteration = 1;
     }
    
     for (int i = 0; i < 3; ++i)
     {
-        if (coords[i] < _mlat_min[i])
+        if (mlat_coords[i] < _mlat_min[i])
         {
-            _mlat_min[i] = coords[i];
+            _mlat_min[i] = mlat_coords[i];
         }
-        else if (coords[i] > _mlat_max[i])
+        else if (mlat_coords[i] > _mlat_max[i])
         {
-            _mlat_max[i] = coords[i];
+            _mlat_max[i] = mlat_coords[i];
         }
         if (std::abs(_mlat_average[i] - _kalman_average[i]) > _iteration++ * std::abs(_mlat_min[i] - _mlat_max[i]))
         {
@@ -85,9 +86,10 @@ void Processor::process()
         _estim.reset();
     }
 
-    addPoint(coords, _plt_mlat);
+    addPoint(mlat_coords, _plt_mlat);
     addPoint(filter_coords, _plt_filter);
     addPoint(filter_speed, _plt_filter_speed);
+    addPoint(filter_acceleration, _plt_filter_acceleration);
 }
 
 void Processor::setTower(uint16_t id, const Tower& tower)

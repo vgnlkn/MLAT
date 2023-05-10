@@ -1,77 +1,26 @@
 ﻿#include <motion_filter.h>
 #include <matrix.h>
 
-static const double time_delta = 1e-4;
 
-MotionFilter::MotionFilter()
-{
-	OurMatrix<3, 3> covariance_state;
-	covariance_state.setDiagonalValue(1e2);
-	//covariance_state[2][2] = 1e-4;
-	_filter.setStateCovarianceMatrix(covariance_state);
 
-	OurMatrix<3, 3> covariance_error;
-	_filter.setErrorCovarianceMatrix(covariance_error);
-
-	OurMatrix<1, 1> covariance_noise;
-	// эта матрица очень важна
-	covariance_noise.setDiagonalValue(1e2);
-	_filter.setNoiseCovarianceMatrix(covariance_noise);
-
-	OurMatrix<1, 3> observation_matrix;
-	observation_matrix.setZero();
-	observation_matrix[0][0] = 1;
-	_filter.setObservationMatrix(observation_matrix);
-
-}
-
-OurVector<3> MotionFilter::filter(OurVector<1> calculated_state)
-{
-	this->calculateStateMatrix(time_delta);
-	_filter.setStateMatrix(_state);
-	_filter.predict(time_delta);
-	return _filter.correct(calculated_state);
-}
-
-void MotionFilter::calculateStateMatrix(double time_delta)
-{
-	_state.setIdentity();
-	_state[0][1] = time_delta;
-	_state[1][2] = time_delta;
-	_state[0][2] = 0.5 * time_delta * time_delta;
-}
-
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
 
 MlatEstimation::MlatEstimation()
 {
-	//! P
-	OurMatrix<9, 9> covariance_state;
-	covariance_state.setDiagonalValue(1e4);
-	_filter.setStateCovarianceMatrix(covariance_state);
+	_filter.setStateCovarianceMatrix(getCovarianceStateMatrix());
 
-	//! Q
 	OurMatrix<9, 9> covariance_error;
 	_filter.setErrorCovarianceMatrix(covariance_error);
 
-	//! R
 	OurMatrix<3, 3> covariance_noise;
-	// эта матрица очень важна
-	covariance_noise.setDiagonalValue(0.000001);
+	covariance_noise.setDiagonalValue(k_covariance_noise);
 	_filter.setNoiseCovarianceMatrix(covariance_noise);
 
-	//! H
 	OurMatrix<3, 9> observation_matrix;
 	observation_matrix.setZero();
 	observation_matrix[0][0] = 1;
 	observation_matrix[1][3] = 1;
 	observation_matrix[2][6] = 1;
 	_filter.setObservationMatrix(observation_matrix);
-
 }
 
 
@@ -100,10 +49,16 @@ OurVector<9> MlatEstimation::estimatedState(OurVector<3>& observation)
 	return _filter.correct(observation);
 }
 
-void MlatEstimation::reset()
+OurMatrix<9, 9> MlatEstimation::getCovarianceStateMatrix()
 {
-	//! P
-	OurMatrix<9, 9> covariance_state;
-	covariance_state.setDiagonalValue(1e4);
-	_filter.setStateCovarianceMatrix(covariance_state);
+    OurMatrix<9, 9> covariance_state;
+    covariance_state[0][0] = k_state;
+    covariance_state[1][1] = k_speed;
+    covariance_state[2][2] = k_acceleration;
+    covariance_state[3][3] = k_state;
+    covariance_state[4][4] = k_speed;
+    covariance_state[5][5] = k_acceleration;
+    covariance_state[6][6] = k_state;
+    covariance_state[7][7] = k_z_speed;
+    covariance_state[8][8] = k_acceleration;
 }

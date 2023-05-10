@@ -4,6 +4,8 @@
 Field::Field() :
         _towers(new Tower[TOWERS_COUNT]),
         _plt_flight(nullptr),
+        _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
 {
@@ -61,14 +63,18 @@ void Field::sendSignalsToTowers()
 
 void Field::updatePlot()
 {
-    if (_plt_flight)
+    auto drawPoint = [](Plotter* plt, const OurVector<3>& param)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        _plt_flight->addPoint(_current_position[0], _current_position[1],
-                              _current_position[2]);
-        _plt_speed->addPoint(_aircraft.getSpeed()[0], _aircraft.getSpeed()[1],
-                             _aircraft.getSpeed()[2]);
-    }
+        if (plt)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            plt->addPoint(param[0], param[1], param[2]);
+        }
+    };
+
+    drawPoint(_plt_flight, _current_position);
+    drawPoint(_plt_speed, _aircraft.getSpeed());
+    drawPoint(_plt_acceleration, _aircraft.getAcceleration());
 }
 
 void Field::checkHeight()

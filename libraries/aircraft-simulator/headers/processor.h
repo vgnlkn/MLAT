@@ -58,6 +58,7 @@ public:
     void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
     //! Setter for _plt_filter_speed
     void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
+    void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
 
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
@@ -85,8 +86,10 @@ private:
     Plotter* _plt_mlat;
     //! Object which draws plots with inverse problem
     Plotter* _plt_filter;
-    //! Array for speed plots(first - filter, second - real)
+    //! Plotter for filter speed
     Plotter* _plt_filter_speed;
+    //! Plotter for filter acceleration
+    Plotter* _plt_filter_acceleration;
     //! Noise generator
     NoizeGenerator* _noise;
     //! Estimation

@@ -3,23 +3,6 @@
 
 #include <kalman_filter.h>
 
-class MotionFilter
-{
-public:
-	MotionFilter();
-	~MotionFilter() = default;
-	void setInitial(OurVector<3>& init) { _filter.setSystemVector(init); }
-	OurVector<3> filter(OurVector<1> calculated_state);
-
-protected:
-    void calculateStateMatrix(double time_delta);
-    
-private:
-	//! Фильтр
-	KalmanFilter<3, 1> _filter;
-	OurMatrix<3, 3> _state;
-
-};
 
 /*! \class MlatEstimation
 *	\brief Kalman Filter implementation
@@ -37,15 +20,17 @@ public:
 	//! Constructor
 	MlatEstimation();
 	//! Destructor
-	//~MlatEstimation() = default;
+	~MlatEstimation() = default;
 	//! Update state matrix
 	void updateStateMatrix(double time_delta);
 	//! Initial state for filter
 	void initState(OurVector<9>& initial_state);
+    //! Get default state covariance state matrix
+    OurMatrix<9, 9> getCovarianceStateMatrix();
 	//! Estimated state
 	OurVector<9> estimatedState(OurVector<3>& observation);
 	//! Resetes covariance matrixes;
-	void reset();
+	void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
 
 private:
 	//! Kalman Filter

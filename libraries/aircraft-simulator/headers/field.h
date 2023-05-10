@@ -25,6 +25,7 @@ public:
         _current_position(start), 
         _plt_flight(nullptr),
         _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
@@ -37,6 +38,7 @@ public:
         _towers(new Tower[TOWERS_COUNT]),
         _plt_flight(nullptr),
         _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
@@ -79,10 +81,14 @@ public:
     void setPlotterFilter(Plotter* plt) { _processor.setPlotterFilter(plt); }
     //! Setting Filter plotter speed
     void setPlotterFilterSpeed(Plotter* plt) { _processor.setPlotterFilterSpeed(plt); }
-    //! Setting flight plotter
+    //! Setting Filter plotter speed
+    void setPlotterFilterAcceleration(Plotter* plt) { _processor.setPlotterFilterAcceleration(plt); }
+    //! Setting coordinate plotter with real values
     void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
-    //! Setting speed plotter
+    //! Setting speed plotter with real values
     void setPlotterSpeed(Plotter* plt) { _plt_speed = plt; }
+    //! Setting acceleration plotter with real values
+    void setPlotterAcceleration(Plotter* plt) { _plt_acceleration = plt; }
     //! Getter of _processor
     void updatePlot();
     //! Process Signals
@@ -103,6 +109,8 @@ private:
     Plotter* _plt_flight;
     //! Plotter object for speed
     Plotter* _plt_speed;
+    //! Plotter object for acceleration
+    Plotter* _plt_acceleration;
     //! Sample rate
     double _sample_rate;
 };

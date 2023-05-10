@@ -79,6 +79,8 @@ data_real = open(sys.argv[2], 'r').read().split('\n')
 data_filter = open(sys.argv[3], 'r').read().split('\n')
 data_filter_speed = open(sys.argv[4], 'r').read().split('\n')
 data_real_speed = open(sys.argv[5], 'r').read().split('\n')
+data_filter_acceleration = open(sys.argv[6], 'r').read().split('\n')
+data_real_acceleration = open(sys.argv[7], 'r').read().split('\n')
 
 arr_x_mlat, arr_y_mlat, arr_z_mlat, arr_x_real, arr_y_real, \
     arr_z_real, arr_x_filter, arr_y_filter, arr_z_filter = read(data_mlat, data_real, data_filter)
@@ -86,80 +88,83 @@ arr_x_mlat, arr_y_mlat, arr_z_mlat, arr_x_real, arr_y_real, \
 x_filter_speed, y_filter_speed, z_filter_speed, x_real_speed, y_real_speed, z_real_speed \
     = read_speed(data_filter_speed, data_real_speed)
 
-
-def draw2D(arr_mlat: list, arr_real: list, arr_filter: list, title: str):
-    plt.plot(arr_mlat, label='MLAT')
-    plt.plot(arr_real, label='Real')
-    plt.plot(arr_filter, label='Inverse problem')
-
-    plt.title(title)
-
-    plt.ylabel('km')
-    plt.xlabel('iteration number')
-
-    # Display the legend
-    plt.legend()
-
-    # Show the plot
-    plt.show()
+x_filter_acceleration, y_filter_acceleration, z_filter_acceleration,\
+    x_real_acceleration, y_real_acceleration, z_real_acceleration \
+    = read_speed(data_filter_acceleration, data_real_acceleration)
 
 
-def count_diff(first_arr: list, second_arr: list) -> list:
-    diff = []
+fig, axs = plt.subplots(3, 3, figsize=(8, 10))
 
-    for i in range(min(len(first_arr), len(second_arr))):
-        diff.append(abs(first_arr[i] - second_arr[i]))
+# Coordinates
 
-    return diff
+# Plot for x coordinate
+axs[0][0].plot(arr_x_real, label='Real')
+axs[0][0].plot(arr_x_filter, label='Filter')
+axs[0][0].set_title('Coordinates of the aircraft on the axis x')
+axs[0][0].set_ylabel('km')
+axs[0][0].legend()
 
+# Plot for y coordinate
+axs[1][0].plot(arr_y_real, label='Real')
+axs[1][0].plot(arr_y_filter, label='Filter')
+axs[1][0].set_title('Coordinates of the aircraft on the axis y')
+axs[1][0].set_ylabel('km')
+axs[1][0].legend()
 
-def draw_diff(first_arr: list, second_arr: list, title: str):
-    diff = count_diff(first_arr, second_arr)
-    iterations = [int(i) for i in range(len(diff))]
+# Plot for z coordinate
+axs[2][0].plot(arr_z_real, label='Real')
+axs[2][0].plot(arr_z_filter, label='Filter')
+axs[2][0].set_title('Coordinates of the aircraft on the axis z')
+axs[2][0].set_ylabel('km')
+axs[2][0].set_xlabel('iteration number')
+axs[2][0].legend()
 
-    plt.figure()
-    plt.title(title)
-    plt.scatter(iterations, diff, label='modulus of difference', s=2)
+# Speed
 
-    plt.ylabel('km')
-    plt.xlabel('iteration number')
-    plt.legend()
-    plt.show()
+# Plot for x speed
+axs[0][1].plot(x_real_speed, label='Real')
+axs[0][1].plot(x_filter_speed, label='Filter')
+axs[0][1].set_title('x speed')
+axs[0][1].set_ylabel('m/s')
+axs[0][1].legend()
 
+# Plot for y speed
+axs[1][1].plot(y_real_speed, label='Real')
+axs[1][1].plot(y_filter_speed, label='Filter')
+axs[1][1].set_title('y speed')
+axs[1][1].set_ylabel('m/s')
+axs[1][1].legend()
 
-fig, axs = plt.subplots(3, 1, figsize=(8, 10))
+# Plot for z speed
+axs[2][1].plot(z_real_speed, label='Real')
+axs[2][1].plot(z_filter_speed, label='Filter')
+axs[2][1].set_title('z speed')
+axs[2][1].set_ylabel('m/s')
+axs[2][1].set_xlabel('iteration number')
+axs[2][1].legend()
 
-# Plot for x
-axs[0].plot(x_real_speed, label='Real')
-axs[0].plot(x_filter_speed, label='Filter')
-axs[0].set_title('x speed')
-axs[0].set_ylabel('m/s')
-axs[0].legend()
+# Acceleration
 
-# Plot for y
-axs[1].plot(y_real_speed, label='Real')
-axs[1].plot(y_filter_speed, label='Filter')
-axs[1].set_title('y speed')
-axs[1].set_ylabel('m/s')
-axs[1].legend()
+# Plot for x speed
+axs[0][2].plot(x_real_acceleration, label='Real')
+axs[0][2].plot(x_filter_acceleration, label='Filter')
+axs[0][2].set_title('x acceleration')
+axs[0][2].set_ylabel('m/s^2')
+axs[0][2].legend()
 
-# Plot for z
-axs[2].plot(z_real_speed, label='Real')
-axs[2].plot(z_filter_speed, label='Filter')
-axs[2].set_title('z speed')
-axs[2].set_ylabel('m/s')
-axs[2].set_xlabel('iteration number')
-axs[2].legend()
+# Plot for y speed
+axs[1][2].plot(y_real_acceleration, label='Real')
+axs[1][2].plot(y_filter_acceleration, label='Filter')
+axs[1][2].set_title('y acceleration')
+axs[1][2].set_ylabel('m/s^2')
+axs[1][2].legend()
+
+# Plot for z speed
+axs[2][2].plot(z_real_acceleration, label='Real')
+axs[2][2].plot(z_filter_acceleration, label='Filter')
+axs[2][2].set_title('z acceleration')
+axs[2][2].set_ylabel('m/s^2')
+axs[2][2].set_xlabel('iteration number')
+axs[2][2].legend()
 
 plt.show()
-
-'''
-draw2D(arr_x_mlat, arr_x_real, arr_x_filter, 'Coordinates of the aircraft on the axis x')
-draw_diff(arr_x_mlat, arr_x_real, 'Modulus of difference on the axis x')
-
-draw2D(arr_y_mlat, arr_y_real, arr_y_filter, 'Coordinates of the aircraft on the axis y')
-draw_diff(arr_y_mlat, arr_y_real, 'Modulus of difference on the axis y')
-
-draw2D(arr_z_mlat, arr_z_real, arr_z_filter, 'Coordinates of the aircraft on the axis z')
-draw_diff(arr_z_mlat, arr_z_real, 'Modulus of difference on the axis z')
-'''
