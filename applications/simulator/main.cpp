@@ -6,22 +6,38 @@
 
 int main()
 {
-    const std::string filepath1 = STOCK_PATH1;
-    const std::string filepath2 = STOCK_PATH2;
-	Plotter plt1(filepath1);
-	Plotter plt2(filepath2);
+    const std::string filepath_mlat = STOCK_PATH_MLAT;
+    const std::string filepath_real = STOCK_PATH_REAL;
+    const std::string filepath_filter = STOCK_PATH_FILTER;
+    const std::string filepath_speed_filter = STOCK_PATH_SPEED_FILTER;
+    const std::string filepath_real_speed = STOCK_PATH_SPEED_REAL;
+    const std::string filepath_filter_acceleration = STOCK_PATH_ACCELERATION_FILTER;
+    const std::string filepath_real_acceleration = STOCK_PATH_ACCELERATION_REAL;
 
-	OurVector<3> a;
-	a.setValue(1);
-	a[2] = 0.001f;
+	Plotter plt_mlat(filepath_mlat);
+	Plotter plt_real(filepath_real);
+	Plotter plt_filter(filepath_filter);
+	Plotter plt_speed_filter(filepath_speed_filter);
+	Plotter plt_speed_real(filepath_real_speed);
+	Plotter plt_acceleration_filter(filepath_filter_acceleration);
+	Plotter plt_acceleration_real(filepath_real_acceleration);
 
-	Aircraft aircraft(a);
+	OurVector<3> acceleration;
+	acceleration.setValue(1);
+    acceleration[2] = 0.001f;
+
+	Aircraft aircraft(acceleration);
 	aircraft.calculateNewSpeed();
 
 	Field obj(aircraft);
 
-	obj.setPlotterMLAT(&plt1);
-	obj.setPlotterFlight(&plt2);
+	obj.setPlotterMLAT(&plt_mlat);
+	obj.setPlotterFlight(&plt_real);
+    obj.setPlotterFilter(&plt_filter);
+    obj.setPlotterFilterSpeed(&plt_speed_filter);
+    obj.setPlotterSpeed(&plt_speed_real);
+    obj.setPlotterAcceleration(&plt_acceleration_real);
+    obj.setPlotterFilterAcceleration(&plt_acceleration_filter);
 
 	obj.startMovement();
 

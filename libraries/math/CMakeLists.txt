@@ -2,15 +2,17 @@ cmake_minimum_required(VERSION 3.10)
 
 include_directories (. tests/)
 
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../applications/utilities/)
+
 add_library (Math
     vector.h
     equation_solver.h
     matrix.h
     src/equation_solver.cpp
-        ../../applications/utilities/defines.h 
+        ../../applications/utilities/defines.h
 	kalman_filter.h
-	motion_filter.h
-    src/motion_filter.cpp
+        mlat_estimation.h
+        src/mlat_estimation.cpp
 )
 
 find_package(GTest)

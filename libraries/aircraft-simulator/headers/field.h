@@ -7,8 +7,6 @@
 #include <chrono>
 #include <thread>
 
-const double kilometer = 1000.f;
-
 
 /*! \class Field
 *   \brief The class in which the flight is simulated.
@@ -25,14 +23,28 @@ public:
     explicit Field(const OurVector<3>& start): 
         _towers(new Tower[TOWERS_COUNT]),
         _current_position(start), 
-        _plt_mlat(nullptr), _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT) {}
+        _plt_flight(nullptr),
+        _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
+        _tower_count(TOWERS_COUNT),
+        _sample_rate(k_sample_rate)
+    {
+        _processor.setSampleRate(_sample_rate);
+        _aircraft.setTimeDelta(_sample_rate);
+    }
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft): 
         _aircraft(aircraft), 
         _towers(new Tower[TOWERS_COUNT]),
-        _plt_mlat(nullptr), _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT) {}
+        _plt_flight(nullptr),
+        _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
+        _tower_count(TOWERS_COUNT),
+        _sample_rate(k_sample_rate)
+    {
+        _processor.setSampleRate(_sample_rate);
+        _aircraft.setTimeDelta(_sample_rate);
+    }
     //! Destructor
     ~Field() { if (_towers) delete[] _towers; };
 
@@ -64,9 +76,19 @@ public:
 
     //! Methods to work with plotter
     //! Setting MLAT plotter
-    void setPlotterMLAT(Plotter* plt) { _plt_mlat = plt; _processor.setPlotter(plt); }
-    //! Setting flight plotter
+    void setPlotterMLAT(Plotter* plt) { _processor.setPlotterMlat(plt); }
+    //! Setting Filter plotter
+    void setPlotterFilter(Plotter* plt) { _processor.setPlotterFilter(plt); }
+    //! Setting Filter plotter speed
+    void setPlotterFilterSpeed(Plotter* plt) { _processor.setPlotterFilterSpeed(plt); }
+    //! Setting Filter plotter speed
+    void setPlotterFilterAcceleration(Plotter* plt) { _processor.setPlotterFilterAcceleration(plt); }
+    //! Setting coordinate plotter with real values
     void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
+    //! Setting speed plotter with real values
+    void setPlotterSpeed(Plotter* plt) { _plt_speed = plt; }
+    //! Setting acceleration plotter with real values
+    void setPlotterAcceleration(Plotter* plt) { _plt_acceleration = plt; }
     //! Getter of _processor
     void updatePlot();
     //! Process Signals
@@ -83,10 +105,14 @@ private:
     uint16_t _tower_count;
     //! Class that manage tower time
     Processor _processor;
-    //! Plotter object
-    Plotter* _plt_mlat;
-    //! Plotter object
+    //! Plotter object for coordinates
     Plotter* _plt_flight;
+    //! Plotter object for speed
+    Plotter* _plt_speed;
+    //! Plotter object for acceleration
+    Plotter* _plt_acceleration;
+    //! Sample rate
+    double _sample_rate;
 };
 
 

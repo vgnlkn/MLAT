@@ -1,6 +1,6 @@
 #include <cassert>
 #include <iostream>
-#include "plotter.h"
+#include <plotter.h>
 
 void Plotter::addPoint(double x, double y, double z)
 {

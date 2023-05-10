@@ -2,13 +2,10 @@
 #define MLAT_TOWER_H
 
 #include <vector.h>
-#include "../../../applications/utilities/defines.h"
+#include <defines.h>
 #include <cstring>
 #include <stack>
 #include <cmath>
-
-static const double waveSpeed = 300000.f;
-
 
 /*! \class Tower
 *   \brief Tower class

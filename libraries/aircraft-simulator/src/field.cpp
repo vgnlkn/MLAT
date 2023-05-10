@@ -3,8 +3,15 @@
 
 Field::Field() :
         _towers(new Tower[TOWERS_COUNT]),
-        _plt_mlat(nullptr), _plt_flight(nullptr),
-        _tower_count(TOWERS_COUNT) {}
+        _plt_flight(nullptr),
+        _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
+        _tower_count(TOWERS_COUNT),
+        _sample_rate(k_sample_rate)
+{
+    _processor.setSampleRate(_sample_rate);
+    _aircraft.setTimeDelta(_sample_rate);
+}
 
 void Field::startMovement()
 {
@@ -33,7 +40,7 @@ void Field::initialize()
 void Field::updateAircraftPosition()
 {
     _current_position = _current_position +
-                        _aircraft.getSpeed() * (0.1f / kilometer);
+                        _aircraft.getSpeed() * _sample_rate;
 }
 
 void Field::updateAircraftSpeed()
@@ -56,21 +63,27 @@ void Field::sendSignalsToTowers()
 
 void Field::updatePlot()
 {
-    if (_plt_flight)
+    auto drawPoint = [](Plotter* plt, const OurVector<3>& param)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        _plt_flight->addPoint(_current_position[0], _current_position[1],
-                              _current_position[2]);
-    }
+        if (plt)
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            plt->addPoint(param[0], param[1], param[2]);
+        }
+    };
+
+    drawPoint(_plt_flight, _current_position);
+    drawPoint(_plt_speed, _aircraft.getSpeed());
+    drawPoint(_plt_acceleration, _aircraft.getAcceleration());
 }
 
 void Field::checkHeight()
 {
-    if (_current_position[2] > 11.5f && _aircraft.getSpeed()[2] > 0.f)
+    if (_current_position[2] > 10.f && _aircraft.getSpeed()[2] > 0.f)
     {
         decreaseVerticalSpeed();
     }
-    if (_aircraft.getSpeed()[2] < -1.f)
+    if (_aircraft.getSpeed()[2] < -0.1f)
     {
         stopVerticalSpeed();
     }
@@ -78,14 +91,11 @@ void Field::checkHeight()
 
 void Field::decreaseVerticalSpeed()
 {
-    OurVector<3> new_speed = _aircraft.getSpeed();
-    new_speed[2] /= 16;
-
     OurVector<3> new_acceleration = _aircraft.getAcceleration();
-    new_acceleration[2] = new_acceleration[2] < 0.f ? new_acceleration[2] : -new_acceleration[2];
+    new_acceleration[2] = new_acceleration[2] > 1e-4 ? new_acceleration[2] / 1.5f : new_acceleration[2] - 1e-5;
 
-    _aircraft.setSpeed(new_speed);
     _aircraft.setAcceleration(new_acceleration);
+    _aircraft.calculateNewSpeed();
 }
 
 void Field::stopVerticalSpeed()
