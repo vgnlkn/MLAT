@@ -3,15 +3,11 @@
 
 #include <kalman_filter.h>
 
-
 /*! \class MlatEstimation
 *	\brief Kalman Filter implementation
-*	This class necessery to calculate 
-*	aircraft trajectory parameters using 
-*	Kalman Filter. Such an implementation
-*	doesn't calculate speed and acceleration
-*	using instantaneous values of coordinates.
-*	It makes an estimation which depends on 
+*	This class necessery to calculate aircraft trajectory parameters using 
+*	Kalman Filter. Such an implementationcdoesn't calculate speed and acceleration
+*	using instantaneous values of coordinates. It makes an estimation which depends on 
 *	previous calculations and new observations.
 */
 class MlatEstimation

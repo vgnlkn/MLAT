@@ -1,13 +1,13 @@
 #ifndef MLAT_KALMAN_FILTER_H
 #define MLAT_KALMAN_FILTER_H
 
-/*! \class KalmanFilter
-*   \brief Class describing Kalman Filter
-* А class that implements a Kalman filter for evaluating output values
-*/
 #include <matrix.h>
 #include <iostream>
 
+/*! \class KalmanFilter
+*   \brief Class describing Kalman Filter
+*   А class that implements a Kalman filter for evaluating output values
+*/
 template<uint8_t dim_state, uint8_t dim_observation>
 class KalmanFilter
 {

@@ -12,9 +12,9 @@
 
 /*! \class OurMatrix
 *   \brief Class describing the matrix
-* This class based on OurVector class and extend it for using as matrixed.
-* Allowed all base operations with matrixes, except determinant calculation
-* and getting inversed matrix.
+*   This class based on OurVector class and extend it for using as matrixed.
+*   Allowed all base operations with matrixes, except determinant calculation
+*   and getting inversed matrix.
 */
 template<uint8_t row, uint8_t col, typename type=double>
 class OurMatrix
@@ -50,8 +50,6 @@ public:
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
     friend OurMatrix<row1, col2, T> classicAlgMultiplication(const OurMatrix<row1, col1, T>& first,
                                                              const OurMatrix<row2, col2, T>& second);
-
-
     //! Set value on column
     void setColumn(uint8_t col_index, type value);
     //! Set value on row

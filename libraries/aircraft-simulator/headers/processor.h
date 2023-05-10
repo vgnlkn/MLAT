@@ -48,7 +48,6 @@ public:
     void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Overloading operator[]
     double& operator[](uint16_t id) { return _towers_toa[id]; }
-
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
     //! Setter for _plt_mlat
@@ -57,11 +56,10 @@ public:
     void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
     //! Setter for _plt_filter_speed
     void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
+    //! Setter for _plt_filter_acceleration
     void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
-
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
-
     //! Set samplerate
     void setSampleRate(double sample_rate);
 
@@ -72,6 +70,7 @@ public:
     * Gauss-Newton algorithm
     */
     void process();
+    
 private:
     //! TOA
     std::map<uint16_t, double> _towers_toa;

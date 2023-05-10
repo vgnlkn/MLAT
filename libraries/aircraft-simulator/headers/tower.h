@@ -9,7 +9,7 @@
 
 /*! \class Tower
 *   \brief Tower class
-*   this class describes the id and position of the tower.
+*   This class describes the id and position of the tower.
 *   It also calculates TOA for a specific tower.
 */
 class Tower
@@ -21,12 +21,10 @@ public:
     Tower(const Tower& other);
     //! Overloading operator=
     Tower& operator=(const Tower& other);
-
     //! Overloading operator==
     bool operator==(const Tower& other) const { return _id == other._id && _position == other._position; }
     //! Overloading operator<
     bool operator<(const Tower& other) const { return _id < other._id; }
-
     //! Receives a signal
     double calculateTime(const OurVector<3>& current_position);
     //! Getter for _position
@@ -37,6 +35,7 @@ public:
     [[nodiscard]] uint16_t getID() const { return _id; }
     //! Setter for _id
     void setID(uint16_t id) { _id = id; }
+
 private:
     //! Needed for operator=
     void swap(Tower& other);

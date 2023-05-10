@@ -10,9 +10,9 @@
 
 /*! \class Field
 *   \brief The class in which the flight is simulated.
-* The class in which the flight simulation of the aircraft is implemented.
-* The speed of its flight is also regulated here, towers are placed in the field
-* and towers to which the aircraft is connected.
+*   The class in which the flight simulation of the aircraft is implemented.
+*   The speed of its flight is also regulated here, towers are placed in the field
+*   and towers to which the aircraft is connected.
 */
 class Field
 {
@@ -94,6 +94,7 @@ public:
     //! Process Signals
     void processSignals() { _processor.process(); }
     [[nodiscard]] Processor getProcessor() const { return _processor; }
+
 private:
     //! Aircraft
     Aircraft _aircraft;
