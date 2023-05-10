@@ -37,7 +37,6 @@ private:
 	KalmanFilter<9, 3> _filter;
 	//! Sample rate
 	double _time_delta;
-	
 };
 
 #endif
