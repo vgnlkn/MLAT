@@ -1,7 +1,8 @@
 ﻿#include <mlat_estimation.h>
 #include <matrix.h>
 
-static const double array_dispersion[] = {1e4, 9000, 1e3, 10, 1e-6};
+
+static const double array_dispersion[] = {1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10};
 
 MlatEstimation::MlatEstimation()
 {
@@ -51,15 +52,10 @@ OurVector<9> MlatEstimation::estimatedState(OurVector<3>& observation)
 OurMatrix<9, 9> MlatEstimation::getCovarianceStateMatrix()
 {
     OurMatrix<9, 9> covariance_state;
-    covariance_state[0][0] = array_dispersion[0];
-    covariance_state[1][1] = array_dispersion[1];
-    covariance_state[2][2] = array_dispersion[3];
-    covariance_state[3][3] = array_dispersion[0];
-    covariance_state[4][4] = array_dispersion[1];
-    covariance_state[5][5] = array_dispersion[3];
-    covariance_state[6][6] = array_dispersion[0];
-    covariance_state[7][7] = array_dispersion[2];
-    covariance_state[8][8] = array_dispersion[3];
+    for (uint8_t i = 0; i < 9; ++i)
+    {
+        covariance_state[i][i] = array_dispersion[i];
+    }
 
     return covariance_state;
 }

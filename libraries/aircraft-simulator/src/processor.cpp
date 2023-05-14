@@ -14,7 +14,7 @@ void Processor::addTOA(uint16_t id, double TOA)
     _towers_toa[id] = TOA;
 }
 
-void Processor::process()
+void Processor::process(uint32_t iter)
 {
     OurVector<EQUATIONS_COUNT> tdoas;
     calculateTDOA(tdoas);
@@ -86,10 +86,13 @@ void Processor::process()
         _estim.reset();
     }
 
-    addPoint(mlat_coords, _plt_mlat);
-    addPoint(filter_coords, _plt_filter);
-    addPoint(filter_speed, _plt_filter_speed);
-    addPoint(filter_acceleration, _plt_filter_acceleration);
+    if (iter % POINT_MOD == 0)
+    {
+        addPoint(mlat_coords, _plt_mlat);
+        addPoint(filter_coords, _plt_filter);
+        addPoint(filter_speed, _plt_filter_speed);
+        addPoint(filter_acceleration, _plt_filter_acceleration);
+    }
 }
 
 void Processor::setTower(uint16_t id, const Tower& tower)
@@ -115,7 +118,7 @@ void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            tdoas[k++] = _towers_toa[i] + noize(i) - _towers_toa[j] + noize(j);
+            tdoas[k++] = _towers_toa[i] - _towers_toa[j] + noize(j);
         }
     }
 }

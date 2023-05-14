@@ -17,14 +17,17 @@ void Field::startMovement()
 {
     initialize();
 
-    for (int i = 0;; ++i)
+    for (uint32_t i = 0;; ++i)
     {
         updateAircraftPosition();
         checkHeight();
         updateAircraftSpeed();
         sendSignalsToTowers();
-        processSignals();
-        updatePlot();
+        processSignals(i);
+        if (i % POINT_MOD == 0)
+        {
+            updatePlot();
+        }
     }
 }
 

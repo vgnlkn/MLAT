@@ -92,7 +92,7 @@ public:
     //! Getter of _processor
     void updatePlot();
     //! Process Signals
-    void processSignals() { _processor.process(); }
+    void processSignals(uint32_t i) { _processor.process(i); }
     [[nodiscard]] Processor getProcessor() const { return _processor; }
 
 private:

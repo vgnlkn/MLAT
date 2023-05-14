@@ -37,7 +37,8 @@ class Processor
 {
 public:
     //! Constructor
-    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
+    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _plt_filter_acceleration(nullptr),
+    _plt_filter_speed(nullptr), _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
     //! Destructor
     inline ~Processor() { if (_noise) { delete _noise; } }
     //! Initialize solver
@@ -69,7 +70,7 @@ public:
     * which solves using least squares method and
     * Gauss-Newton algorithm
     */
-    void process();
+    void process(uint32_t iter);
     
 private:
     //! TOA
