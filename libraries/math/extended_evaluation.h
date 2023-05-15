@@ -1,5 +1,43 @@
 #ifndef MLAT_EXTENDED_EVALUATION_H
 #define MLAT_EXTENDED_EVALUATION_H
 
+#include <extended_filter.h>
+#include <map>
+#include <utility>
+
+
+class ExtendedEvaluation
+{
+public:
+    //! Constructor
+    ExtendedEvaluation();
+    //! Destructor
+    ~ExtendedEvaluation() = default;
+    //! Update state matrix
+    void updateStateMatrix(double time_delta);
+    //! Initial state for filter
+    void initState(OurVector<9>& initial_state);
+    //! Get default state covariance state matrix
+    OurMatrix<9, 9> getCovarianceStateMatrix();
+    //! Estimated state
+    OurVector<9> estimatedState(OurVector<EQUATIONS_COUNT>& observation);
+    //! Resetes covariance matrixes;
+    void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
+
+    //!
+    OurMatrix<EQUATIONS_COUNT, 9> getJacobian(OurVector<3> &position);
+    //!
+    OurVector<9> getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j);
+    //!
+    void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates) { _towers_coordinates =
+                                                                                    std::move(tower_coordinates); }
+private:
+    //! Kalman Filter
+    ExtendedFilter<9, EQUATIONS_COUNT> _filter;
+    //! Sample rate
+    double _time_delta;
+    //! Tower coordinates
+    std::map<uint16_t, OurVector<3>> _towers_coordinates;
+};
 
 #endif

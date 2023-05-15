@@ -10,16 +10,16 @@ public:
     ExtendedFilter() = default;
 
     virtual OurVector<dim_observation> getError(const OurVector<dim_observation> &state_vector) final;
-    void setFunction(std::function<void(OurVector<dim_observation>)> func) { _observation_function = func; }
+    void setFunction(std::function<OurVector<dim_observation>(OurVector<dim_state>)> func) { _observation_function = func; }
 private:
-    std::function<OurVector<EQUATIONS_COUNT>(OurVector<dim_observation>)> _observation_function;
+    std::function<OurVector<dim_observation>(OurVector<dim_state>)> _observation_function;
 };
 
 template<uint8_t dim_state, uint8_t dim_observation>
 OurVector<dim_observation>
 ExtendedFilter<dim_state, dim_observation>::getError(const OurVector<dim_observation> &state_vector)
 {
-    return this->_system_vector - _observation_function(state_vector);
+    return state_vector - _observation_function(this->_system_vector);
 }
 
 #endif //MLAT_EXTENDED_FILTER_H
