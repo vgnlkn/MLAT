@@ -15,12 +15,14 @@ public:
     ~ExtendedEvaluation() = default;
     //! Update state matrix
     void updateStateMatrix(double time_delta);
+    //! Update observation matrix
+    void updateObservationMatrix(OurVector<3>& position);
     //! Initial state for filter
-    void initState(OurVector<9>& initial_state);
+    void initState(OurVector<9>& initial_state) { _filter.setSystemVector(initial_state); };
     //! Get default state covariance state matrix
     OurMatrix<9, 9> getCovarianceStateMatrix();
     //! Estimated state
-    OurVector<9> estimatedState(OurVector<EQUATIONS_COUNT>& observation);
+    OurVector<9> estimatedState(OurVector<EQUATIONS_COUNT>& tdoa);
     //! Resetes covariance matrixes;
     void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
 
@@ -31,6 +33,9 @@ public:
     //!
     void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates) { _towers_coordinates =
                                                                                     std::move(tower_coordinates); }
+
+    //!
+    void setObservationFunction();
 private:
     //! Kalman Filter
     ExtendedFilter<9, EQUATIONS_COUNT> _filter;

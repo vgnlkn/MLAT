@@ -11,6 +11,7 @@
 #include <plotter.h>
 #include <random>
 #include <mlat_estimation.h>
+#include <extended_evaluation.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -92,7 +93,9 @@ private:
     //! Noise generator
     NoizeGenerator* _noise;
     //! Estimation
-    MlatEstimation _estim;
+    // MlatEstimation _estim;
+    //! Estimation by extended filter
+    ExtendedEvaluation _eval;
     //! Average coordinates
     OurVector<3> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
