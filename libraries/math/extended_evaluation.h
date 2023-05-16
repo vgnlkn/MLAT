@@ -35,11 +35,16 @@ public:
                                                                                     std::move(tower_coordinates); }
     //!
     void setObservationFunction();
+
+    //!
+    [[nodiscard]] OurVector<EQUATIONS_COUNT> getTDOA() const { return _initial_tdoas; }
 private:
     //! Kalman Filter
     ExtendedFilter<9, EQUATIONS_COUNT> _filter;
     //! Sample rate
     double _time_delta;
+    //! tdoa
+    OurVector<EQUATIONS_COUNT> _initial_tdoas;
     //! Tower coordinates
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
 };

@@ -5,7 +5,7 @@
 #define EQUATIONS_COUNT 6
 #define LIGHT_SPEED 3e5
 #define MAX_ITERARATIONS_COUNT 1
-#define POINT_MOD 100
+#define POINT_MOD 1
 
 static const double k_sample_rate = 1e-3;
 static const uint32_t k_duration_interval = 100;

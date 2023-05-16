@@ -40,6 +40,7 @@ void ExtendedEvaluation::updateStateMatrix(double time_delta)
 
 OurVector<9> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT>& tdoa)
 {
+    _initial_tdoas = tdoa;
     _filter.predict(_time_delta);
     setObservationFunction();
     return _filter.correct(tdoa);
@@ -95,6 +96,23 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
         }
     }
 
+    for (int iteration = 0; iteration < MAX_ITERARATIONS_COUNT; ++iteration)
+    {
+        k = 0;
+        for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
+        {
+            for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
+            {
+                if (_initial_tdoas[k] < 0)
+                {
+                    jacobian[k] = -jacobian[k];
+                    _initial_tdoas[k] = _initial_tdoas[k] < 0 ? -_initial_tdoas[k] : _initial_tdoas[k];
+                }
+                k++;
+            }
+        }
+    }
+
     return (1 / LIGHT_SPEED) * jacobian;
 }
 
@@ -121,78 +139,15 @@ void ExtendedEvaluation::setObservationFunction()
         );
     };
 
-    auto observation_func = [=](const OurVector<9>& coordinates) {
-        uint8_t k = 0;
-        OurVector<EQUATIONS_COUNT> tdoas;
-        for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
-        {
-            for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
-            {
-                tdoas[k++] = equation(i, j, coordinates[0], coordinates[1], coordinates[2]);
-            }
-        }
-
-        return tdoas;
-    };
-
-    _filter.setFunction(observation_func);
-}
-/*
-void ExtendedEvaluation::setObservationFunction()
-{
-    auto observation_func = [](const OurVector<9>& coordinates)
+    auto observation_func = [=](const OurVector<9>& coordinates)
     {
-        OurMatrix<TOWERS_COUNT, 3> _towers_coordinates;
-        OurVector<3> first_tower_position;
-        first_tower_position[0] = -1500;
-        first_tower_position[1] = 400;
-        first_tower_position[2] = 1200;
-
-        _towers_coordinates[0] = first_tower_position;
-
-        OurVector<3> second_tower_position;
-        second_tower_position[0] = 2000;
-        second_tower_position[1] = -3000;
-        second_tower_position[2] = 0;
-
-        _towers_coordinates[1] = second_tower_position;
-
-        OurVector<3> third_tower_position;
-        third_tower_position[0] = -5000;
-        third_tower_position[1] = 12000;
-        third_tower_position[2] = -900;
-
-        _towers_coordinates[2] = third_tower_position;
-
-        OurVector<3> fourth_tower_position;
-        fourth_tower_position[0] = 11000;
-        fourth_tower_position[1] = -4000;
-        fourth_tower_position[2] = 2000;
-
-        _towers_coordinates[3] = fourth_tower_position;
-
-        auto equation = [=](uint8_t i, uint8_t j, double x, double y, double z)
-        {
-            return std::abs(
-                    std::sqrt(
-                            std::pow(_towers_coordinates[i][0] - x, 2) +
-                            std::pow(_towers_coordinates[i][1] - y, 2) +
-                            std::pow(_towers_coordinates[i][2] - z, 2))
-                    -
-                    std::sqrt(
-                            std::pow(_towers_coordinates[j][0] - x, 2) +
-                            std::pow(_towers_coordinates[j][1] - y, 2) +
-                            std::pow(_towers_coordinates[j][2] - z, 2))
-            );
-        };
-
         uint8_t k = 0;
         OurVector<EQUATIONS_COUNT> tdoas;
         for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
         {
             for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
             {
-                tdoas[k++] = equation(i, j, coordinates[0], coordinates[1], coordinates[2]);
+                tdoas[k++] = equation(i, j, coordinates[0], coordinates[3], coordinates[6]) / LIGHT_SPEED;
             }
         }
 
@@ -201,4 +156,3 @@ void ExtendedEvaluation::setObservationFunction()
 
     _filter.setFunction(observation_func);
 }
-*/

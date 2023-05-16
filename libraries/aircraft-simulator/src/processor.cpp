@@ -23,6 +23,7 @@ void Processor::process(uint32_t iter)
     // OurVector<9> aircraft_trajectory_estimation = _estim.estimatedState(mlat_coords);
     // std::cout << tdoas << '\n';
     _eval.updateObservationMatrix(mlat_coords);
+    tdoas = _eval.getTDOA();
     OurVector<9> aircraft_trajectory_estimation = _eval.estimatedState(tdoas);
 
     // std::cout << aircraft_trajectory_estimation << '\n';
