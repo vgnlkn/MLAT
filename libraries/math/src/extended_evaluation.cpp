@@ -76,9 +76,10 @@ OurVector<9> ExtendedEvaluation::getJacobianRow(OurVector<3> &coordinate, uint8_
 
     for (int column = 0; column < 3; ++column)
     {
-        jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denominator_i -
-                                numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denominator_j);
+        jacobian_row[column * 3] = (numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denominator_i -
+                                    numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denominator_j);
     }
+
     return jacobian_row;
 }
 
@@ -90,8 +91,7 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            jacobian[k] = getJacobianRow(position, i, j);
-            k += 3;
+            jacobian[k++] = getJacobianRow(position, i, j);
         }
     }
 
@@ -124,8 +124,10 @@ void ExtendedEvaluation::setObservationFunction()
     auto observation_func = [=](const OurVector<9>& coordinates) {
         uint8_t k = 0;
         OurVector<EQUATIONS_COUNT> tdoas;
-        for (uint8_t i = 0; i < TOWERS_COUNT; ++i) {
-            for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j) {
+        for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
+        {
+            for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
+            {
                 tdoas[k++] = equation(i, j, coordinates[0], coordinates[1], coordinates[2]);
             }
         }
@@ -135,3 +137,68 @@ void ExtendedEvaluation::setObservationFunction()
 
     _filter.setFunction(observation_func);
 }
+/*
+void ExtendedEvaluation::setObservationFunction()
+{
+    auto observation_func = [](const OurVector<9>& coordinates)
+    {
+        OurMatrix<TOWERS_COUNT, 3> _towers_coordinates;
+        OurVector<3> first_tower_position;
+        first_tower_position[0] = -1500;
+        first_tower_position[1] = 400;
+        first_tower_position[2] = 1200;
+
+        _towers_coordinates[0] = first_tower_position;
+
+        OurVector<3> second_tower_position;
+        second_tower_position[0] = 2000;
+        second_tower_position[1] = -3000;
+        second_tower_position[2] = 0;
+
+        _towers_coordinates[1] = second_tower_position;
+
+        OurVector<3> third_tower_position;
+        third_tower_position[0] = -5000;
+        third_tower_position[1] = 12000;
+        third_tower_position[2] = -900;
+
+        _towers_coordinates[2] = third_tower_position;
+
+        OurVector<3> fourth_tower_position;
+        fourth_tower_position[0] = 11000;
+        fourth_tower_position[1] = -4000;
+        fourth_tower_position[2] = 2000;
+
+        _towers_coordinates[3] = fourth_tower_position;
+
+        auto equation = [=](uint8_t i, uint8_t j, double x, double y, double z)
+        {
+            return std::abs(
+                    std::sqrt(
+                            std::pow(_towers_coordinates[i][0] - x, 2) +
+                            std::pow(_towers_coordinates[i][1] - y, 2) +
+                            std::pow(_towers_coordinates[i][2] - z, 2))
+                    -
+                    std::sqrt(
+                            std::pow(_towers_coordinates[j][0] - x, 2) +
+                            std::pow(_towers_coordinates[j][1] - y, 2) +
+                            std::pow(_towers_coordinates[j][2] - z, 2))
+            );
+        };
+
+        uint8_t k = 0;
+        OurVector<EQUATIONS_COUNT> tdoas;
+        for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
+        {
+            for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
+            {
+                tdoas[k++] = equation(i, j, coordinates[0], coordinates[1], coordinates[2]);
+            }
+        }
+
+        return tdoas;
+    };
+
+    _filter.setFunction(observation_func);
+}
+*/

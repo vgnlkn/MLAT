@@ -21,7 +21,11 @@ void Processor::process(uint32_t iter)
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
     // OurVector<9> aircraft_trajectory_estimation = _estim.estimatedState(mlat_coords);
+    // std::cout << tdoas << '\n';
+    _eval.updateObservationMatrix(mlat_coords);
     OurVector<9> aircraft_trajectory_estimation = _eval.estimatedState(tdoas);
+
+    // std::cout << aircraft_trajectory_estimation << '\n';
 
     auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
     {

@@ -22,7 +22,7 @@ public:
     //! Get default state covariance state matrix
     OurMatrix<9, 9> getCovarianceStateMatrix();
     //! Estimated state
-    OurVector<9> estimatedState(OurVector<EQUATIONS_COUNT>& tdoa);
+    OurVector<9> estimatedState(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Resetes covariance matrixes;
     void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
 
@@ -33,7 +33,6 @@ public:
     //!
     void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates) { _towers_coordinates =
                                                                                     std::move(tower_coordinates); }
-
     //!
     void setObservationFunction();
 private:
