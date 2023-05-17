@@ -68,7 +68,6 @@ OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const Our
     OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
     OurVector<dim_observation> Y = this->getError(state_vector);
     _system_vector = _system_vector + (K * Y);
-    std::cout << _system_vector << "\n\n";
     _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 
     return _system_vector;

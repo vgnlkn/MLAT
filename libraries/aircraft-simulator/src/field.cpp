@@ -143,6 +143,13 @@ void Field::setTowers()
 
     _towers[3].setID(3);
     _towers[3].setPosition(tower_position);
+
+    tower_position[0] = 7500;
+    tower_position[1] = 7000;
+    tower_position[2] = 500;
+
+    _towers[4].setID(4);
+    _towers[4].setPosition(tower_position);
 }
 
 void Field::setAircraftTowers()

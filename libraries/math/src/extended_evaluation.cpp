@@ -4,7 +4,7 @@
 #include <utility>
 
 
-static const double array_dispersion[] = {1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10};
+static const double array_dispersion[] = {10e10, 10e10, 10e10, 10e10, 10e10, 10e10, 10e10, 10e10, 10e10};
 
 ExtendedEvaluation::ExtendedEvaluation()
 {
