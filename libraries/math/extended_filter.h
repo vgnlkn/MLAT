@@ -3,6 +3,7 @@
 
 #include <kalman_filter.h>
 #include <defines.h>
+#include <functional>
 
 template<uint8_t dim_state, uint8_t dim_observation>
 class ExtendedFilter final : public KalmanFilter<dim_state, dim_observation> {
@@ -19,6 +20,7 @@ template<uint8_t dim_state, uint8_t dim_observation>
 OurVector<dim_observation>
 ExtendedFilter<dim_state, dim_observation>::getError(const OurVector<dim_observation> &state_vector)
 {
+   // std::cout << _observation_function(this->_system_vector) << std::endl;
     return state_vector - _observation_function(this->_system_vector);
 }
 

@@ -72,6 +72,8 @@ public:
     * Gauss-Newton algorithm
     */
     void process(uint32_t iter);
+
+    friend class Field;
     
 private:
     //! TOA

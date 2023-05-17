@@ -38,6 +38,23 @@ void Field::initialize()
     sendSignalsToTowers();
     _processor.initSolver();
     _aircraft.checkAcceleration();
+
+    OurVector<9> state;
+    state[0] = _current_position[0];
+    state[3] = _current_position[1];
+    state[6] = _current_position[2];
+
+    state[1] = _aircraft.getSpeed()[0];
+    state[4] = _aircraft.getSpeed()[1];
+    state[7] = _aircraft.getSpeed()[2];
+
+    state[2] = _aircraft.getAcceleration()[0];
+    state[5] = _aircraft.getAcceleration()[1];
+    state[8] = _aircraft.getAcceleration()[2];
+
+
+    _processor._eval.initState(state);
+    _processor._eval.updateObservationMatrix(_current_position);
 }
 
 void Field::updateAircraftPosition()

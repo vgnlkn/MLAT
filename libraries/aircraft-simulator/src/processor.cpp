@@ -14,16 +14,30 @@ void Processor::addTOA(uint16_t id, double TOA)
     _towers_toa[id] = TOA;
 }
 
+int k = 0;
 void Processor::process(uint32_t iter)
 {
     OurVector<EQUATIONS_COUNT> tdoas;
     calculateTDOA(tdoas);
 
+    //std::cout << tdoas << std::endl;
     OurVector<3> mlat_coords = _solver.solve(tdoas);
-    // OurVector<9> aircraft_trajectory_estimation = _estim.estimatedState(mlat_coords);
+    
+    //OurVector<9> aircraft_trajectory_estimation = _estim.estimatedState(mlat_coords);
     // std::cout << tdoas << '\n';
-    _eval.updateObservationMatrix(mlat_coords);
-    tdoas = _eval.getTDOA();
+    //_eval.updateObservationMatrix(mlat_coords);
+  //  tdoas = _eval.getTDOA();
+    //if (k <100)
+    //{
+    // //   k = false;
+    //    OurVector<9> st;
+    //    st[0] = mlat_coords[0];
+    //    st[3] = mlat_coords[1];
+    //    st[6] = mlat_coords[2];
+    //    _eval.initState(st);
+    //    k++;
+    //}
+    
     OurVector<9> aircraft_trajectory_estimation = _eval.estimatedState(tdoas);
 
     // std::cout << aircraft_trajectory_estimation << '\n';

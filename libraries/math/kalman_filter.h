@@ -29,6 +29,8 @@ public:
     //! Setter for _noise_covariance_matrix
     void setNoiseCovarianceMatrix(const OurMatrix<dim_observation, dim_observation>& other) { _noise_covariance_matrix = other; }
 
+    auto getSystemVector() { return _system_vector; }
+
     //! Predicts model values
     void predict(double time_delta);
     //! Corrects model values
@@ -54,6 +56,7 @@ template<uint8_t dim_state, uint8_t dim_observation>
 void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
 {
     _system_vector = _state_transition_matrix * _system_vector;
+    
     _state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix
                                * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
 }
@@ -66,6 +69,7 @@ OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const Our
     OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
                                                     + _noise_covariance_matrix;
     OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
+    //std::cout << K << std::endl << std::endl;
     OurVector<dim_observation> Y = this->getError(state_vector);
     _system_vector = _system_vector + (K * Y);
     _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;

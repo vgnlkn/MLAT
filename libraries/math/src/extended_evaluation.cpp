@@ -4,7 +4,7 @@
 #include <utility>
 
 
-static const double array_dispersion[] = {10e10, 10e10, 10e10, 10e10, 10e10, 10e10, 10e10, 10e10, 10e10};
+static const double array_dispersion[] = { 1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10 };
 
 ExtendedEvaluation::ExtendedEvaluation()
 {
@@ -14,12 +14,12 @@ ExtendedEvaluation::ExtendedEvaluation()
     _filter.setErrorCovarianceMatrix(covariance_error);
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> covariance_noise;
-    covariance_noise.setDiagonalValue(array_dispersion[4]);
+    covariance_noise.setDiagonalValue(1e4);
     _filter.setNoiseCovarianceMatrix(covariance_noise);
 
-    OurVector<3> pos;
-    pos.setValue(1);
-    updateObservationMatrix(pos);
+    //OurVector<3> pos;
+    //pos.setValue(1);
+    //updateObservationMatrix(pos);
     setObservationFunction();
 }
 
@@ -41,8 +41,18 @@ void ExtendedEvaluation::updateStateMatrix(double time_delta)
 OurVector<9> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT>& tdoa)
 {
     _initial_tdoas = tdoa;
+    //std::cout << tdoa << std::endl;
     _filter.predict(_time_delta);
-    setObservationFunction();
+
+    
+    auto system = _filter.getSystemVector();
+    OurVector<3> pos;
+    pos[0] = system[0];
+    pos[1] = system[3];
+    pos[2] = system[6];
+
+    updateObservationMatrix(pos);
+    
     return _filter.correct(tdoa);
 }
 
