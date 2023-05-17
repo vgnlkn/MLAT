@@ -21,6 +21,7 @@ OurVector<dim_observation>
 ExtendedFilter<dim_state, dim_observation>::getError(const OurVector<dim_observation> &state_vector)
 {
    // std::cout << _observation_function(this->_system_vector) << std::endl;
+   // std::cout << state_vector - _observation_function(this->_system_vector) << std::endl;
     return state_vector - _observation_function(this->_system_vector);
 }
 

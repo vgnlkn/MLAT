@@ -95,6 +95,26 @@ public:
     void processSignals(uint32_t i) { _processor.process(i); }
     [[nodiscard]] Processor getProcessor() const { return _processor; }
 
+
+
+    auto aircraftState()
+    {
+        OurVector<9> state;
+        state[0] = _current_position[0];
+        state[3] = _current_position[1];
+        state[6] = _current_position[2];
+
+        state[1] = _aircraft.getSpeed()[0];
+        state[4] = _aircraft.getSpeed()[1];
+        state[7] = _aircraft.getSpeed()[2];
+
+        state[2] = _aircraft.getAcceleration()[0];
+        state[5] = _aircraft.getAcceleration()[1];
+        state[8] = _aircraft.getAcceleration()[2];
+
+        return state;
+    }
+
 private:
     //! Aircraft
     Aircraft _aircraft;

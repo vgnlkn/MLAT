@@ -4,7 +4,10 @@
 #include <utility>
 
 
-static const double array_dispersion[] = { 1e4, 9000, 10, 1e4, 9000, 10, 0.1, 0.100, 0.00001 };
+static const double array_dispersion[] = { 1e-6, 0.009000, 0.0010, 1e-6, 0.009000, 0.0010, 0.0001, 0.000100, 0.00000001 };
+//static const double array_dispersion[] = { 1e4, 9000, 1e4, 1e4, 9000, 1e4, 1e5, 1e4, 1e4 };
+
+
 
 ExtendedEvaluation::ExtendedEvaluation()
 {
@@ -14,7 +17,8 @@ ExtendedEvaluation::ExtendedEvaluation()
     _filter.setErrorCovarianceMatrix(covariance_error);
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> covariance_noise;
-    covariance_noise.setDiagonalValue(array_dispersion[4]);
+    //covariance_noise.setDiagonalValue(array_dispersion[4]);
+    covariance_noise.setDiagonalValue(1e-8);
     _filter.setNoiseCovarianceMatrix(covariance_noise);
 
     //OurVector<3> pos;
@@ -41,16 +45,13 @@ void ExtendedEvaluation::updateStateMatrix(double time_delta)
 OurVector<9> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT>& tdoa)
 {
     _initial_tdoas = tdoa;
-    //std::cout << tdoa << std::endl;
     _filter.predict(_time_delta);
-
     
     auto system = _filter.getSystemVector();
     OurVector<3> pos;
     pos[0] = system[0];
     pos[1] = system[3];
     pos[2] = system[6];
-
     updateObservationMatrix(pos);
     
     return _filter.correct(_initial_tdoas);
@@ -116,19 +117,21 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
                 if (_initial_tdoas[k] < 0)
                 {
                     jacobian[k] = -jacobian[k];
-                    _initial_tdoas[k] = _initial_tdoas[k] < 0 ? -_initial_tdoas[k] : _initial_tdoas[k];
+                    _initial_tdoas[k] = -_initial_tdoas[k];
                 }
                 k++;
             }
         }
     }
 
-    return (1 / LIGHT_SPEED) * jacobian;
+    return /*(1 / LIGHT_SPEED) **/ jacobian;
 }
 
 void ExtendedEvaluation::updateObservationMatrix(OurVector<3>& position)
 {
     auto H = getJacobian(position);
+    std::cout << H << "\n\n";
+
     _filter.setObservationMatrix(H);
 }
 
@@ -136,7 +139,7 @@ void ExtendedEvaluation::setObservationFunction()
 {
     auto equation = [=](uint8_t i, uint8_t j, double x, double y, double z)
     {
-        return std::abs(
+        return (1/LIGHT_SPEED) * std::abs(
                 std::sqrt(
                        std::pow(_towers_coordinates[i][0] - x, 2) +
                        std::pow(_towers_coordinates[i][1] - y, 2) +
@@ -157,7 +160,7 @@ void ExtendedEvaluation::setObservationFunction()
         {
             for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
             {
-                tdoas[k++] = equation(i, j, coordinates[0], coordinates[3], coordinates[6]) / LIGHT_SPEED;
+                tdoas[k++] = equation(i, j, coordinates[0], coordinates[3], coordinates[6]);
             }
         }
 

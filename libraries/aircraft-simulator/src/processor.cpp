@@ -97,11 +97,15 @@ void Processor::process(uint32_t iter)
 
     if (_overstatement > k_duration_overstatement)
     {
-        aircraft_trajectory_estimation[8] = 0;
-        aircraft_trajectory_estimation[5] = 0;
-        aircraft_trajectory_estimation[2] = 0;
+        aircraft_trajectory_estimation[8] *= -1;
+        aircraft_trajectory_estimation[5] *= -1;
+        aircraft_trajectory_estimation[2] *= -1;
+        
+        /*aircraft_trajectory_estimation[1] = 0;
+        aircraft_trajectory_estimation[4] = 0;
+        aircraft_trajectory_estimation[7] = 0;*/
 
-        // _estim.initState(aircraft_trajectory_estimation);
+         //_estim.initState(aircraft_trajectory_estimation);
         _eval.initState(aircraft_trajectory_estimation);
         // _estim.reset();
         _eval.reset();
