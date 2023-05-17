@@ -4,7 +4,7 @@
 #include <utility>
 
 
-static const double array_dispersion[] = { 1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10 };
+static const double array_dispersion[] = { 1e4, 9000, 10, 1e4, 9000, 10, 0.1, 0.100, 0.00001 };
 
 ExtendedEvaluation::ExtendedEvaluation()
 {
@@ -14,7 +14,7 @@ ExtendedEvaluation::ExtendedEvaluation()
     _filter.setErrorCovarianceMatrix(covariance_error);
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> covariance_noise;
-    covariance_noise.setDiagonalValue(1e4);
+    covariance_noise.setDiagonalValue(array_dispersion[4]);
     _filter.setNoiseCovarianceMatrix(covariance_noise);
 
     //OurVector<3> pos;
@@ -53,7 +53,7 @@ OurVector<9> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT>& tdoa
 
     updateObservationMatrix(pos);
     
-    return _filter.correct(tdoa);
+    return _filter.correct(_initial_tdoas);
 }
 
 OurMatrix<9, 9> ExtendedEvaluation::getCovarianceStateMatrix()

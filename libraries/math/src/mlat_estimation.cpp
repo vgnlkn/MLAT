@@ -12,7 +12,7 @@ MlatEstimation::MlatEstimation()
 	_filter.setErrorCovarianceMatrix(covariance_error);
 
 	OurMatrix<3, 3> covariance_noise;
-	covariance_noise.setDiagonalValue(array_dispersion[4]);
+	covariance_noise.setDiagonalValue(array_dispersion[2]);
 	_filter.setNoiseCovarianceMatrix(covariance_noise);
 
 	OurMatrix<3, 9> observation_matrix;
