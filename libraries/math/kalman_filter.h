@@ -3,6 +3,7 @@
 
 #include <matrix.h>
 #include <iostream>
+#include <defines.h>
 
 /*! \class KalmanFilter
 *   \brief Class describing Kalman Filter
@@ -59,6 +60,8 @@ void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
     
     _state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix
                                * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
+
+    //std::cout << _state_covariance_matrix << std::endl;
 }
 
 template<uint8_t dim_state, uint8_t dim_observation>
@@ -67,11 +70,12 @@ OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const Our
     OurMatrix<dim_state, dim_state> identity_matrix;
     identity_matrix.setIdentity();
     OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
-                                                    + _noise_covariance_matrix;
+        + _noise_covariance_matrix;
     OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
-    std::cout << S << std::endl << std::endl;
     OurVector<dim_observation> Y = this->getError(state_vector);
     _system_vector = _system_vector + (K * Y);
+    
+  //  std::cout << K << std::endl << std::endl;
     _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 
     return _system_vector;

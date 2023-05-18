@@ -37,7 +37,7 @@ void Processor::process(uint32_t iter)
     //    _eval.initState(st);
     //    k++;
     //}
-    
+    //std::cout << tdoas << std::endl;
     OurVector<9> aircraft_trajectory_estimation = _eval.estimatedState(tdoas);
 
     // std::cout << aircraft_trajectory_estimation << '\n';
@@ -106,9 +106,9 @@ void Processor::process(uint32_t iter)
         aircraft_trajectory_estimation[7] = 0;*/
 
          //_estim.initState(aircraft_trajectory_estimation);
-        _eval.initState(aircraft_trajectory_estimation);
+       // _eval.initState(aircraft_trajectory_estimation);
         // _estim.reset();
-        _eval.reset();
+    //    _eval.reset();
     }
 
     if (iter % POINT_MOD == 0)

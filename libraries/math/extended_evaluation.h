@@ -32,13 +32,17 @@ public:
     OurVector<9> getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j);
     //!
     void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates) { _towers_coordinates =
-                                                                                    std::move(tower_coordinates); }
+                                                                                    std::move(tower_coordinates);
+    
+  //  for (auto& item : _towers_coordinates) { std::cout << item.second << std::endl; }
+    }
     //!
     void setObservationFunction();
 
     //!
     [[nodiscard]] OurVector<EQUATIONS_COUNT> getTDOA() const { return _initial_tdoas; }
 private:
+   
     //! Kalman Filter
     ExtendedFilter<9, EQUATIONS_COUNT> _filter;
     //! Sample rate
@@ -47,6 +51,8 @@ private:
     OurVector<EQUATIONS_COUNT> _initial_tdoas;
     //! Tower coordinates
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
+
+    
 };
 
 #endif
