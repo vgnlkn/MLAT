@@ -112,6 +112,7 @@ void Processor::process(uint32_t iter)
     }
 
     if (iter % POINT_MOD == 0)
+   // if (1==1)
     {
         addPoint(mlat_coords, _plt_mlat);
         addPoint(filter_coords, _plt_filter);
@@ -145,7 +146,7 @@ void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
     {
         for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
         {
-            tdoas[k++] = _towers_toa[i] - _towers_toa[j] + noize(j);
+            tdoas[k++] = _towers_toa[i] - _towers_toa[j] +noize(j);
         }
     }
 }

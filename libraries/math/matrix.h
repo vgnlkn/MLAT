@@ -223,7 +223,7 @@ OurMatrix<row1, col2, T> operator*(const OurMatrix<row1, col1, T>& first, const 
 
     if (row1 == col1 == row2 == col2)
     {
-        return strassenAlg(first, second);
+     //   return strassenAlg(first, second);
     }
     return classicAlgMultiplication(first, second);
 }

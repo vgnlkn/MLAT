@@ -19,7 +19,7 @@ ExtendedEvaluation::ExtendedEvaluation()
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> covariance_noise;
     //covariance_noise.setDiagonalValue(array_dispersion[4]);
-    covariance_noise.setDiagonalValue(1e-6);
+    covariance_noise.setDiagonalValue(1e4);
     _filter.setNoiseCovarianceMatrix(covariance_noise);
 
     //OurVector<3> pos;
@@ -89,7 +89,7 @@ OurVector<9> ExtendedEvaluation::getJacobianRow(OurVector<3> &coordinate, uint8_
 
     for (int column = 0; column < 3; ++column)
     {
-        jacobian_row[column * 3] = (numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denominator_i -
+        jacobian_row[column * 3] = std::abs(numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denominator_i -
                                     numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denominator_j);
     }
 
@@ -100,8 +100,17 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
 {
     auto eequation = [=](uint8_t i, uint8_t j, double x, double y, double z)
     {
-        return (1 / LIGHT_SPEED) *
+      /*  std::cout << "================================================================\n" <<
             std::sqrt(
+                std::pow(_towers_coordinates[i][0] - x, 2) +
+                std::pow(_towers_coordinates[i][1] - y, 2) +
+                std::pow(_towers_coordinates[i][2] - z, 2)
+            ) << "\n" <<
+            std::sqrt(
+                std::pow(_towers_coordinates[j][0] - x, 2) +
+                std::pow(_towers_coordinates[j][1] - y, 2) +
+                std::pow(_towers_coordinates[j][2] - z, 2)
+            ) << "\n" << std::sqrt(
                 std::pow(_towers_coordinates[i][0] - x, 2) +
                 std::pow(_towers_coordinates[i][1] - y, 2) +
                 std::pow(_towers_coordinates[i][2] - z, 2)
@@ -111,7 +120,19 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
                 std::pow(_towers_coordinates[j][0] - x, 2) +
                 std::pow(_towers_coordinates[j][1] - y, 2) +
                 std::pow(_towers_coordinates[j][2] - z, 2)
-            );
+            ) << "\n\n";*/
+        return (1 / LIGHT_SPEED) *
+            (std::sqrt(
+                std::pow(_towers_coordinates[i][0] - x, 2) +
+                std::pow(_towers_coordinates[i][1] - y, 2) +
+                std::pow(_towers_coordinates[i][2] - z, 2)
+            )
+            -
+            std::sqrt(
+                std::pow(_towers_coordinates[j][0] - x, 2) +
+                std::pow(_towers_coordinates[j][1] - y, 2) +
+                std::pow(_towers_coordinates[j][2] - z, 2)
+            ));
     };
 
     auto Aobservation_func = [=](const OurVector<9>& coordinates)
@@ -122,12 +143,12 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
         {
             for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
             {
-                std::cout << coordinates[0] << " " << coordinates[3] << " " << coordinates[6] << std::endl;
+               // std::cout << coordinates[0] << " " << coordinates[3] << " " << coordinates[6] << std::endl;
                 tdoas[k++] = eequation(i, j, coordinates[0], coordinates[3], coordinates[6]);
                // std::cout << tdoas[k - 1];
             }
         }
-        std::cout << std::endl;
+        //std::cout << std::endl;
         return tdoas;
     };
 
@@ -136,10 +157,10 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
     _pseudo_state[3] = position[1];
     _pseudo_state[6] = position[2];
     auto calculated_tdoa = Aobservation_func(_pseudo_state);
-    std::cout << "calculated_tdoa" << std::endl;
+   /* std::cout << "calculated_tdoa" << std::endl;
     std::cout << calculated_tdoa << std::endl;
     std::cout << "init tdoa" << std::endl;
-    std::cout << _initial_tdoas << std::endl << std::endl;
+    std::cout << _initial_tdoas << std::endl << std::endl;*/
     
   //  std::cout << _pseudo_state << std::endl;
     OurMatrix<EQUATIONS_COUNT, 9> jacobian;
@@ -162,7 +183,7 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
             {
                 if (calculated_tdoa[k] < 0)
                 {
-                    jacobian[k] = -jacobian[k];
+             //       jacobian[k] = -jacobian[k];
                     //_initial_tdoas[k] = -_initial_tdoas[k];
                 }
                 k++;
@@ -180,7 +201,7 @@ OurMatrix<EQUATIONS_COUNT, 9> ExtendedEvaluation::getJacobian(OurVector<3> &posi
 void ExtendedEvaluation::updateObservationMatrix(OurVector<3>& position)
 {
     auto H = getJacobian(position);
-   // std::cout << H << "\n\n";
+    //std::cout << H << "\n\n";
 
     _filter.setObservationMatrix(H);
 }

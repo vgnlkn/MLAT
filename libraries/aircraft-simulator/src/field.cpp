@@ -53,7 +53,7 @@ void Field::initialize()
     state[8] = _aircraft.getAcceleration()[2];
 
 
-    _processor._eval.initState(state);
+//_processor._eval.initState(state);
     _processor._eval.updateObservationMatrix(_current_position);
 }
 
