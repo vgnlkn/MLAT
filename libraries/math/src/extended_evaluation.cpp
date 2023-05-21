@@ -5,7 +5,8 @@
 
 //static const double array_dispersion[] = { 1e4, 4356, 2, 1e4, 4356, 2, 1e4, 4356, 0.2 };
 //static const double array_dispersion[] = { 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6 };
-static const double array_dispersion[] = { 1e4, 9000, 1e4, 1e4, 9000, 1e4, 1e5, 1e4, 1e4 };
+//static const double array_dispersion[] = { 1e5, 9000, 1e4, 1e4, 9000, 1e4, 1e4, 1e4, 1e4 };
+static const double array_dispersion[] = { 1,1,1,1,1,1,1,1,1,1,1,1,1};
 
 
 ExtendedEvaluation::ExtendedEvaluation()
@@ -16,7 +17,7 @@ ExtendedEvaluation::ExtendedEvaluation()
     _filter.setErrorCovarianceMatrix(covariance_error);
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> covariance_noise;
-    covariance_noise.setDiagonalValue(1e4);
+    //covariance_noise.setDiagonalValue(1);
     _filter.setNoiseCovarianceMatrix(covariance_noise);
     setObservationFunction();
 }
@@ -27,22 +28,19 @@ void ExtendedEvaluation::updateStateMatrix(double time_delta)
     OurMatrix<3, 3> state_matrix;
     state_matrix.setIdentity();
 
-    state_matrix[0][1] = time_delta;
+   /* state_matrix[0][1] = time_delta;
     state_matrix[0][2] = time_delta * time_delta * 0.5;
     state_matrix[1][2] = time_delta;
-    _time_delta = time_delta;
-    _filter.setStateMatrix(state_matrix);
-
-    _time_delta = time_delta;
+   */ _time_delta = time_delta;
     _filter.setStateMatrix(state_matrix);
 }
 
 OurVector<3> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT>& tdoas)
 {
     _initial_tdoas = tdoas;
-    _filter.predict(_time_delta);
 
     auto system = _filter.getSystemVector();
+    _filter.predict(_time_delta);
     updateObservationMatrix(system);
 
     return _filter.correct(_initial_tdoas);
@@ -98,36 +96,46 @@ OurMatrix<EQUATIONS_COUNT, 3> ExtendedEvaluation::getJacobian(OurVector<3>& posi
         }
     }
 
-    /*for (int i = 0; i < EQUATIONS_COUNT; ++i)
-    {
-        _initial_tdoas[i] = std::abs(_initial_tdoas[i]);
-    } */
-
     return (1 / LIGHT_SPEED) * jacobian;
 }
 
 void ExtendedEvaluation::updateObservationMatrix(OurVector<3>& position)
 {
     auto H = getJacobian(position);
-
     _filter.setObservationMatrix(H);
 }
 
 void ExtendedEvaluation::setObservationFunction()
 {
+    auto eequation = [=](const OurVector<3>& at, uint8_t tower_i, uint8_t tower_j)
+    {
+        auto coordinates_delta_i = _towers_coordinates[tower_i] - at;
+        double d_i = 0;
+        for (uint8_t i = 0; i < 3; ++i)
+        {
+            d_i += std::pow(coordinates_delta_i[i], 2);
+        }
+        d_i = std::sqrt(d_i);
+        auto coordinates_delta_j = _towers_coordinates[tower_j] - at;
+        double d_j = 0;
+        for (uint8_t i = 0; i < 3; ++i)
+        {
+            d_j += std::pow(coordinates_delta_j[i], 2);
+        }
+        d_j = std::sqrt(d_j);
+        return d_i - d_j;
+
+    };
+        
     auto equation = [=](uint8_t i, uint8_t j, double x, double y, double z)
     {
-        return (1 / LIGHT_SPEED) * std::abs(
-                std::sqrt(
-                        std::pow(_towers_coordinates[i][0] - x, 2) +
-                        std::pow(_towers_coordinates[i][1] - y, 2) +
-                        std::pow(_towers_coordinates[i][2] - z, 2))
-                -
-                std::sqrt(
-                        std::pow(_towers_coordinates[j][0] - x, 2) +
-                        std::pow(_towers_coordinates[j][1] - y, 2) +
-                        std::pow(_towers_coordinates[j][2] - z, 2))
-        );
+        
+        OurVector<3> pos;
+        pos[0] = x;
+        pos[1] = y;
+        pos[2] = z;
+        
+        return (1 / LIGHT_SPEED) * eequation(pos, i, j);
     };
 
     auto observation_func = [=](const OurVector<3>& coordinates)
@@ -138,7 +146,8 @@ void ExtendedEvaluation::setObservationFunction()
         {
             for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
             {
-                tdoas[k++] = equation(i, j, coordinates[0], coordinates[1], coordinates[2]);
+                tdoas[k] = equation(i, j, coordinates[0], coordinates[1], coordinates[2]);
+                k++;
             }
         }
 

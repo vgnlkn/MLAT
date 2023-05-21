@@ -48,45 +48,6 @@ void Processor::process(uint32_t iter)
     // fillVector(filter_acceleration, 2);
 
 
-    _mlat_average = mlat_coords + _mlat_average;
-    _kalman_average = filter_coords + _kalman_average;
-    if (_iteration % 100 == 0)
-    {
-        _overstatement = 0;
-        _mlat_average.setValue(0);
-        _mlat_min = mlat_coords;
-        _mlat_max = mlat_coords;
-        _kalman_average.setValue(0);
-        _iteration = 1;
-    }
-   
-    for (int i = 0; i < 3; ++i)
-    {
-        if (mlat_coords[i] < _mlat_min[i])
-        {
-            _mlat_min[i] = mlat_coords[i];
-        }
-        else if (mlat_coords[i] > _mlat_max[i])
-        {
-            _mlat_max[i] = mlat_coords[i];
-        }
-        if (std::abs(_mlat_average[i] - _kalman_average[i]) > _iteration++ * std::abs(_mlat_min[i] - _mlat_max[i]))
-        {
-            _overstatement++;
-        }
-    }
-
-
-    /*if (_overstatement > k_duration_overstatement)
-    {
-        aircraft_trajectory_estimation[0] = 0;
-        aircraft_trajectory_estimation[1] = 0;
-        aircraft_trajectory_estimation[2] = 0;
-
-        _eval.initState(aircraft_trajectory_estimation);
-        _eval.reset();
-    } */
-
     if (iter % POINT_MOD == 0)
     {
         addPoint(mlat_coords, _plt_mlat);
