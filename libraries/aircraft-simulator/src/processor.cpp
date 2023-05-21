@@ -20,15 +20,15 @@ void Processor::process(uint32_t iter)
     calculateTDOA(tdoas);
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
-    OurVector<9> aircraft_trajectory_estimation = 
-        _estim.estimatedState(mlat_coords);
+    OurVector<3> aircraft_trajectory_estimation = _eval.estimatedState(tdoas);
 
     auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
     {
-        vector[0] = aircraft_trajectory_estimation[i];
-        vector[1] = aircraft_trajectory_estimation[i + 3];
-        vector[2] = aircraft_trajectory_estimation[i + 6];
+        vector[0] = aircraft_trajectory_estimation[0];
+        vector[1] = aircraft_trajectory_estimation[1];
+        vector[2] = aircraft_trajectory_estimation[2];
     };
+
 
     auto addPoint = [](const OurVector<3>& coords, Plotter* plt) -> void
     {
@@ -44,8 +44,8 @@ void Processor::process(uint32_t iter)
 
     OurVector<3> filter_coords, filter_speed, filter_acceleration;
     fillVector(filter_coords, 0);
-    fillVector(filter_speed, 1);
-    fillVector(filter_acceleration, 2);
+    // fillVector(filter_speed, 1);
+    // fillVector(filter_acceleration, 2);
 
 
     _mlat_average = mlat_coords + _mlat_average;
@@ -76,22 +76,23 @@ void Processor::process(uint32_t iter)
         }
     }
 
-    if (_overstatement > k_duration_overstatement)
+
+    /*if (_overstatement > k_duration_overstatement)
     {
-        aircraft_trajectory_estimation[8] = 0;
-        aircraft_trajectory_estimation[5] = 0;
+        aircraft_trajectory_estimation[0] = 0;
+        aircraft_trajectory_estimation[1] = 0;
         aircraft_trajectory_estimation[2] = 0;
 
-        _estim.initState(aircraft_trajectory_estimation);
-        _estim.reset();
-    }
+        _eval.initState(aircraft_trajectory_estimation);
+        _eval.reset();
+    } */
 
     if (iter % POINT_MOD == 0)
     {
         addPoint(mlat_coords, _plt_mlat);
         addPoint(filter_coords, _plt_filter);
-        addPoint(filter_speed, _plt_filter_speed);
-        addPoint(filter_acceleration, _plt_filter_acceleration);
+        // addPoint(filter_speed, _plt_filter_speed);
+        // addPoint(filter_acceleration, _plt_filter_acceleration);
     }
 }
 
@@ -100,11 +101,12 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _towers[id] = tower;
     _towers_coordinates[id] = tower.getPosition();
     _solver.setTowersCoordinates(_towers_coordinates);
+    _eval.setTowersCoordinates(_towers_coordinates);
 }
 
 void Processor::setSampleRate(double sample_rate)
 {
-    _estim.updateStateMatrix(sample_rate);
+    _eval.updateStateMatrix(sample_rate);
 }
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)

@@ -30,19 +30,31 @@ public:
     void setNoiseCovarianceMatrix(const OurMatrix<dim_observation, dim_observation>& other)
     { _noise_covariance_matrix = other; }
 
+    //! Getter for _system_vector
+    auto getSystemVector() { return _system_vector; }
+
     //! Predicts model values
     void predict(double time_delta);
     //! Corrects model values
     OurVector<dim_state> correct(const OurVector<dim_observation>& state_vector);
 
-private:
-    OurVector<dim_state> _system_vector;                       // x
-    OurMatrix<dim_state, dim_state> _state_transition_matrix;  // F
-    OurMatrix<dim_state, dim_state> _error_covariance_matrix;  // Q
-    OurMatrix<dim_state, dim_state> _state_covariance_matrix;  // P
+    //! Virtual function that overriden in extended filter
+    virtual OurVector<dim_observation> getError(const OurVector<dim_observation> &state_vector);
+protected:
+    OurVector<dim_state> _system_vector;                                   // x
+    OurMatrix<dim_state, dim_state> _state_transition_matrix;              // F
+    OurMatrix<dim_state, dim_state> _error_covariance_matrix;              // Q
+    OurMatrix<dim_state, dim_state> _state_covariance_matrix;              // P
     OurMatrix<dim_observation, dim_observation> _noise_covariance_matrix;  // R
-    OurMatrix<dim_observation, dim_state> _observation_matrix; // H
+    OurMatrix<dim_observation, dim_state> _observation_matrix;             // H
 };
+
+template<uint8_t dim_state, uint8_t dim_observation>
+OurVector<dim_observation>
+KalmanFilter<dim_state, dim_observation>::getError(const OurVector<dim_observation> &state_vector)
+{
+    return state_vector - (_observation_matrix * _system_vector);
+}
 
 template<uint8_t dim_state, uint8_t dim_observation>
 void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)

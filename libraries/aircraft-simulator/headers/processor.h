@@ -11,6 +11,7 @@
 #include <plotter.h>
 #include <random>
 #include <mlat_estimation.h>
+#include <extended_evaluation.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -71,6 +72,9 @@ public:
     * Gauss-Newton algorithm
     */
     void process(uint32_t iter);
+
+    //! Getter for _eval
+    ExtendedEvaluation& getEval() { return _eval; }
     
 private:
     //! TOA
@@ -93,6 +97,8 @@ private:
     NoizeGenerator* _noise;
     //! Estimation
     MlatEstimation _estim;
+    //! Estimation by extended filter
+    ExtendedEvaluation _eval;
     //! Average coordinates
     OurVector<3> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
