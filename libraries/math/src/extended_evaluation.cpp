@@ -6,7 +6,7 @@
 //static const double array_dispersion[] = { 1e4, 4356, 2, 1e4, 4356, 2, 1e4, 4356, 0.2 };
 //static const double array_dispersion[] = { 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6 };
 //static const double array_dispersion[] = { 1e5, 9000, 1e4, 1e4, 9000, 1e4, 1e4, 1e4, 1e4 };
-static const double array_dispersion[] = { 1,1,1,1,1,1,1,1,1,1,1,1,1};
+static const double array_dispersion[] = { 1,1,1,1,1,1,1,1,1,1,1,1,1 };
 
 
 ExtendedEvaluation::ExtendedEvaluation()

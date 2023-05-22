@@ -23,6 +23,7 @@ void Field::startMovement()
         checkHeight();
         updateAircraftSpeed();
         sendSignalsToTowers();
+        _processor.getEval().updateObservationMatrix(_current_position);
         processSignals(i);
         if (i % POINT_MOD == 0)
         {
