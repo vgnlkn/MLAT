@@ -39,7 +39,7 @@ void Field::initialize()
     _processor.initSolver();
     _aircraft.checkAcceleration();
 
-    _processor.getEval().updateObservationMatrix(_current_position);
+    //_processor.getEval().updateObservationMatrix(_current_position);
 }
 
 void Field::updateAircraftPosition()

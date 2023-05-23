@@ -14,6 +14,11 @@ public:
     ExtendedEvaluation();
     //! Destructor
     ~ExtendedEvaluation() = default;
+
+    void setInitialParams(const OurVector<3>& initial_coordinates,
+        const OurVector<EQUATIONS_COUNT>& initial_tdoas);
+
+
     //! Update state matrix
     void updateStateMatrix(double time_delta);
     //! Update observation matrix

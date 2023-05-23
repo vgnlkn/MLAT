@@ -22,6 +22,13 @@ ExtendedEvaluation::ExtendedEvaluation()
     setObservationFunction();
 }
 
+void ExtendedEvaluation::setInitialParams(const OurVector<3>& initial_coordinates, const OurVector<EQUATIONS_COUNT>& initial_tdoas)
+{
+    auto pos = initial_coordinates;
+    updateObservationMatrix(pos);
+
+}
+
 
 void ExtendedEvaluation::updateStateMatrix(double time_delta)
 {
@@ -39,8 +46,8 @@ OurVector<3> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT>& tdoa
 {
     _initial_tdoas = tdoas;
 
-    auto system = _filter.getSystemVector();
     _filter.predict(_time_delta);
+    auto system = _filter.getSystemVector();
     updateObservationMatrix(system);
 
     return _filter.correct(_initial_tdoas);
@@ -95,8 +102,8 @@ OurMatrix<EQUATIONS_COUNT, 3> ExtendedEvaluation::getJacobian(OurVector<3>& posi
             jacobian[k++] = getJacobianRow(position, i, j);
         }
     }
-
-    return (1 / LIGHT_SPEED) * jacobian;
+   // std::cout << jacobian << std::endl << std::endl;
+    return jacobian;
 }
 
 void ExtendedEvaluation::updateObservationMatrix(OurVector<3>& position)
@@ -107,7 +114,7 @@ void ExtendedEvaluation::updateObservationMatrix(OurVector<3>& position)
 
 void ExtendedEvaluation::setObservationFunction()
 {
-    auto eequation = [=](const OurVector<3>& at, uint8_t tower_i, uint8_t tower_j)
+    auto equation = [=](const OurVector<3>& at, uint8_t tower_i, uint8_t tower_j)
     {
         auto coordinates_delta_i = _towers_coordinates[tower_i] - at;
         double d_i = 0;
@@ -126,17 +133,6 @@ void ExtendedEvaluation::setObservationFunction()
         return d_i - d_j;
 
     };
-        
-    auto equation = [=](uint8_t i, uint8_t j, double x, double y, double z)
-    {
-        
-        OurVector<3> pos;
-        pos[0] = x;
-        pos[1] = y;
-        pos[2] = z;
-        
-        return (1 / LIGHT_SPEED) * eequation(pos, i, j);
-    };
 
     auto observation_func = [=](const OurVector<3>& coordinates)
     {
@@ -146,11 +142,11 @@ void ExtendedEvaluation::setObservationFunction()
         {
             for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
             {
-                tdoas[k] = equation(i, j, coordinates[0], coordinates[1], coordinates[2]);
+                tdoas[k] = equation(coordinates, i, j);
                 k++;
             }
         }
-
+       // std::cout << coordinates << std::endl;
         return tdoas;
     };
 
