@@ -20,6 +20,7 @@ template<uint8_t dim_state, uint8_t dim_observation>
 OurVector<dim_observation>
 ExtendedFilter<dim_state, dim_observation>::getError(const OurVector<dim_observation> &state_vector)
 {
+    //return state_vector * LIGHT_SPEED - _observation_function(this->_system_vector);
     return _observation_function(this->_system_vector) - state_vector * LIGHT_SPEED;
 }
 
