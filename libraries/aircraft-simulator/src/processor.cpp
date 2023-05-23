@@ -7,6 +7,8 @@ void Processor::initSolver()
     calculateTDOA(tdoas);
 
     _solver.setInitialParams(init, tdoas);
+    _eval.setInitialParams(init, tdoas);
+
 }
 
 void Processor::addTOA(uint16_t id, double TOA)
