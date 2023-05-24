@@ -45,6 +45,8 @@ public:
     std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> QRDecomposition() const;
     //! Computing the LUP-factorization of current matrix
     void LUPFactorization(OurVector<row>& P);
+    //! Computing the Cholesky decomposition of current matrix
+    OurMatrix<row, col> choleskyDecomposition() const;
 
     //! Classical matrix multiplication algorithm
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
@@ -112,6 +114,88 @@ private:
     OurVector<col, type>* _matrix;
 
 };
+
+template<uint8_t row, uint8_t col, typename type>
+OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
+{
+    checkParams(*this);
+    assert(row == col);
+
+    OurMatrix<row, col, type> L;
+
+    // Три реализации холецкого
+    /*
+    for (uint8_t i = 0; i < row; i++)
+    {
+        for (uint8_t j = 0; j <= i; j++)
+        {
+            double sum = 0;
+            for (uint8_t k = 0; k < j; k++)
+            {
+                sum += L[i][k] * L[j][k];
+            }
+
+            if (i == j)
+            {
+                L[i][j] = sqrt(_matrix[i][i] - sum);
+            }
+            else
+            {
+                L[i][j] = (1.0 / L[j][j] * (_matrix[i][j] - sum));
+            }
+        }
+    }
+    */
+    /*
+    for (uint8_t i = 0; i < row; i++)
+    {
+        for (uint8_t j = 0; j <= i; j++)
+        {
+            double sum = 0;
+            for (uint8_t k = 0; k < j; k++)
+            {
+                sum += L[i][k] * L[j][k];
+            }
+
+            if (i == j)
+            {
+                L[i][j] = sqrt(_matrix[i][i] - sum);
+            }
+            else
+            {
+                L[i][j] = (1.0 / L[j][j] * (_matrix[i][j] - sum));
+            }
+        }
+    }
+     */
+
+    for (uint8_t i = 0; i < row; ++i)
+    {
+        for (uint8_t j = 0; j <= i; ++j)
+        {
+            double sum = 0.0;
+            if (j == i)
+            {
+                for (int k = 0; k < j; ++k)
+                {
+                    sum += std::pow(L[j][k], 2);
+                }
+                L[j][j] = std::sqrt(_matrix[j][j] - sum);
+            }
+            else
+            {
+                for (int k = 0; k < j; ++k)
+                {
+                    sum += (L[i][k] * L[j][k]);
+                }
+                L[i][j] = (_matrix[i][j] - sum) / L[j][j];
+            }
+        }
+    }
+
+    return L;
+}
+
 
 template<uint8_t row, uint8_t col, typename type>
 OurMatrix<col, row, type> OurMatrix<row, col, type>::getInverse() const

@@ -620,3 +620,28 @@ TEST(MatrixTests, TestMultiplying)
         }
     }
 }
+
+TEST(MatrixTests, TestCholesky)
+{
+    OurMatrix<3, 3> matrix;
+    matrix[0][0] = 4;
+    matrix[0][1] = 12;
+    matrix[0][2] = -16;
+    matrix[1][0] = 12;
+    matrix[1][1] = 37;
+    matrix[1][2] = -43;
+    matrix[2][0] = -16;
+    matrix[2][1] = -43;
+    matrix[2][2] = 98;
+
+    OurMatrix<3, 3> L = matrix.choleskyDecomposition();
+    OurMatrix<3, 3> res = L * L.getTransposed();
+
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ASSERT_EQ(matrix[i][j], res[i][j]);
+        }
+    }
+}
