@@ -650,26 +650,44 @@ TEST(MatrixTests, TestCholesky)
 TEST(MatrixTests, TestLU) {
     OurMatrix<3, 3, double> a, L, ans;
 
-    a[0][0] = 1.0;
+    a[0][0] = 3.0;
     a[0][1] = 2.0;
     a[0][2] = 3.0;
     a[1][0] = 4.0;
     a[1][1] = 5.0;
     a[1][2] = 6.0;
     a[2][0] = 7.0;
-    a[2][1] = 8.0;
+    a[2][1] = 9.0;
     a[2][2] = 10.0;
 
+    ans[0][0] = 0.8;
+    ans[0][1] = -1.4;
+    ans[0][2] = 0.6;
+    ans[1][0] = -0.4;
+    ans[1][1] = -1.8;
+    ans[1][2] = 1.2;
+    ans[2][0] = -0.2;
+    ans[2][1] = 2.6;
+    ans[2][2] = -1.4;
+
     OurMatrix<3, 3> U = a.LUFactorization(L);
-    ans = L * U;
+    auto res = L * U;
 
     for (uint8_t i = 0; i < 3; ++i)
     {
         for (uint8_t j = 0; j < 3; ++j)
         {
-            ASSERT_EQ(a[i][j], ans[i][j]);
+            ASSERT_EQ(a[i][j], res[i][j]);
         }
     }
 
-    
+    std::cout << a << "\n\n" << a.getLUInverse() << "\n\n" << a.getInverse();
+
+    /*for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ASSERT_EQ(a[i][j], ans[i][j]);
+        }
+    } */
 }
