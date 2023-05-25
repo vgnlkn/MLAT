@@ -645,3 +645,29 @@ TEST(MatrixTests, TestCholesky)
         }
     }
 }
+
+
+TEST(MatrixTests, TestLU) {
+    OurMatrix<3, 3, double> a, L, ans;
+
+    a[0][0] = 1.0;
+    a[0][1] = 2.0;
+    a[0][2] = 3.0;
+    a[1][0] = 4.0;
+    a[1][1] = 5.0;
+    a[1][2] = 6.0;
+    a[2][0] = 7.0;
+    a[2][1] = 8.0;
+    a[2][2] = 9.0;
+
+    OurMatrix<3, 3> U = a.LUFactorization(L);
+    ans = L * U;
+
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ASSERT_EQ(a[i][j], ans[i][j]);
+        }
+    }
+}

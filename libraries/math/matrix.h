@@ -46,7 +46,7 @@ public:
     //! Computing the LUP-factorization of current matrix
     void LUPFactorization(OurVector<row>& P);
     //! Computing the LU-factorization of current matrix
-    void LUFactorization(OurMatrix<row, col>& L);
+    OurMatrix<row, col> LUFactorization(OurMatrix<row, col>& L);
     //! Computing the Cholesky decomposition of current matrix
     OurMatrix<row, col> choleskyDecomposition() const;
 
@@ -118,7 +118,7 @@ private:
 };
 
 template<uint8_t row, uint8_t col, typename type>
-void OurMatrix<row, col, type>::LUFactorization(OurMatrix<row, col>& L)
+OurMatrix<row, col> OurMatrix<row, col, type>::LUFactorization(OurMatrix<row, col>& L)
 {
     assert(row == col);
     const uint8_t N = row;
