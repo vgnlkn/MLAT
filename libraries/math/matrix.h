@@ -47,6 +47,8 @@ public:
     void LUPFactorization(OurVector<row>& P);
     //! Computing the LU-factorization of current matrix
     OurMatrix<row, col> LUFactorization(OurMatrix<row, col>& L);
+    //! Inverse matrix with LU-factorization
+    OurMatrix<col, row> getLUInverse();
     //! Computing the Cholesky decomposition of current matrix
     OurMatrix<row, col> choleskyDecomposition() const;
 
@@ -116,6 +118,48 @@ private:
     OurVector<col, type>* _matrix;
 
 };
+
+template<uint8_t row, uint8_t col, typename type>
+OurMatrix<col, row> OurMatrix<row, col, type>::getLUInverse()
+{
+    OurMatrix<row, col> L;
+    OurMatrix<row, col> U = this->LUFactorization(L);
+
+    OurMatrix<col, row, type> U_inversed = U;
+
+    double sum;
+    for (int i = col - 1; i >= 0; i--)
+    {
+        U_inversed[i][i] = 1 / U[i][i];
+        for (int j = i - 1; j >= 0; j--)
+        {
+            sum = 0;
+            for (int k = j + 1; k <= i; k++)
+            {
+                sum += U[j][k] * U_inversed[k][i];
+            }
+            U_inversed[j][i] = -sum / U[j][j];
+        }
+    }
+
+    OurMatrix<col, row, type> L_inversed = L;
+    for (int i = 0; i < col; i++)
+    {
+        L_inversed[i][i] = 1 / L[i][i];
+        for (int j = i + 1; j < col; j++)
+        {
+            sum = 0;
+            for (int k = i; k < j; k++)
+            {
+                sum += L[j][k] * L_inversed[k][i];
+            }
+            L_inversed[j][i] = -sum / L[j][j];
+        }
+    }
+
+
+    return U_inversed * L_inversed;
+}
 
 template<uint8_t row, uint8_t col, typename type>
 OurMatrix<row, col> OurMatrix<row, col, type>::LUFactorization(OurMatrix<row, col>& L)

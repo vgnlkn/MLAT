@@ -658,7 +658,7 @@ TEST(MatrixTests, TestLU) {
     a[1][2] = 6.0;
     a[2][0] = 7.0;
     a[2][1] = 8.0;
-    a[2][2] = 9.0;
+    a[2][2] = 10.0;
 
     OurMatrix<3, 3> U = a.LUFactorization(L);
     ans = L * U;
@@ -670,4 +670,6 @@ TEST(MatrixTests, TestLU) {
             ASSERT_EQ(a[i][j], ans[i][j]);
         }
     }
+
+    
 }
