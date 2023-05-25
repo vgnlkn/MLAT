@@ -38,13 +38,15 @@ public:
     void setZero() { this->setValue(0.f); }
     //! Gets transposed copy of matrix
     OurMatrix<col, row, type> getTransposed() const;
-    
+
     //! Computing the pseudo inversed matrix
     OurMatrix<col, row, type> pseudoInverse() const;
     //! Computing the QR-decomposition of current matrix
     std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> QRDecomposition() const;
     //! Computing the LUP-factorization of current matrix
     void LUPFactorization(OurVector<row>& P);
+    //! Computing the LU-factorization of current matrix
+    void LUFactorization(OurMatrix<row, col>& L);
     //! Computing the Cholesky decomposition of current matrix
     OurMatrix<row, col> choleskyDecomposition() const;
 
@@ -114,6 +116,44 @@ private:
     OurVector<col, type>* _matrix;
 
 };
+
+template<uint8_t row, uint8_t col, typename type>
+void OurMatrix<row, col, type>::LUFactorization(OurMatrix<row, col>& L)
+{
+    assert(row == col);
+    const uint8_t N = row;
+
+    OurMatrix<N, N> U = (*this);
+
+    for (uint8_t i = 0; i < N; i++)
+    {
+        for (uint8_t j = i; j < N; j++)
+        {
+            L[j][i] = U[j][i] / U[i][i];
+        }
+    }
+
+    for (uint8_t k = 1; k < N; k++)
+    {
+        for (uint8_t i = k - 1; i < N; i++)
+        {
+            for (uint8_t j = i; j < N; j++)
+            {
+                L[j][i] = U[j][i] / U[i][i];
+            }
+        }
+
+        for (uint8_t i = k; i < N; i++)
+        {
+            for (uint8_t j = k - 1; j < N; j++)
+            {
+                U[i][j] = U[i][j] - L[i][k - 1] * U[k - 1][j];
+            }
+        }
+    }
+
+    return U;
+}
 
 template<uint8_t row, uint8_t col, typename type>
 OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
@@ -203,7 +243,7 @@ OurMatrix<col, row, type> OurMatrix<row, col, type>::getInverse() const
     checkParams(*this);
     assert(row == col);
 
-    OurMatrix<row, 2*col, type> augmented_matrix;
+    OurMatrix<row, 2 * col, type> augmented_matrix;
     augmented_matrix.setZero();
 
     for (uint8_t i = 0; i < row; ++i)
@@ -537,13 +577,13 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
     OurMatrix<col, col, type> R_inversed = QR.second;
 
     double sum;
-    for (int i = col - 1; i >= 0; i--) 
+    for (int i = col - 1; i >= 0; i--)
     {
         R_inversed[i][i] = 1 / QR.second[i][i];
-        for (int j = i - 1; j >= 0; j--) 
+        for (int j = i - 1; j >= 0; j--)
         {
             sum = 0;
-            for (int k = j + 1; k <= i; k++) 
+            for (int k = j + 1; k <= i; k++)
             {
                 sum += QR.second[j][k] * R_inversed[k][i];
             }
@@ -551,7 +591,7 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
         }
     }
 
-    
+
     return R_inversed * Q_transposed;
 }
 
@@ -560,7 +600,7 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
 {
     OurMatrix<row, col, type> Q;
     OurMatrix<col, col, type> R;
-    for (int j = 0; j < col; j++) 
+    for (int j = 0; j < col; j++)
     {
         for (int i = 0; i < row; i++)
         {
