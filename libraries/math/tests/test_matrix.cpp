@@ -681,13 +681,13 @@ TEST(MatrixTests, TestLU) {
         }
     }
 
-    std::cout << a << "\n\n" << a.getLUInverse() << "\n\n" << a.getInverse();
-
-    /*for (uint8_t i = 0; i < 3; ++i)
+    std::cout << a << "\n\n" << a.getLUInverse() << "\n\n" << a.getInverse() << "\n";
+    a = a.getLUInverse();
+    for (uint8_t i = 0; i < 3; ++i)
     {
         for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(a[i][j], ans[i][j]);
         }
-    } */
+    }
 }
