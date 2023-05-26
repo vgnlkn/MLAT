@@ -3,6 +3,7 @@
 
 #include <matrix.h>
 #include <iostream>
+#include <iomanip>
 
 /*! \class KalmanFilter
 *   \brief Class describing Kalman Filter
@@ -79,11 +80,12 @@ OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const Our
     OurMatrix<dim_observation, dim_observation> S = (_observation_matrix * _state_covariance_matrix) * _observation_matrix.getTransposed();
                                                     //+ _noise_covariance_matrix;
     OurMatrix<dim_observation, dim_observation> L = S.choleskyDecomposition();
-    std::cout << S << "\n\n" << L << "\n\n";
+    //std::cout << std::fixed << std::setprecision(15);
+    std::cout << "S = \n" << S << "\n\n" << S * S.matrixInverse() << "\n\n";
     OurMatrix<dim_state, dim_observation> K = (/*_state_covariance_matrix **/ _observation_matrix.getTransposed()) * S.getInverse();
     
-    std::cout << _observation_matrix.pseudoInverse() << std::endl << std::endl;
-    std::cout << K << std::endl << std::endl;
+   // std::cout << _observation_matrix.pseudoInverse() << std::endl << std::endl;
+    // std::cout << K << std::endl << std::endl;
 
     exit(0);
     
