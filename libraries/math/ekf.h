@@ -69,7 +69,7 @@ inline OurVector<3> EKF<dim_observation>::estimate(OurVector<dim_observation> ob
 	_state = _state + K * (observations - equation(_state));
 	_covariance_state = (I - K * _observation_mtx) * _covariance_state;
 		
-
+	return _state;
 }
 
 template<uint8_t dim_observation>
@@ -84,14 +84,14 @@ inline OurVector<dim_observation> EKF<dim_observation>::equation(OurVector<3> x)
 			tdoa[k++] = (1 / LIGHT_SPEED) * (l2_norm(x - _tower_positions[i]) - l2_norm(x - _tower_positions[j]));
 		}
 	}
-
+	return tdoa;
 }
 
 template<uint8_t dim_observation>
 inline void EKF<dim_observation>::updateObservation()
 {
 	OurMatrix<dim_observation, 3> jacobi;
-	auto jacobiRow = [&](OurVector x, uint8_t i, uint8_t j)
+	auto jacobiRow = [&](OurVector<3> x, uint8_t i, uint8_t j)
 	{
 		OurVector<3> row;
 		row.setValue(0);
@@ -102,13 +102,14 @@ inline void EKF<dim_observation>::updateObservation()
 			row[col] = (x[col] - _tower_positions[i][col]) / d_i -
 					   (x[col] - _tower_positions[j][col]) / d_j;
 		}
+		return row;
 	};
 	int observation = 0;
 	for (int i = 0; i < TOWERS_COUNT; ++i)
 	{
 		for (int j = i + 1; j < TOWERS_COUNT; ++j)
 		{
-			_observation_mtx[observation++] = (1/LIGHT_SPEED) * jacobiRow(_state, i, j)
+			_observation_mtx[observation++] = (1 / LIGHT_SPEED) * jacobiRow(_state, i, j);
 		}
 	}
 }
