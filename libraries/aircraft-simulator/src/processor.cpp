@@ -8,7 +8,6 @@ void Processor::initSolver()
 
     _solver.setInitialParams(init, tdoas);
     //_eval.setInitialParams(init, tdoas);
-
 }
 
 void Processor::addTOA(uint16_t id, double TOA)
@@ -22,7 +21,7 @@ void Processor::process(uint32_t iter)
     calculateTDOA(tdoas);
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
-    OurVector<3> aircraft_trajectory_estimation = _eval.estimatedState(tdoas);
+    OurVector<3> aircraft_trajectory_estimation = _ekf.estimate(tdoas);
 
     auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
     {
@@ -65,6 +64,7 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _towers_coordinates[id] = tower.getPosition();
     _solver.setTowersCoordinates(_towers_coordinates);
     _eval.setTowersCoordinates(_towers_coordinates);
+    _ekf.init(_towers_coordinates);
 }
 
 void Processor::setSampleRate(double sample_rate)

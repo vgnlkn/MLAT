@@ -12,6 +12,7 @@
 #include <random>
 #include <mlat_estimation.h>
 #include <extended_evaluation.h>
+#include <ekf.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -107,7 +108,8 @@ private:
     uint32_t _iteration;
     //! Overstatement
     uint32_t _overstatement;
-
+    //! ekf
+    EKF<EQUATIONS_COUNT> _ekf;
 };
 
 
