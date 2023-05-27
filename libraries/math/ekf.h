@@ -109,9 +109,10 @@ inline void EKF<dim_observation>::updateObservation()
 	{
 		for (int j = i + 1; j < TOWERS_COUNT; ++j)
 		{
-			_observation_mtx[observation++] = (1 / LIGHT_SPEED) * jacobiRow(_state, i, j);
+			_observation_mtx[observation++] = jacobiRow(_state, i, j);
 		}
 	}
+	_observation_mtx = (-1 / LIGHT_SPEED) * _observation_mtx;
 }
 
 #endif

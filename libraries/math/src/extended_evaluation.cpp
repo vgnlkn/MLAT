@@ -38,7 +38,7 @@ void ExtendedEvaluation::updateStateMatrix(double time_delta)
 
 OurVector<3> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT> tdoas)
 {
-    // return _filter.estimate(tdoas);
+     return _filter.estimate(tdoas);
 }
 
 OurMatrix<3, 3> ExtendedEvaluation::getCovarianceStateMatrix()
