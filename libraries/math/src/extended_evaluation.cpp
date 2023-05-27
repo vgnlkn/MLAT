@@ -11,46 +11,34 @@ static const double array_dispersion[] = { 1,1,1,1,1,1,1,1,1,1,1,1,1 };
 
 ExtendedEvaluation::ExtendedEvaluation()
 {
-    _filter.setStateCovarianceMatrix(getCovarianceStateMatrix());
-
-    OurMatrix<3, 3> covariance_error;
-    _filter.setErrorCovarianceMatrix(covariance_error);
-
-    OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> covariance_noise;
-    //covariance_noise.setDiagonalValue(1);
-    _filter.setNoiseCovarianceMatrix(covariance_noise);
-    setObservationFunction();
+    _filter.init(_towers_coordinates);
 }
 
+/*
 void ExtendedEvaluation::setInitialParams(const OurVector<3>& initial_coordinates, const OurVector<EQUATIONS_COUNT>& initial_tdoas)
 {
     auto pos = initial_coordinates;
     updateObservationMatrix(pos);
-
 }
+*/
 
-
+/*
 void ExtendedEvaluation::updateStateMatrix(double time_delta)
 {
     OurMatrix<3, 3> state_matrix;
     state_matrix.setIdentity();
 
-   /* state_matrix[0][1] = time_delta;
-    state_matrix[0][2] = time_delta * time_delta * 0.5;
-    state_matrix[1][2] = time_delta;
-   */ _time_delta = time_delta;
+    // state_matrix[0][1] = time_delta;
+    // state_matrix[0][2] = time_delta * time_delta * 0.5;
+    // state_matrix[1][2] = time_delta;
+    _time_delta = time_delta;
     _filter.setStateMatrix(state_matrix);
 }
+*/
 
-OurVector<3> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT>& tdoas)
+OurVector<3> ExtendedEvaluation::estimatedState(OurVector<EQUATIONS_COUNT> tdoas)
 {
-    _initial_tdoas = tdoas;
-
-    _filter.predict(_time_delta);
-    auto system = _filter.getSystemVector();
-    updateObservationMatrix(system);
-
-    return _filter.correct(_initial_tdoas);
+    return _filter.estimate(tdoas);
 }
 
 OurMatrix<3, 3> ExtendedEvaluation::getCovarianceStateMatrix()
@@ -106,12 +94,15 @@ OurMatrix<EQUATIONS_COUNT, 3> ExtendedEvaluation::getJacobian(OurVector<3>& posi
     return jacobian;
 }
 
+/*
 void ExtendedEvaluation::updateObservationMatrix(OurVector<3>& position)
 {
     auto H = getJacobian(position);
     _filter.setObservationMatrix(H);
 }
+ */
 
+/*
 void ExtendedEvaluation::setObservationFunction()
 {
     auto equation = [=](const OurVector<3>& at, uint8_t tower_i, uint8_t tower_j)
@@ -151,4 +142,4 @@ void ExtendedEvaluation::setObservationFunction()
     };
 
     _filter.setFunction(observation_func);
-}
+} */

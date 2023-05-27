@@ -13,7 +13,7 @@ add_library (Math
 	kalman_filter.h
         mlat_estimation.h
         src/mlat_estimation.cpp
-        extended_evaluation.h src/extended_evaluation.cpp extended_filter.h)
+        extended_evaluation.h src/extended_evaluation.cpp extended_filter.h ekf.h)
 
 find_package(GTest)
 if (${GTest_FOUND})

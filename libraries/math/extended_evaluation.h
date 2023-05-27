@@ -1,7 +1,7 @@
 #ifndef MLAT_EXTENDED_EVALUATION_H
 #define MLAT_EXTENDED_EVALUATION_H
 
-#include <extended_filter.h>
+#include <ekf.h>
 #include <map>
 #include <utility>
 
@@ -15,20 +15,20 @@ public:
     //! Destructor
     ~ExtendedEvaluation() = default;
 
-    void setInitialParams(const OurVector<3>& initial_coordinates,
+    /*void setInitialParams(const OurVector<3>& initial_coordinates,
         const OurVector<EQUATIONS_COUNT>& initial_tdoas);
-
+    */
 
     //! Update state matrix
-    void updateStateMatrix(double time_delta);
+    // void updateStateMatrix(double time_delta);
     //! Update observation matrix
-    void updateObservationMatrix(OurVector<3>& position);
+    // void updateObservationMatrix(OurVector<3>& position);
     //! Initial state for filter
     // void initState(OurVector<9>& initial_state) { _filter.setSystemVector(initial_state); };
     //! Get default state covariance state matrix
     OurMatrix<3, 3> getCovarianceStateMatrix();
     //! Estimated state
-    OurVector<3> estimatedState(OurVector<EQUATIONS_COUNT>& tdoas);
+    OurVector<3> estimatedState(OurVector<EQUATIONS_COUNT> tdoas);
     //! Resetes covariance matrixes;
     // void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
 
@@ -40,10 +40,10 @@ public:
     void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates) { _towers_coordinates =
                                                                                     std::move(tower_coordinates); }
     //!
-    void setObservationFunction();
+    // void setObservationFunction();
 private:
     //! Kalman Filter
-    ExtendedFilter<3, EQUATIONS_COUNT> _filter;
+    EKF<EQUATIONS_COUNT> _filter;
     //! Sample rate
     double _time_delta;
     //! TDOA

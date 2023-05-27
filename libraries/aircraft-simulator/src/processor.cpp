@@ -7,7 +7,7 @@ void Processor::initSolver()
     calculateTDOA(tdoas);
 
     _solver.setInitialParams(init, tdoas);
-    _eval.setInitialParams(init, tdoas);
+    //_eval.setInitialParams(init, tdoas);
 
 }
 
@@ -69,7 +69,7 @@ void Processor::setTower(uint16_t id, const Tower& tower)
 
 void Processor::setSampleRate(double sample_rate)
 {
-    _eval.updateStateMatrix(sample_rate);
+    //_eval.updateStateMatrix(sample_rate);
 }
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
