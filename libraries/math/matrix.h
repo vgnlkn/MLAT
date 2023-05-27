@@ -133,7 +133,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixInverse()
 {
     for (uint8_t i = 0; i < row; ++i)
     {
-        for (uint j = 0; j < col; ++j)
+        for (uint8_t j = 0; j < col; ++j)
         {
             _matrix[i][j] = std::round(_matrix[i][j] * 1e6) / 1e6;
         }
