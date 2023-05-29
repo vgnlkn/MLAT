@@ -63,7 +63,7 @@ void Aircraft::checkAcceleration()
     }
 }
 
-double Aircraft::sendSignal(Tower tower, const OurVector<3>& current_position)
+long double Aircraft::sendSignal(Tower tower, const OurVector<3>& current_position)
 {
     return tower.calculateTime(current_position);
 }

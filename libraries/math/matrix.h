@@ -17,7 +17,7 @@
 *   Allowed all base operations with matrixes, except determinant calculation
 *   and getting inversed matrix.
 */
-template<uint8_t row, uint8_t col, typename type=double>
+template<uint8_t row, uint8_t col, typename type=long double>
 class OurMatrix
 {
 public:
@@ -108,7 +108,7 @@ public:
     OurVector<row, type> operator*(const OurVector<col, type>& other) const;
     //! Overloading multiplying with single number(number is first)
     template<uint8_t row_, uint8_t col_, typename T>
-    friend OurMatrix<row_, col_, T> operator*(double number, OurMatrix<row_, col_, T>& vector);
+    friend OurMatrix<row_, col_, T> operator*(long double number, OurMatrix<row_, col_, T>& vector);
     //! Overloading multiplying with vector (vector first)
     template<uint8_t row_, uint8_t col_, typename T>
     friend OurVector<col_, T> operator*(const OurVector<row_, T>& vector, const OurMatrix<row_, col_, T>& matrix);
@@ -173,7 +173,7 @@ OurVector<row> OurMatrix<row, col, type>::helperSolve(OurMatrix<row, col> &luMat
     OurVector<n> x = b;
 
     for (int i = 1; i < n; ++i) {
-        double sum = x[i];
+        long double sum = x[i];
         for (int j = 0; j < i; ++j)
             sum -= luMatrix[i][j] * x[j];
         x[i] = sum;
@@ -182,7 +182,7 @@ OurVector<row> OurMatrix<row, col, type>::helperSolve(OurMatrix<row, col> &luMat
     x[n - 1] /= luMatrix[n - 1][n - 1];
 
     for (int i = n - 2; i >= 0; --i) {
-        double sum = x[i];
+        long double sum = x[i];
         for (int j = i + 1; j < n; ++j)
             sum -= luMatrix[i][j] * x[j];
         x[i] = sum / luMatrix[i][i];
@@ -203,7 +203,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixDecompose(OurMatrix<row, co
     toggle = 1;
     for (int j = 0; j < n - 1; ++j)
     {
-        double colMax = std::abs(result[j][j]);
+        long double colMax = std::abs(result[j][j]);
         int pRow = j;
         for (int i = j + 1; i < n; ++i)
         {
@@ -307,7 +307,7 @@ OurMatrix<col, row> OurMatrix<row, col, type>::getLUInverse()
 
     OurMatrix<col, row, type> U_inversed = U;
 
-    double sum;
+    long double sum;
     for (int i = col - 1; i >= 0; i--)
     {
         U_inversed[i][i] = 1 / U[i][i];
@@ -393,7 +393,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
     {
         for (uint8_t j = 0; j <= i; j++)
         {
-            double sum = 0;
+            long double sum = 0;
             for (uint8_t k = 0; k < j; k++)
             {
                 sum += L[i][k] * L[j][k];
@@ -415,7 +415,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
     {
         for (uint8_t j = 0; j <= i; j++)
         {
-            double sum = 0;
+            long double sum = 0;
             for (uint8_t k = 0; k < j; k++)
             {
                 sum += L[i][k] * L[j][k];
@@ -437,7 +437,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
     {
         for (uint8_t j = 0; j <= i; ++j)
         {
-            double sum = 0.0;
+            long double sum = 0.0;
             if (j == i)
             {
                 for (int k = 0; k < j; ++k)
@@ -535,7 +535,7 @@ void OurMatrix<row, col, type>::LUPFactorization(OurVector<row>& P)
 
     for(uint8_t k = 0; k < n; k++)
     {
-        double p = 0;
+        long double p = 0;
         int kp = k;
         for(uint8_t i = k; i < n; i++)
         {
@@ -701,7 +701,7 @@ void OurMatrix<row, col, type>::setRow(uint8_t row_index, type value)
 }
 
 template<uint8_t row_, uint8_t col_, typename T>
-inline OurMatrix<row_, col_, T> operator*(double number, OurMatrix<row_, col_, T>& vector)
+inline OurMatrix<row_, col_, T> operator*(long double number, OurMatrix<row_, col_, T>& vector)
 {
     return vector * number;
 }
@@ -710,7 +710,7 @@ template<uint8_t row_, uint8_t col_, typename T>
 inline OurVector<col_, T> operator*(const OurVector<row_, T>& vector, const OurMatrix<row_, col_, T>& matrix)
 {
     OurVector<col_, T> product;
-    double sum = 0;
+    long double sum = 0;
     for (int8_t x = 0; x < col_; ++x)
     {
         for (int8_t y = 0; y < row_; ++y)
@@ -800,7 +800,7 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
     OurMatrix<col, row, type> Q_transposed = QR.first.getTransposed();
     OurMatrix<col, col, type> R_inversed = QR.second;
 
-    double sum;
+    long double sum;
     for (int i = col - 1; i >= 0; i--)
     {
         R_inversed[i][i] = 1 / QR.second[i][i];
@@ -832,7 +832,7 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
         }
         for (int k = 0; k < j; k++)
         {
-            double dot = 0;
+            long double dot = 0;
             for (int i = 0; i < row; i++)
             {
                 dot += Q[i][k] * _matrix[i][j];
@@ -843,7 +843,7 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
                 Q[i][j] -= R[k][j] * Q[i][k];
             }
         }
-        double norm = 0;
+        long double norm = 0;
         for (int i = 0; i < row; i++)
         {
             norm += Q[i][j] * Q[i][j];

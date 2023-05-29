@@ -21,12 +21,12 @@ class NoizeGenerator
 {
 public:
     inline NoizeGenerator(): _rd(), _gen(_rd()), _distribution(0, 1e-6) {}
-    inline double generate() { return _distribution(_gen); }
+    inline long double generate() { return _distribution(_gen); }
 
 private:
     std::random_device _rd;
     std::mt19937 _gen;
-    std::normal_distribution<double> _distribution;
+    std::normal_distribution<long double> _distribution;
 };
 
 /*! \class Processor
@@ -46,11 +46,11 @@ public:
     //! Initialize solver
     void initSolver();
     //! Adding TOA for one iteration
-    void addTOA(uint16_t id, double TOA);
+    void addTOA(uint16_t id, long double TOA);
     //! Calculates TDOA
     void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Overloading operator[]
-    double& operator[](uint16_t id) { return _towers_toa[id]; }
+    long double& operator[](uint16_t id) { return _towers_toa[id]; }
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
     //! Setter for _plt_mlat
@@ -64,7 +64,7 @@ public:
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
     //! Set samplerate
-    void setSampleRate(double sample_rate);
+    void setSampleRate(long double sample_rate);
 
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
@@ -79,7 +79,7 @@ public:
     
 private:
     //! TOA
-    std::map<uint16_t, double> _towers_toa;
+    std::map<uint16_t, long double> _towers_toa;
     //! Towers
     std::map<uint16_t, Tower> _towers;
     //! Towers position

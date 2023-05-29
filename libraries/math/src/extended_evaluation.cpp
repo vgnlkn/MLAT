@@ -3,10 +3,10 @@
 
 #include <utility>
 
-//static const double array_dispersion[] = { 1e4, 4356, 2, 1e4, 4356, 2, 1e4, 4356, 0.2 };
-//static const double array_dispersion[] = { 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6 };
-//static const double array_dispersion[] = { 1e5, 9000, 1e4, 1e4, 9000, 1e4, 1e4, 1e4, 1e4 };
-static const double array_dispersion[] = { 1,1,1,1,1,1,1,1,1,1,1,1,1 };
+//static const long double array_dispersion[] = { 1e4, 4356, 2, 1e4, 4356, 2, 1e4, 4356, 0.2 };
+//static const long double array_dispersion[] = { 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6, 1e-6 };
+//static const long double array_dispersion[] = { 1e5, 9000, 1e4, 1e4, 9000, 1e4, 1e4, 1e4, 1e4 };
+static const long double array_dispersion[] = { 1,1,1,1,1,1,1,1,1,1,1,1,1 };
 
 
 ExtendedEvaluation::ExtendedEvaluation()
@@ -23,7 +23,7 @@ void ExtendedEvaluation::setInitialParams(const OurVector<3>& initial_coordinate
 */
 
 /*
-void ExtendedEvaluation::updateStateMatrix(double time_delta)
+void ExtendedEvaluation::updateStateMatrix(long double time_delta)
 {
     OurMatrix<3, 3> state_matrix;
     state_matrix.setIdentity();
@@ -56,8 +56,8 @@ OurMatrix<3, 3> ExtendedEvaluation::getCovarianceStateMatrix()
 OurVector<3> ExtendedEvaluation::getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<3> jacobian_row;
-    auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [=](uint8_t index, double x, double y, double z)
+    auto numerator = [](long double tower_coordinate, long double plane_coordinate) { return plane_coordinate - tower_coordinate; };
+    auto denominator = [=](uint8_t index, long double x, long double y, long double z)
     {
         return std::sqrt(
                 std::pow(_towers_coordinates[index][0] - x, 2) +
@@ -66,8 +66,8 @@ OurVector<3> ExtendedEvaluation::getJacobianRow(OurVector<3>& coordinate, uint8_
         );
     };
 
-    double denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
-    double denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
+    long double denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
+    long double denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
     assert(denominator_i && denominator_j);
 
     for (int column = 0; column < 3; ++column)
@@ -108,14 +108,14 @@ void ExtendedEvaluation::setObservationFunction()
     auto equation = [=](const OurVector<3>& at, uint8_t tower_i, uint8_t tower_j)
     {
         auto coordinates_delta_i = _towers_coordinates[tower_i] - at;
-        double d_i = 0;
+        long double d_i = 0;
         for (uint8_t i = 0; i < 3; ++i)
         {
             d_i += std::pow(coordinates_delta_i[i], 2);
         }
         d_i = std::sqrt(d_i);
         auto coordinates_delta_j = _towers_coordinates[tower_j] - at;
-        double d_j = 0;
+        long double d_j = 0;
         for (uint8_t i = 0; i < 3; ++i)
         {
             d_j += std::pow(coordinates_delta_j[i], 2);

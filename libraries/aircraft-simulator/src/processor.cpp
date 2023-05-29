@@ -10,7 +10,7 @@ void Processor::initSolver()
     //_eval.setInitialParams(init, tdoas);
 }
 
-void Processor::addTOA(uint16_t id, double TOA)
+void Processor::addTOA(uint16_t id, long double TOA)
 {
     _towers_toa[id] = TOA;
 }
@@ -67,14 +67,14 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _ekf.init(_towers_coordinates);
 }
 
-void Processor::setSampleRate(double sample_rate)
+void Processor::setSampleRate(long double sample_rate)
 {
     //_eval.updateStateMatrix(sample_rate);
 }
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
 {
-    auto noize = [=](int i) -> double
+    auto noize = [=](int i) -> long double
     {
         return _towers_toa[i] * _noise->generate();
     };

@@ -35,7 +35,7 @@ public:
     auto getSystemVector() { return _system_vector; }
 
     //! Predicts model values
-    void predict(double time_delta);
+    void predict(long double time_delta);
     //! Corrects model values
     OurVector<dim_state> correct(const OurVector<dim_observation>& state_vector);
 
@@ -58,7 +58,7 @@ KalmanFilter<dim_state, dim_observation>::getError(const OurVector<dim_observati
 }
 
 template<uint8_t dim_state, uint8_t dim_observation>
-void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
+void KalmanFilter<dim_state, dim_observation>::predict(long double time_delta)
 {
     _system_vector = _state_transition_matrix * _system_vector;
     //_state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix

@@ -32,7 +32,7 @@ public:
 
 private:
     //! Calculates the distance between two dots
-    double distance(const OurVector<3>& from, const OurVector<3>& to);
+    long double distance(const OurVector<3>& from, const OurVector<3>& to);
     //! Returns the Jacobian row
     OurVector<3> getJacobianRow(OurVector<3>& position, uint8_t tower_i, uint8_t tower_j);
 
