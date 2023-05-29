@@ -131,13 +131,13 @@ private:
 template<uint8_t row, uint8_t col, typename type>
 OurMatrix<row, col> OurMatrix<row, col, type>::matrixInverse()
 {
-    for (uint8_t i = 0; i < row; ++i)
-    {
-        for (uint8_t j = 0; j < col; ++j)
-        {
-            _matrix[i][j] = std::round(_matrix[i][j] * 1e6) / 1e6;
-        }
-    }
+    // for (uint8_t i = 0; i < row; ++i)
+    // {
+    //     for (uint8_t j = 0; j < col; ++j)
+    //     {
+    //     //    _matrix[i][j] = std::round(_matrix[i][j] * 1e6) / 1e6;
+    //     }
+    // }
 
     const int n = row;
     OurMatrix<row, col> result = *this;
@@ -442,7 +442,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
             {
                 for (int k = 0; k < j; ++k)
                 {
-                    sum += std::pow(L[j][k], 2);
+                    sum += powl(L[j][k], 2);
                 }
                 L[j][j] = sqrtl(_matrix[j][j] - sum);
             }

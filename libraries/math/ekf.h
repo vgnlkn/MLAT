@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <fstream>
 
-static const long double k_covariance_dispersion[] = { 1e9, 1e6, 1e3 };
+static const long double k_covariance_dispersion[] = { 1e20, 1e20, 1e20 };
 // static const long double k_covariance_dispersion[] = { 1000, 1000, 1000 };
 
 template <uint8_t dim_observation>
@@ -44,10 +44,14 @@ void EKF<dim_observation>::init(std::map<uint16_t, OurVector<3>> tower_positions
 	_evolution.setIdentity();
 
 	_covariance_state.setZero();
-    _observation_error.setDiagonalValue(1e-5);
+    _observation_error.setDiagonalValue(1e-6);
 
+	_covariance_state.setIdentity();
 	for (int i = 0; i < 3; ++i)
-		_covariance_state[i][i] = k_covariance_dispersion[i];
+	{	
+	//	_covariance_state[i][i] = k_covariance_dispersion[i];
+	}
+
 
 }
 
@@ -55,21 +59,26 @@ template<uint8_t dim_observation>
 inline OurVector<3> EKF<dim_observation>::estimate(OurVector<dim_observation> observations)
 {
 	_state = this->_evolution * _state;
-	_covariance_state = _evolution * _covariance_state * _evolution.getTransposed();
+	//_covariance_state = _evolution * _covariance_state * _evolution.getTransposed();
 	updateObservation();
 
 	//! Проверить размерности
-	OurMatrix<dim_observation, dim_observation> S = (_observation_mtx * _covariance_state) * _observation_mtx.getTransposed()
-		+ _observation_error;
-	OurMatrix<3, dim_observation> K = _covariance_state * _observation_mtx.getTransposed() * S.matrixInverse();
-	// OurMatrix<3, dim_observation> K = _covariance_state * _observation_mtx.getTransposed() * S.getInverse();
-    // std::cout << K << "\n\n";
+	OurMatrix<dim_observation, dim_observation> S = (_observation_mtx * _covariance_state) * _observation_mtx.getTransposed();
+		//+ _observation_error;
+
+	//std::cout << _observation_mtx << "\n\n";	
+	//exit(0);
+	//OurMatrix<3, dim_observation> K =  _observation_mtx.getTransposed() * S.pseudoInverse();
+	OurMatrix<3, dim_observation> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
+    //std::cout << K << "\n\n";
 
 	OurMatrix<3,3> I;
 	I.setIdentity();
 
-	_state = _state + K * (observations - equation(_state));
-	_covariance_state = (I - K * _observation_mtx) * _covariance_state;
+	//_state = _state + K * (observations - equation(_state));
+	_state = _state + _observation_mtx.pseudoInverse() * (equation(_state) - observations * LIGHT_SPEED);
+	//std::cout << _state << "\n\n";
+	//_covariance_state = (I - K * _observation_mtx) * _covariance_state;
 
 	return _state;
 }
@@ -88,7 +97,7 @@ inline OurVector<dim_observation> EKF<dim_observation>::equation(OurVector<3> x)
 	{
 		for (int j = i + 1; j < TOWERS_COUNT; ++j)
 		{
-			tdoa[k++] = (1 / LIGHT_SPEED) * (l2_norm(x - _tower_positions[i]) - l2_norm(x - _tower_positions[j]));
+			tdoa[k++] = (l2_norm(x - _tower_positions[i]) - l2_norm(x - _tower_positions[j]));
 		}
 	}
 	return tdoa;
@@ -124,7 +133,7 @@ inline void EKF<dim_observation>::updateObservation()
 			_observation_mtx[observation++] = jacobiRow(_state, i, j);
 		}
 	}
-	_observation_mtx = (1 / LIGHT_SPEED) * _observation_mtx;
+	//_observation_mtx = _observation_mtx;
 }
 
 #endif
