@@ -79,7 +79,7 @@ inline OurVector<dim_observation> EKF<dim_observation>::equation(OurVector<3> x)
 {
     auto l2_norm = [](OurVector<3> vec) -> long double
     {
-        return std::sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+        return sqrtl(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     };
 
 	OurVector<dim_observation> tdoa;
@@ -99,7 +99,7 @@ inline void EKF<dim_observation>::updateObservation()
 {
     auto l2_norm = [](OurVector<3> vec) -> long double
     {
-        return std::sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+        return sqrtl(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     };
 
 	OurMatrix<dim_observation, 3> jacobi;

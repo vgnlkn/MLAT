@@ -59,7 +59,7 @@ OurVector<3> ExtendedEvaluation::getJacobianRow(OurVector<3>& coordinate, uint8_
     auto numerator = [](long double tower_coordinate, long double plane_coordinate) { return plane_coordinate - tower_coordinate; };
     auto denominator = [=](uint8_t index, long double x, long double y, long double z)
     {
-        return std::sqrt(
+        return sqrtl(
                 std::pow(_towers_coordinates[index][0] - x, 2) +
                 std::pow(_towers_coordinates[index][1] - y, 2) +
                 std::pow(_towers_coordinates[index][2] - z, 2)
@@ -113,14 +113,14 @@ void ExtendedEvaluation::setObservationFunction()
         {
             d_i += std::pow(coordinates_delta_i[i], 2);
         }
-        d_i = std::sqrt(d_i);
+        d_i = sqrtl(d_i);
         auto coordinates_delta_j = _towers_coordinates[tower_j] - at;
         long double d_j = 0;
         for (uint8_t i = 0; i < 3; ++i)
         {
             d_j += std::pow(coordinates_delta_j[i], 2);
         }
-        d_j = std::sqrt(d_j);
+        d_j = sqrtl(d_j);
         return d_i - d_j;
 
     };

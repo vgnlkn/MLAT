@@ -444,7 +444,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
                 {
                     sum += std::pow(L[j][k], 2);
                 }
-                L[j][j] = std::sqrt(_matrix[j][j] - sum);
+                L[j][j] = sqrtl(_matrix[j][j] - sum);
             }
             else
             {
@@ -848,7 +848,7 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
         {
             norm += Q[i][j] * Q[i][j];
         }
-        norm = std::sqrt(norm);
+        norm = sqrtl(norm);
         for (int i = 0; i < row; i++)
         {
             Q[i][j] /= norm;
