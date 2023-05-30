@@ -20,7 +20,7 @@ public:
     */
 
     //! Update state matrix
-    // void updateStateMatrix(long double time_delta);
+    // void updateStateMatrix(double time_delta);
     //! Update observation matrix
     // void updateObservationMatrix(OurVector<3>& position);
     //! Initial state for filter
@@ -45,7 +45,7 @@ private:
     //! Kalman Filter
     EKF<EQUATIONS_COUNT> _filter;
     //! Sample rate
-    long double _time_delta;
+    double _time_delta;
     //! TDOA
     OurVector<EQUATIONS_COUNT> _initial_tdoas;
     //! Tower coordinates

@@ -10,7 +10,7 @@
 /*! \class OurVector
 *   \brief Class describing the custom vector
 */
-template<uint8_t size, typename type=long double>
+template<uint8_t size, typename type=double>
 class OurVector final
 {
 public:
@@ -46,10 +46,10 @@ public:
     //! Overloading operator- that inverts number
     OurVector<size, type> operator-() const;
     //! Overloading multiplying with single number
-    OurVector<size, type> operator*(long double number) const;
+    OurVector<size, type> operator*(double number) const;
     //! Overloading multiplying with single number(number is first)
     template<uint8_t size_, typename T>
-    friend OurVector<size_, T> operator*(long double number, OurVector<size_, T>& vector);
+    friend OurVector<size_, T> operator*(double number, OurVector<size_, T>& vector);
     //! Overloading output to stream operator
     template<uint8_t size_, typename T>
     friend std::ostream& operator<<(std::ostream& os, const OurVector<size_, T>& vector);
@@ -73,7 +73,7 @@ inline void OurVector<size, type>::setValue(type value)
 }
 
 template<uint8_t size, typename type>
-OurVector<size, type> OurVector<size, type>::operator*(long double number) const
+OurVector<size, type> OurVector<size, type>::operator*(double number) const
 {
     OurVector<size, type> result;
 
@@ -86,7 +86,7 @@ OurVector<size, type> OurVector<size, type>::operator*(long double number) const
 }
 
 template<uint8_t size_, typename T>
-OurVector<size_, T> operator*(long double number, OurVector<size_, T>& vector)
+OurVector<size_, T> operator*(double number, OurVector<size_, T>& vector)
 {
     return vector * number;
 }

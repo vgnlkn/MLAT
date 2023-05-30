@@ -113,7 +113,7 @@ private:
     //! Plotter object for acceleration
     Plotter* _plt_acceleration;
     //! Sample rate
-    long double _sample_rate;
+    double _sample_rate;
 };
 
 

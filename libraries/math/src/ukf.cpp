@@ -53,7 +53,7 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
         x[0] = at[0];
         x[1] = at[3];
         x[2] = at[6];
-        auto l2_norm = [](OurVector<3> vec) -> long double
+        auto l2_norm = [](OurVector<3> vec) -> double
         {
             return sqrtl(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
         };
@@ -101,7 +101,7 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     return _initial_coordinates;
 }
 
-long double UKF::distance(const OurVector<3>& from, const OurVector<3>& to)
+double UKF::distance(const OurVector<3>& from, const OurVector<3>& to)
 {
     return sqrtl(std::pow(from[0] - to[0], 2) + std::pow(from[1] - to[1], 2) + std::pow(from[2] - to[2], 2));
 }
@@ -109,8 +109,8 @@ long double UKF::distance(const OurVector<3>& from, const OurVector<3>& to)
 OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<9> jacobian_row;
-    auto numerator = [](long double tower_coordinate, long double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [=](uint8_t index, long double x, long double y, long double z)
+    auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
+    auto denominator = [=](uint8_t index, double x, double y, double z)
     {
         return sqrtl(
                 std::pow(_towers_coordinates[index][0] - x, 2) +
@@ -119,8 +119,8 @@ OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint
         );
     };
 
-    long double denominator_i = denominator(tower_i, coordinate[0], coordinate[3], coordinate[6]);
-    long double denominator_j = denominator(tower_j, coordinate[0], coordinate[3], coordinate[6]);
+    double denominator_i = denominator(tower_i, coordinate[0], coordinate[3], coordinate[6]);
+    double denominator_j = denominator(tower_j, coordinate[0], coordinate[3], coordinate[6]);
     assert(denominator_i && denominator_j);
 
     for (int column = 0; column < 9; column+=3)

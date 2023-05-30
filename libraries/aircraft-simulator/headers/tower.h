@@ -26,7 +26,7 @@ public:
     //! Overloading operator<
     bool operator<(const Tower& other) const { return _id < other._id; }
     //! Receives a signal
-    long double calculateTime(const OurVector<3>& current_position);
+    double calculateTime(const OurVector<3>& current_position);
     //! Getter for _position
     [[nodiscard]] OurVector<3> getPosition() const { return _position; }
     //! Setter for _position

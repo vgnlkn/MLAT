@@ -9,9 +9,9 @@
 
 #include <cstdint>
 
-static const long double k_sample_rate = 1e-3;
+static const double k_sample_rate = 1e-3;
 static const uint32_t k_duration_interval = 100;
 static const uint32_t k_duration_overstatement = 0.05 * k_duration_interval;
-static const long double k_wave_speed = 300000.f;
+static const double k_wave_speed = 300000.f;
 
 #endif

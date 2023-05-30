@@ -1,6 +1,6 @@
 #include <nkf.h>
 
-static const long double k_covariance_dispersion[] = { 1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 1e3 };
+static const double k_covariance_dispersion[] = { 1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 1e3, 1e3 };
 
 OurMatrix<EQUATIONS_COUNT, 3> NKF::getJacobian(OurVector<3>& position)
 {
@@ -40,7 +40,7 @@ OurVector<3> NKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     _initial_tdoas = tdoas;
     auto one_more_eq = [=](const OurVector<3>& at)
     {
-        auto l2_norm = [](OurVector<3> vec) -> long double
+        auto l2_norm = [](OurVector<3> vec) -> double
         {
             return sqrtl(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
         };
@@ -89,7 +89,7 @@ OurVector<3> NKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     return _initial_coordinates;
 }
 
-long double NKF::distance(const OurVector<3>& from, const OurVector<3>& to)
+double NKF::distance(const OurVector<3>& from, const OurVector<3>& to)
 {
     return sqrtl(std::pow(from[0] - to[0], 2) + std::pow(from[1] - to[1], 2) + std::pow(from[2] - to[2], 2));
 }
@@ -97,8 +97,8 @@ long double NKF::distance(const OurVector<3>& from, const OurVector<3>& to)
 OurVector<3> NKF::getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<3> jacobian_row;
-    auto numerator = [](long double tower_coordinate, long double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [=](uint8_t index, long double x, long double y, long double z)
+    auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
+    auto denominator = [=](uint8_t index, double x, double y, double z)
     {
         return sqrtl(
             std::pow(_towers_coordinates[index][0] - x, 2) +
@@ -107,8 +107,8 @@ OurVector<3> NKF::getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint
         );
     };
     
-    long double denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
-    long double denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
+    double denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
+    double denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
     assert(denominator_i && denominator_j);
 
     for (int column = 0; column < 3; ++column)

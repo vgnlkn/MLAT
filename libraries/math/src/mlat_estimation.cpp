@@ -2,7 +2,7 @@
 #include <matrix.h>
 
 
-static const long double array_dispersion[] = {1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10};
+static const double array_dispersion[] = {1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10};
 
 MlatEstimation::MlatEstimation()
 {
@@ -24,7 +24,7 @@ MlatEstimation::MlatEstimation()
 }
 
 
-void MlatEstimation::updateStateMatrix(long double time_delta)
+void MlatEstimation::updateStateMatrix(double time_delta)
 {
 	OurMatrix<9, 9> state_matrix;
 	state_matrix.setIdentity();

@@ -56,7 +56,7 @@ void Field::updateAircraftSpeed()
 
 void Field::sendSignalsToTowers()
 {
-    long double toa;
+    double toa;
     for (uint16_t j = 0; j < _tower_count; ++j)
     {
         Tower& tower = _towers[j];

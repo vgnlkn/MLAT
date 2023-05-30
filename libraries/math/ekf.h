@@ -7,8 +7,8 @@
 #include <iomanip>
 #include <fstream>
 
-static const long double k_covariance_dispersion[] = { 1e20, 1e20, 1e20 };
-// static const long double k_covariance_dispersion[] = { 1000, 1000, 1000 };
+static const double k_covariance_dispersion[] = { 1e20, 1e20, 1e20 };
+// static const double k_covariance_dispersion[] = { 1000, 1000, 1000 };
 
 template <uint8_t dim_observation>
 class EKF
@@ -94,14 +94,14 @@ inline OurVector<3> EKF<dim_observation>::estimate(OurVector<dim_observation> ob
 	 auto equation = [&](const OurVector<3>& at, uint8_t tower_i, uint8_t tower_j)
     {
         auto coordinates_delta_i = _tower_positions[tower_i] - at;
-        long double d_i = 0;
+        double d_i = 0;
         for (uint8_t i = 0; i < 3; ++i)
         {
             d_i += std::pow(coordinates_delta_i[i], 2);
         }
         d_i = sqrtl(d_i);
         auto coordinates_delta_j = _tower_positions[tower_j] - at;
-        long double d_j = 0;
+        double d_j = 0;
         for (uint8_t i = 0; i < 3; ++i)
         {
             d_j += std::pow(coordinates_delta_j[i], 2);
@@ -134,7 +134,7 @@ inline OurVector<3> EKF<dim_observation>::estimate(OurVector<dim_observation> ob
 template<uint8_t dim_observation>
 inline OurVector<dim_observation> EKF<dim_observation>::equationn(OurVector<3> x)
 {
-    auto l2_norm = [](OurVector<3> vec) -> long double
+    auto l2_norm = [](OurVector<3> vec) -> double
     {
         return sqrtl(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     };
@@ -154,7 +154,7 @@ inline OurVector<dim_observation> EKF<dim_observation>::equationn(OurVector<3> x
 template<uint8_t dim_observation>
 inline void EKF<dim_observation>::updateObservation()
 {
-    auto l2_norm = [](OurVector<3> vec) -> long double
+    auto l2_norm = [](OurVector<3> vec) -> double
     {
         return sqrtl(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
     };
@@ -164,8 +164,8 @@ inline void EKF<dim_observation>::updateObservation()
 	{
 		OurVector<3> row;
 		row.setValue(0);
-		long double d_i = l2_norm(x - _tower_positions[i]);
-		long double d_j = l2_norm(x - _tower_positions[j]);
+		double d_i = l2_norm(x - _tower_positions[i]);
+		double d_j = l2_norm(x - _tower_positions[j]);
 		for (uint8_t col = 0; col < 3; ++col)
 		{
 			row[col] = (x[col] - _tower_positions[i][col]) / d_i -
@@ -189,8 +189,8 @@ template<uint8_t dim_observation>
 OurVector<3> EKF<dim_observation>::getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<3> jacobian_row;
-    auto numerator = [](long double tower_coordinate, long double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [=](uint8_t index, long double x, long double y, long double z)
+    auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
+    auto denominator = [=](uint8_t index, double x, double y, double z)
     {
         return sqrtl(
             std::pow(_tower_positions[index][0] - x, 2) +
@@ -199,8 +199,8 @@ OurVector<3> EKF<dim_observation>::getJacobianRow(OurVector<3>& coordinate, uint
         );
     };
     
-    long double denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
-    long double denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
+    double denominator_i = denominator(tower_i, coordinate[0], coordinate[1], coordinate[2]);
+    double denominator_j = denominator(tower_j, coordinate[0], coordinate[1], coordinate[2]);
     assert(denominator_i && denominator_j);
 
     for (int column = 0; column < 3; ++column)

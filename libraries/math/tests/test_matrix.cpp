@@ -556,7 +556,7 @@ TEST(MatrixTests, AdvancedArithmetic_3)
 
 TEST(MatrixTests, TestInverseMatrix)
 {
-    OurMatrix<3, 3, long double> a, ans;
+    OurMatrix<3, 3, double> a, ans;
 
     a[0][0] = 1.0;
     a[0][1] = 0.0;
@@ -590,7 +590,7 @@ TEST(MatrixTests, TestInverseMatrix)
 
 TEST(MatrixTests, TestMultiplying)
 {
-    OurMatrix<3, 3, long double> a, ans;
+    OurMatrix<3, 3, double> a, ans;
 
     a[0][0] = 1.0;
     a[0][1] = 0.0;
@@ -648,7 +648,7 @@ TEST(MatrixTests, TestCholesky)
 
 
 TEST(MatrixTests, TestLU) {
-    OurMatrix<3, 3, long double> a, L, ans;
+    OurMatrix<3, 3, double> a, L, ans;
 
     a[0][0] = 3.0;
     a[0][1] = 2.0;
