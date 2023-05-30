@@ -40,7 +40,7 @@ void UKF::setInitialParams(const OurVector<9>& initial_coordinates,
     {
         _covariance_state[i][i] = k_covariance_dispersion[i];
     }
-    _observation_error.setDiagonalValue(1e-7);
+    _observation_error.setDiagonalValue(1e-6);
 }
 
 OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
@@ -71,7 +71,6 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     };
 
     auto jacobian = this->getJacobian(_initial_coordinates);
-//    std::cout << jacobian << "\n\n";
     uint8_t k = 0;
     for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
     {
@@ -80,7 +79,6 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
             if (_initial_tdoas[k] < 0)
             {
                 jacobian[k] = -jacobian[k];
-                // _initial_tdoas[k] = _initial_tdoas[k] < 0 ? -_initial_tdoas[k] : _initial_tdoas[k];
             }
         }
 
@@ -93,13 +91,13 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
 
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
-    S = 1e5 * S;
+    S = 1e6 * S;
     OurMatrix<9, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
-    K = 1e5 * K;
+    K = 1e6 * K;
     OurMatrix<9,9> I;
     I.setIdentity();
     _initial_coordinates = _initial_coordinates + K * discrepancy;
-    _covariance_state = (I - (1/LIGHT_SPEED) * K * _observation_mtx) * _covariance_state;
+    _covariance_state = (I - K * _observation_mtx) * _covariance_state;
     return _initial_coordinates;
 }
 
