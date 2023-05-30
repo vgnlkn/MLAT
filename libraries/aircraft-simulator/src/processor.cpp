@@ -7,7 +7,13 @@ void Processor::initSolver()
     calculateTDOA(tdoas);
 
     _solver.setInitialParams(init, tdoas);
-    _nkf.setInitialParams(init, tdoas);
+
+    OurVector<9> init_state;
+    init_state[0] = init[0];
+    init_state[3] = init[1];
+    init_state[6] = init[2];
+
+    _nkf.setInitialParams(init_state, tdoas);
     _ekf.setInitialParams(init, tdoas);
     //_eval.setInitialParams(init, tdoas);
 }
@@ -24,8 +30,7 @@ void Processor::process(uint32_t iter)
     calculateTDOA(tdoas);
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
-    OurVector<3> aircraft_trajectory_estimation = _ekf.estimate(tdoas);
-    aircraft_trajectory_estimation = _nkf.solve(tdoas);
+    OurVector<9> aircraft_trajectory_estimation =  _nkf.solve(tdoas);
 
     auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
     {
@@ -49,16 +54,16 @@ void Processor::process(uint32_t iter)
 
     OurVector<3> filter_coords, filter_speed, filter_acceleration;
     fillVector(filter_coords, 0);
-    // fillVector(filter_speed, 1);
-    // fillVector(filter_acceleration, 2);
+    fillVector(filter_speed, 1);
+    fillVector(filter_acceleration, 2);
 
 
     if (iter % POINT_MOD == 0)
     {
         addPoint(mlat_coords, _plt_mlat);
         addPoint(filter_coords, _plt_filter);
-        // addPoint(filter_speed, _plt_filter_speed);
-        // addPoint(filter_acceleration, _plt_filter_acceleration);
+        addPoint(filter_speed, _plt_filter_speed);
+        addPoint(filter_acceleration, _plt_filter_acceleration);
     }
 }
 

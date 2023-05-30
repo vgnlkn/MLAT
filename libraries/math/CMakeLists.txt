@@ -10,6 +10,8 @@ add_library (Math
     matrix.h
     nkf.h
     src/nkf.cpp
+    ukf.h
+    src/ukf.cpp
     src/equation_solver.cpp
         ../../applications/utilities/defines.h
 	kalman_filter.h

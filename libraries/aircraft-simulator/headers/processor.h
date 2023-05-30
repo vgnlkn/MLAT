@@ -14,6 +14,7 @@
 #include <extended_evaluation.h>
 #include <ekf.h>
 #include <nkf.h>
+#include <ukf.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -111,7 +112,7 @@ private:
     uint32_t _overstatement;
     //! ekf
     EKF<EQUATIONS_COUNT> _ekf;
-    NKF _nkf;
+    UKF _nkf;
 };
 
 
