@@ -1,8 +1,7 @@
 #include <ukf.h>
 #include <defines.h>
 
-static const double k_covariance_dispersion[] = { 1e-4, 0.0009, 1e-4, 1e-4, 0.0009, 1e-4, 1e-5, 1e-4, 1e-4 };
-// { 1e4, 9000, 1e4, 1e4, 9000, 1e4, 1e5, 1e4, 1e4 };
+static const double k_covariance_dispersion[] = { 1e3, 0.1, 1e3, 1e4, 0.1, 1e3, 1e3, 0.1, 1e4 };
 
 OurMatrix<EQUATIONS_COUNT, 9> UKF::getJacobian(OurVector<9>& position)
 {
@@ -37,7 +36,7 @@ void UKF::setInitialParams(const OurVector<9>& initial_coordinates,
         _evolution[i][i + 2] = k_sample_rate * k_sample_rate * 0.5;
         _evolution[i + 1][i + 2] = k_sample_rate;
     }
-    for (int i=0; i<9; ++i)
+    for (int i = 0; i < 9; ++i)
     {
         _covariance_state[i][i] = k_covariance_dispersion[i];
     }
