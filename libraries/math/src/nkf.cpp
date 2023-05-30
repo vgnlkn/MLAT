@@ -1,6 +1,6 @@
 #include <nkf.h>
 
-static const long double k_covariance_dispersion[] = { 1e-6, 1e-6, 1e-6 };
+static const long double k_covariance_dispersion[] = { 1e3, 1e3, 1e3 };
 
 OurMatrix<EQUATIONS_COUNT, 3> NKF::getJacobian(OurVector<3>& position)
 {
