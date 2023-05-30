@@ -51,7 +51,7 @@ void Field::updateAircraftPosition()
 void Field::updateAircraftSpeed()
 {
     _aircraft.calculateNewSpeed();
-    _aircraft.checkSpeed();
+    // _aircraft.checkSpeed();
 }
 
 void Field::sendSignalsToTowers()
@@ -72,7 +72,7 @@ void Field::updatePlot()
     {
         if (plt)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(2));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
             plt->addPoint(param[0], param[1], param[2]);
         }
     };

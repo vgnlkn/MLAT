@@ -5,7 +5,7 @@
 #define EQUATIONS_COUNT 10
 #define LIGHT_SPEED 3e5
 #define MAX_ITERARATIONS_COUNT 1
-#define POINT_MOD 5
+#define POINT_MOD 100
 
 #include <cstdint>
 
