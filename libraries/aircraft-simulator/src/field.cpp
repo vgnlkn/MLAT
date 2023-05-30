@@ -72,7 +72,7 @@ void Field::updatePlot()
     {
         if (plt)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+            std::this_thread::sleep_for(std::chrono::milliseconds(2));
             plt->addPoint(param[0], param[1], param[2]);
         }
     };
