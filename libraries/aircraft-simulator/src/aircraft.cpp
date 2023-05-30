@@ -54,13 +54,13 @@ void Aircraft::checkSpeed() {
 
 void Aircraft::checkAcceleration()
 {
-    for (uint8_t i = 0; i < 3; ++i)
-    {
-        if (_state[i][1] > 10.f)
-        {
-            _state[i][1] = 2.5f;
-        }
-    }
+    // for (uint8_t i = 0; i < 3; ++i)
+    // {
+    //     if (_state[i][1] > 10.f)
+    //     {
+    //         _state[i][1] = 2.5f;
+    //     }
+    // }
 }
 
 long double Aircraft::sendSignal(Tower tower, const OurVector<3>& current_position)

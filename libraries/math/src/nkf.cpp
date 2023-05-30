@@ -1,5 +1,6 @@
 #include <nkf.h>
-#include <iomanip>
+
+static const long double k_covariance_dispersion[] = { 1e-6, 1e-6, 1e-6 };
 
 OurMatrix<EQUATIONS_COUNT, 3> NKF::getJacobian(OurVector<3>& position)
 {
@@ -28,7 +29,8 @@ void NKF::setInitialParams(const OurVector<3>& initial_coordinates,
     _evolution.setZero();
     _evolution.setIdentity();
     _covariance_state.setZero();
-	_covariance_state.setIdentity();
+    for (int i=0; i<3; ++i)
+        _covariance_state[i][i] = k_covariance_dispersion[i];
     _observation_error.setDiagonalValue(1e-6);
 }
 
@@ -73,34 +75,17 @@ OurVector<3> NKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
 
     _initial_coordinates = _evolution * _initial_coordinates;
     discrepancy = one_more_eq(_initial_coordinates) - _initial_tdoas * LIGHT_SPEED;
-   
-    //_covariance_state = _evolution * _covariance_state * _evolution.getTransposed();
+   _covariance_state = _evolution * _covariance_state * _evolution.getTransposed();
 
 
-    OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = (_observation_mtx * _covariance_state) * _observation_mtx.getTransposed();
-		//+ _observation_error;
-    //std::cout <<S << "\n\n";
-    auto scp = S;
-    auto sinv = scp.matrixInverse();
-    for (int i=0; i<10; ++i)
-    {
-        for (int j=0; j<10; ++j)
-        {
-            if (sinv[i][j] != sinv[i][j])
-            {
-                
-                std::cout << std::setprecision(40) << S.matrixInverse() << "\n\n";
-              //  exit(0);
-            }
-        }
-    }
-
+    OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
+    S = 1e5 * S;
     OurMatrix<3, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
-
-    _initial_coordinates = _initial_coordinates + _observation_mtx.pseudoInverse() * discrepancy;
-
-    //exit(0);
-
+    K = 1e5 * K; 
+    OurMatrix<3,3> I;
+    I.setIdentity();
+    _initial_coordinates = _initial_coordinates + K * discrepancy;
+    _covariance_state = (I - (1/LIGHT_SPEED) * K * _observation_mtx) * _covariance_state;
     return _initial_coordinates;
 }
 
