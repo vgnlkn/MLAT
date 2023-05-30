@@ -77,8 +77,10 @@ public:
     void process(uint32_t iter);
 
     //! Getter for _eval
-    ExtendedEvaluation& getEval() { return _eval; }
-    
+    // ExtendedEvaluation& getEval() { return _eval; }
+
+    //! Getter for _nkf
+    UKF& getNKF() { return _nkf; }
 private:
     //! TOA
     std::map<uint16_t, long double> _towers_toa;
@@ -99,9 +101,9 @@ private:
     //! Noise generator
     NoizeGenerator* _noise;
     //! Estimation
-    MlatEstimation _estim;
+    // MlatEstimation _estim;
     //! Estimation by extended filter
-    ExtendedEvaluation _eval;
+    // ExtendedEvaluation _eval;
     //! Average coordinates
     OurVector<3> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
@@ -111,7 +113,7 @@ private:
     //! Overstatement
     uint32_t _overstatement;
     //! ekf
-    EKF<EQUATIONS_COUNT> _ekf;
+    // EKF<EQUATIONS_COUNT> _ekf;
     UKF _nkf;
 };
 

@@ -45,8 +45,7 @@ void Field::initialize()
 
 void Field::updateAircraftPosition()
 {
-    _current_position = _current_position +
-                        _aircraft.getSpeed() * _sample_rate;
+    _current_position = _current_position + _aircraft.getSpeed() * _sample_rate;
 }
 
 void Field::updateAircraftSpeed()
@@ -87,11 +86,11 @@ void Field::checkHeight()
 {
     if (_current_position[2] > 10.f && _aircraft.getSpeed()[2] > 0.f)
     {
-        decreaseVerticalSpeed();
+        // decreaseVerticalSpeed();
     }
     if (_aircraft.getSpeed()[2] < -0.1f)
     {
-        stopVerticalSpeed();
+        // stopVerticalSpeed();
     }
 }
 

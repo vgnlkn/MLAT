@@ -14,7 +14,7 @@ void Processor::initSolver()
     init_state[6] = init[2];
 
     _nkf.setInitialParams(init_state, tdoas);
-    _ekf.setInitialParams(init, tdoas);
+    // _ekf.setInitialParams(init, tdoas);
     //_eval.setInitialParams(init, tdoas);
 }
 
@@ -34,9 +34,9 @@ void Processor::process(uint32_t iter)
 
     auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
     {
-        vector[0] = aircraft_trajectory_estimation[0];
-        vector[1] = aircraft_trajectory_estimation[1];
-        vector[2] = aircraft_trajectory_estimation[2];
+        vector[0] = aircraft_trajectory_estimation[i];
+        vector[1] = aircraft_trajectory_estimation[i + 3];
+        vector[2] = aircraft_trajectory_estimation[i + 6];
     };
 
 
@@ -73,8 +73,8 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _towers_coordinates[id] = tower.getPosition();
     _solver.setTowersCoordinates(_towers_coordinates);
     _nkf.setTowersCoordinates(_towers_coordinates);
-    _eval.setTowersCoordinates(_towers_coordinates);
-    _ekf.init(_towers_coordinates);
+    // _eval.setTowersCoordinates(_towers_coordinates);
+    // _ekf.init(_towers_coordinates);
 }
 
 void Processor::setSampleRate(long double sample_rate)

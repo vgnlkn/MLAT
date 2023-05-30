@@ -24,7 +24,7 @@ int main()
 
 	OurVector<3> acceleration;
 	acceleration.setValue(1);
-    acceleration[2] = 1.f;
+    acceleration[2] = 0.001f;
 
 	Aircraft aircraft(acceleration);
 	aircraft.calculateNewSpeed();

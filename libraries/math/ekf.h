@@ -65,7 +65,7 @@ template<uint8_t dim_observation>
 void EKF<dim_observation>::setInitialParams(const OurVector<3>& initial_coordinates,
                                       const OurVector<EQUATIONS_COUNT>& initial_tdoas)
 {
-    _state = initial_coordinates;
+    _state = initial_coordinates * (1.f / 16.f);
     _observation = initial_tdoas;
 }
 
