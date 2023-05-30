@@ -23,6 +23,7 @@ void Field::startMovement()
         checkHeight();
         updateAircraftSpeed();
         sendSignalsToTowers();
+        //_processor.getEval().updateObservationMatrix(_current_position);
         processSignals(i);
         if (i % POINT_MOD == 0)
         {
@@ -38,12 +39,13 @@ void Field::initialize()
     sendSignalsToTowers();
     _processor.initSolver();
     _aircraft.checkAcceleration();
+
+    //_processor.getEval().updateObservationMatrix(_current_position);
 }
 
 void Field::updateAircraftPosition()
 {
-    _current_position = _current_position +
-                        _aircraft.getSpeed() * _sample_rate;
+    _current_position = _current_position + _aircraft.getSpeed() * _sample_rate;
 }
 
 void Field::updateAircraftSpeed()
@@ -54,7 +56,7 @@ void Field::updateAircraftSpeed()
 
 void Field::sendSignalsToTowers()
 {
-    double toa;
+    long double toa;
     for (uint16_t j = 0; j < _tower_count; ++j)
     {
         Tower& tower = _towers[j];
@@ -70,7 +72,7 @@ void Field::updatePlot()
     {
         if (plt)
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
             plt->addPoint(param[0], param[1], param[2]);
         }
     };
@@ -84,11 +86,11 @@ void Field::checkHeight()
 {
     if (_current_position[2] > 10.f && _aircraft.getSpeed()[2] > 0.f)
     {
-        decreaseVerticalSpeed();
+        // decreaseVerticalSpeed();
     }
     if (_aircraft.getSpeed()[2] < -0.1f)
     {
-        stopVerticalSpeed();
+        // stopVerticalSpeed();
     }
 }
 
@@ -143,6 +145,13 @@ void Field::setTowers()
 
     _towers[3].setID(3);
     _towers[3].setPosition(tower_position);
+
+    tower_position[0] = 7500;
+    tower_position[1] = 7000;
+    tower_position[2] = 500;
+
+    _towers[4].setID(4);
+    _towers[4].setPosition(tower_position);
 }
 
 void Field::setAircraftTowers()

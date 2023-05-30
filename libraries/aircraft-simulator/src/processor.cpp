@@ -7,9 +7,18 @@ void Processor::initSolver()
     calculateTDOA(tdoas);
 
     _solver.setInitialParams(init, tdoas);
+
+    OurVector<9> init_state;
+    init_state[0] = init[0];
+    init_state[3] = init[1];
+    init_state[6] = init[2];
+
+    _nkf.setInitialParams(init_state, tdoas);
+    // _ekf.setInitialParams(init, tdoas);
+    //_eval.setInitialParams(init, tdoas);
 }
 
-void Processor::addTOA(uint16_t id, double TOA)
+void Processor::addTOA(uint16_t id, long double TOA)
 {
     _towers_toa[id] = TOA;
 }
@@ -17,11 +26,11 @@ void Processor::addTOA(uint16_t id, double TOA)
 void Processor::process(uint32_t iter)
 {
     OurVector<EQUATIONS_COUNT> tdoas;
+    OurVector<EQUATIONS_COUNT> tdoass;
     calculateTDOA(tdoas);
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
-    OurVector<9> aircraft_trajectory_estimation = 
-        _estim.estimatedState(mlat_coords);
+    OurVector<9> aircraft_trajectory_estimation =  _nkf.solve(tdoas);
 
     auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
     {
@@ -29,6 +38,7 @@ void Processor::process(uint32_t iter)
         vector[1] = aircraft_trajectory_estimation[i + 3];
         vector[2] = aircraft_trajectory_estimation[i + 6];
     };
+
 
     auto addPoint = [](const OurVector<3>& coords, Plotter* plt) -> void
     {
@@ -48,44 +58,6 @@ void Processor::process(uint32_t iter)
     fillVector(filter_acceleration, 2);
 
 
-    _mlat_average = mlat_coords + _mlat_average;
-    _kalman_average = filter_coords + _kalman_average;
-    if (_iteration % 100 == 0)
-    {
-        _overstatement = 0;
-        _mlat_average.setValue(0);
-        _mlat_min = mlat_coords;
-        _mlat_max = mlat_coords;
-        _kalman_average.setValue(0);
-        _iteration = 1;
-    }
-   
-    for (int i = 0; i < 3; ++i)
-    {
-        if (mlat_coords[i] < _mlat_min[i])
-        {
-            _mlat_min[i] = mlat_coords[i];
-        }
-        else if (mlat_coords[i] > _mlat_max[i])
-        {
-            _mlat_max[i] = mlat_coords[i];
-        }
-        if (std::abs(_mlat_average[i] - _kalman_average[i]) > _iteration++ * std::abs(_mlat_min[i] - _mlat_max[i]))
-        {
-            _overstatement++;
-        }
-    }
-
-    if (_overstatement > k_duration_overstatement)
-    {
-        aircraft_trajectory_estimation[8] = 0;
-        aircraft_trajectory_estimation[5] = 0;
-        aircraft_trajectory_estimation[2] = 0;
-
-        _estim.initState(aircraft_trajectory_estimation);
-        _estim.reset();
-    }
-
     if (iter % POINT_MOD == 0)
     {
         addPoint(mlat_coords, _plt_mlat);
@@ -100,16 +72,19 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _towers[id] = tower;
     _towers_coordinates[id] = tower.getPosition();
     _solver.setTowersCoordinates(_towers_coordinates);
+    _nkf.setTowersCoordinates(_towers_coordinates);
+    // _eval.setTowersCoordinates(_towers_coordinates);
+    // _ekf.init(_towers_coordinates);
 }
 
-void Processor::setSampleRate(double sample_rate)
+void Processor::setSampleRate(long double sample_rate)
 {
-    _estim.updateStateMatrix(sample_rate);
+    //_eval.updateStateMatrix(sample_rate);
 }
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)
 {
-    auto noize = [=](int i) -> double
+    auto noize = [=](int i) -> long double
     {
         return _towers_toa[i] * _noise->generate();
     };

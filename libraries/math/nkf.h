@@ -1,5 +1,5 @@
-#ifndef EQUATION_SOLVER_H
-#define EQUATION_SOLVER_H
+#ifndef NKF_H
+#define NKF_H
 
 #include <vector.h>
 #include <matrix.h>
@@ -9,18 +9,18 @@
 #include <cassert>
 #include <utility>
 
-/*! \class EquationSolver
+/*! \class NKF
 *   \brief Class which solves the MLAT problem
 *   This class implements the Gauss-Newton algorithm
 *   for the least squares problem
 */
-class EquationSolver 
+class NKF 
 {
 public:
     //! Constructor
-    EquationSolver() = default;
+    NKF() = default;
     //! Destructor
-    ~EquationSolver() = default;
+    ~NKF() = default;
     //! Returns the Jacobian of the least squares problem
     OurMatrix<EQUATIONS_COUNT, 3> getJacobian(OurVector<3>& position);
     //! Setter for tower coordinates
@@ -43,6 +43,15 @@ private:
     OurVector<EQUATIONS_COUNT> _initial_tdoas;
     //! Tower coordinates
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
+
+
+    OurVector<3> _state; //! (x, y, z)
+	OurVector<EQUATIONS_COUNT> _observation;
+	OurMatrix<3, 3> _evolution; //! Matrix F
+	OurMatrix<3, 3> _covariance_state; //! Matrix P
+
+	OurMatrix<EQUATIONS_COUNT, 3> _observation_mtx; //! Matrix H
+	OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> _observation_error; //! Matrix R
 };
 
 #endif

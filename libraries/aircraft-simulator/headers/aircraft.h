@@ -38,11 +38,11 @@ public:
     //! Check acceleration of the _aircraft
     void checkAcceleration();
     //! Setter for time_delta
-    void setTimeDelta(double dt) { _time_delta = dt; }
+    void setTimeDelta(long double dt) { _time_delta = dt; }
 
     //! Methods to work with signals
     //! Sends signal to tower
-    double sendSignal(Tower tower, const OurVector<3>& current_position);
+    long double sendSignal(Tower tower, const OurVector<3>& current_position);
 
     //! Methods to work with towers
     //! Sets new tower
@@ -55,7 +55,7 @@ private:
     //! first column - speed of the aircraft, second - acceleration
     OurMatrix<3, 2> _state;
     //! Time delta between measurements
-    double _time_delta;
+    long double _time_delta;
 };
 
 

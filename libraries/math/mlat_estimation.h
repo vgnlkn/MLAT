@@ -18,7 +18,7 @@ public:
 	//! Destructor
 	~MlatEstimation() = default;
 	//! Update state matrix
-	void updateStateMatrix(double time_delta);
+	void updateStateMatrix(long double time_delta);
 	//! Initial state for filter
 	void initState(OurVector<9>& initial_state);
     //! Get default state covariance state matrix
@@ -32,7 +32,7 @@ private:
 	//! Kalman Filter
 	KalmanFilter<9, 3> _filter;
 	//! Sample rate
-	double _time_delta;
+	long double _time_delta;
 };
 
 #endif

@@ -556,7 +556,7 @@ TEST(MatrixTests, AdvancedArithmetic_3)
 
 TEST(MatrixTests, TestInverseMatrix)
 {
-    OurMatrix<3, 3, double> a, ans;
+    OurMatrix<3, 3, long double> a, ans;
 
     a[0][0] = 1.0;
     a[0][1] = 0.0;
@@ -590,7 +590,7 @@ TEST(MatrixTests, TestInverseMatrix)
 
 TEST(MatrixTests, TestMultiplying)
 {
-    OurMatrix<3, 3, double> a, ans;
+    OurMatrix<3, 3, long double> a, ans;
 
     a[0][0] = 1.0;
     a[0][1] = 0.0;
@@ -617,6 +617,77 @@ TEST(MatrixTests, TestMultiplying)
         for (uint8_t j = 0; j < 3; ++j)
         {
             ans[i][j] /= 12.0;
+        }
+    }
+}
+
+TEST(MatrixTests, TestCholesky)
+{
+    OurMatrix<3, 3> matrix;
+    matrix[0][0] = 4;
+    matrix[0][1] = 12;
+    matrix[0][2] = -16;
+    matrix[1][0] = 12;
+    matrix[1][1] = 37;
+    matrix[1][2] = -43;
+    matrix[2][0] = -16;
+    matrix[2][1] = -43;
+    matrix[2][2] = 98;
+
+    OurMatrix<3, 3> L = matrix.choleskyDecomposition();
+    OurMatrix<3, 3> res = L * L.getTransposed();
+
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ASSERT_EQ(matrix[i][j], res[i][j]);
+        }
+    }
+}
+
+
+TEST(MatrixTests, TestLU) {
+    OurMatrix<3, 3, long double> a, L, ans;
+
+    a[0][0] = 3.0;
+    a[0][1] = 2.0;
+    a[0][2] = 3.0;
+    a[1][0] = 4.0;
+    a[1][1] = 5.0;
+    a[1][2] = 6.0;
+    a[2][0] = 7.0;
+    a[2][1] = 9.0;
+    a[2][2] = 10.0;
+
+    ans[0][0] = 0.8;
+    ans[0][1] = -1.4;
+    ans[0][2] = 0.6;
+    ans[1][0] = -0.4;
+    ans[1][1] = -1.8;
+    ans[1][2] = 1.2;
+    ans[2][0] = -0.2;
+    ans[2][1] = 2.6;
+    ans[2][2] = -1.4;
+
+    OurMatrix<3, 3> U = a.LUFactorization(L);
+    auto res = L * U;
+
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ASSERT_EQ(a[i][j], res[i][j]);
+        }
+    }
+
+    std::cout << a << "\n\n" << a.getLUInverse() << "\n\n" << a.getInverse() << "\n";
+    a = a.getLUInverse();
+    for (uint8_t i = 0; i < 3; ++i)
+    {
+        for (uint8_t j = 0; j < 3; ++j)
+        {
+            ASSERT_EQ(a[i][j], ans[i][j]);
         }
     }
 }

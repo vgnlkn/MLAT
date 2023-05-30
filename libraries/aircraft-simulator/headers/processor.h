@@ -11,6 +11,10 @@
 #include <plotter.h>
 #include <random>
 #include <mlat_estimation.h>
+#include <extended_evaluation.h>
+#include <ekf.h>
+#include <nkf.h>
+#include <ukf.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -19,12 +23,12 @@ class NoizeGenerator
 {
 public:
     inline NoizeGenerator(): _rd(), _gen(_rd()), _distribution(0, 1e-6) {}
-    inline double generate() { return _distribution(_gen); }
+    inline long double generate() { return _distribution(_gen); }
 
 private:
     std::random_device _rd;
     std::mt19937 _gen;
-    std::normal_distribution<double> _distribution;
+    std::normal_distribution<long double> _distribution;
 };
 
 /*! \class Processor
@@ -44,11 +48,11 @@ public:
     //! Initialize solver
     void initSolver();
     //! Adding TOA for one iteration
-    void addTOA(uint16_t id, double TOA);
+    void addTOA(uint16_t id, long double TOA);
     //! Calculates TDOA
     void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Overloading operator[]
-    double& operator[](uint16_t id) { return _towers_toa[id]; }
+    long double& operator[](uint16_t id) { return _towers_toa[id]; }
     //! Get tower using her id
     Tower getTower(uint16_t id) { return _towers[id]; }
     //! Setter for _plt_mlat
@@ -62,7 +66,7 @@ public:
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
     //! Set samplerate
-    void setSampleRate(double sample_rate);
+    void setSampleRate(long double sample_rate);
 
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
@@ -71,10 +75,15 @@ public:
     * Gauss-Newton algorithm
     */
     void process(uint32_t iter);
-    
+
+    //! Getter for _eval
+    // ExtendedEvaluation& getEval() { return _eval; }
+
+    //! Getter for _nkf
+    UKF& getNKF() { return _nkf; }
 private:
     //! TOA
-    std::map<uint16_t, double> _towers_toa;
+    std::map<uint16_t, long double> _towers_toa;
     //! Towers
     std::map<uint16_t, Tower> _towers;
     //! Towers position
@@ -92,7 +101,9 @@ private:
     //! Noise generator
     NoizeGenerator* _noise;
     //! Estimation
-    MlatEstimation _estim;
+    // MlatEstimation _estim;
+    //! Estimation by extended filter
+    // ExtendedEvaluation _eval;
     //! Average coordinates
     OurVector<3> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
@@ -101,7 +112,9 @@ private:
     uint32_t _iteration;
     //! Overstatement
     uint32_t _overstatement;
-
+    //! ekf
+    // EKF<EQUATIONS_COUNT> _ekf;
+    UKF _nkf;
 };
 
 

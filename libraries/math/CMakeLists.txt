@@ -8,12 +8,16 @@ add_library (Math
     vector.h
     equation_solver.h
     matrix.h
+    nkf.h
+    src/nkf.cpp
+    ukf.h
+    src/ukf.cpp
     src/equation_solver.cpp
         ../../applications/utilities/defines.h
 	kalman_filter.h
         mlat_estimation.h
         src/mlat_estimation.cpp
-)
+        extended_evaluation.h src/extended_evaluation.cpp extended_filter.h ekf.h)
 
 find_package(GTest)
 if (${GTest_FOUND})
