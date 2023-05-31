@@ -79,9 +79,9 @@ OurVector<3> NKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
 
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
-    S = 1e5 * S;
+    // S = 1e5 * S;
     OurMatrix<3, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
-    K = 1e5 * K; 
+    // K = 1e5 * K;
     OurMatrix<3,3> I;
     I.setIdentity();
     _initial_coordinates = _initial_coordinates + K * discrepancy;
