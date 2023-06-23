@@ -1,5 +1,4 @@
 #include <ukf.h>
-#include <defines.h>
 
 static const double k_covariance_dispersion[] = { 1e3, 0.1, 1e3, 1e4, 0.1, 1e3, 1e3, 0.1, 1e4 };
 
@@ -22,8 +21,7 @@ void UKF::setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinate
     _towers_coordinates = std::move(tower_coordinates);
 }
 
-void UKF::setInitialParams(const OurVector<9>& initial_coordinates,
-                           const OurVector<EQUATIONS_COUNT>& initial_tdoas)
+void UKF::setInitialParams(const OurVector<9>& initial_coordinates)
 {
     _initial_coordinates = initial_coordinates * 0.01f;
 
@@ -55,7 +53,7 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
         x[2] = at[6];
         auto l2_norm = [](OurVector<3> vec) -> double
         {
-            return sqrtl(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+            return sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
         };
 
         OurVector<EQUATIONS_COUNT> tdoa;
@@ -101,18 +99,13 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     return _initial_coordinates;
 }
 
-double UKF::distance(const OurVector<3>& from, const OurVector<3>& to)
-{
-    return sqrtl(std::pow(from[0] - to[0], 2) + std::pow(from[1] - to[1], 2) + std::pow(from[2] - to[2], 2));
-}
-
 OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<9> jacobian_row;
     auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
     auto denominator = [=](uint8_t index, double x, double y, double z)
     {
-        return sqrtl(
+        return sqrt(
                 std::pow(_towers_coordinates[index][0] - x, 2) +
                 std::pow(_towers_coordinates[index][1] - y, 2) +
                 std::pow(_towers_coordinates[index][2] - z, 2)

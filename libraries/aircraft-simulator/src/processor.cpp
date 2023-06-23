@@ -13,7 +13,7 @@ void Processor::initSolver()
     init_state[3] = init[1];
     init_state[6] = init[2];
 
-    _nkf.setInitialParams(init_state, tdoas);
+    _nkf.setInitialParams(init_state);
 }
 
 void Processor::addTOA(uint16_t id, double TOA)

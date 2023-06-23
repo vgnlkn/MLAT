@@ -26,13 +26,11 @@ public:
     //! Setter for tower coordinates
     void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates);
     //! Setter for initial parameters
-    void setInitialParams(const OurVector<9>& initial_coordinates, const OurVector<EQUATIONS_COUNT>& initial_tdoas);
+    void setInitialParams(const OurVector<9>& initial_coordinates);
     //! Method which return the solution
     OurVector<9> solve(OurVector<EQUATIONS_COUNT>& tdoas);
 
 private:
-    //! Calculates the distance between two dots
-    double distance(const OurVector<3>& from, const OurVector<3>& to);
     //! Returns the Jacobian row
     OurVector<9> getJacobianRow(OurVector<9>& position, uint8_t tower_i, uint8_t tower_j);
 
