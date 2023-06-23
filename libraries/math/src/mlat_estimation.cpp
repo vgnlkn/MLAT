@@ -1,5 +1,4 @@
 ﻿#include <mlat_estimation.h>
-#include <matrix.h>
 
 
 static const double array_dispersion[] = {1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10};

@@ -47,8 +47,6 @@ public:
     //! Methods to work with towers
     //! Sets new tower
     void setNewTower(const Tower& tower) { _towers.push_back(tower); }
-    //! Get array of towers
-    [[nodiscard]] std::vector<Tower> getTowers() const { return _towers; }
 private:
     //! Towers that connected to the aircraft
     std::vector<Tower> _towers;

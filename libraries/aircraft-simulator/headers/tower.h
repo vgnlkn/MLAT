@@ -4,7 +4,6 @@
 #include <vector.h>
 #include <defines.h>
 #include <cstring>
-#include <stack>
 #include <cmath>
 
 /*! \class Tower
@@ -16,7 +15,7 @@ class Tower
 {
 public:
     //! Default constructor
-    Tower() = default;
+    Tower() : _id(0) {};
     //! Copy constructor
     Tower(const Tower& other);
     //! Overloading operator=

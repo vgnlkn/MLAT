@@ -11,9 +11,6 @@
 #include <plotter.h>
 #include <random>
 #include <mlat_estimation.h>
-#include <extended_evaluation.h>
-#include <ekf.h>
-#include <nkf.h>
 #include <ukf.h>
 
 /*! \class NoiseGenerator
@@ -42,9 +39,9 @@ class Processor
 public:
     //! Constructor
     inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _plt_filter_acceleration(nullptr),
-    _plt_filter_speed(nullptr), _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
+    _plt_filter_speed(nullptr), _noise(new NoizeGenerator) {}
     //! Destructor
-    inline ~Processor() { if (_noise) { delete _noise; } }
+    inline ~Processor() { delete _noise; }
     //! Initialize solver
     void initSolver();
     //! Adding TOA for one iteration
@@ -53,8 +50,6 @@ public:
     void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Overloading operator[]
     double& operator[](uint16_t id) { return _towers_toa[id]; }
-    //! Get tower using her id
-    Tower getTower(uint16_t id) { return _towers[id]; }
     //! Setter for _plt_mlat
     void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
     //! Setter for _plt_filter
@@ -65,8 +60,6 @@ public:
     void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
-    //! Set samplerate
-    void setSampleRate(double sample_rate);
 
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
@@ -75,12 +68,6 @@ public:
     * Gauss-Newton algorithm
     */
     void process(uint32_t iter);
-
-    //! Getter for _eval
-    // ExtendedEvaluation& getEval() { return _eval; }
-
-    //! Getter for _nkf
-    UKF& getNKF() { return _nkf; }
 private:
     //! TOA
     std::map<uint16_t, double> _towers_toa;
@@ -101,19 +88,11 @@ private:
     //! Noise generator
     NoizeGenerator* _noise;
     //! Estimation
-    // MlatEstimation _estim;
-    //! Estimation by extended filter
-    // ExtendedEvaluation _eval;
+    MlatEstimation _estim;
     //! Average coordinates
     OurVector<3> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
     OurVector<3> _mlat_min, _mlat_max;
-    //! Counter for iterations
-    uint32_t _iteration;
-    //! Overstatement
-    uint32_t _overstatement;
-    //! ekf
-    // EKF<EQUATIONS_COUNT> _ekf;
     UKF _nkf;
 };
 

@@ -13,9 +13,9 @@ class Plotter
 {
 public:
 	//! Constructor
-	inline Plotter(const std::string& filepath) : _file(new std::ofstream(filepath)) {}
+	inline explicit Plotter(const std::string& filepath) : _file(new std::ofstream(filepath)) {}
 	//! Destructor
-	inline ~Plotter() { if (_file) { delete _file; } }
+	inline ~Plotter() { delete _file; }
     //! Insert point to the file
 	void addPoint(double x, double y, double z);
 	

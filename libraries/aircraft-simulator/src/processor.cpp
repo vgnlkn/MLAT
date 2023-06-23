@@ -14,8 +14,6 @@ void Processor::initSolver()
     init_state[6] = init[2];
 
     _nkf.setInitialParams(init_state, tdoas);
-    // _ekf.setInitialParams(init, tdoas);
-    //_eval.setInitialParams(init, tdoas);
 }
 
 void Processor::addTOA(uint16_t id, double TOA)
@@ -73,13 +71,6 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _towers_coordinates[id] = tower.getPosition();
     _solver.setTowersCoordinates(_towers_coordinates);
     _nkf.setTowersCoordinates(_towers_coordinates);
-    // _eval.setTowersCoordinates(_towers_coordinates);
-    // _ekf.init(_towers_coordinates);
-}
-
-void Processor::setSampleRate(double sample_rate)
-{
-    //_eval.updateStateMatrix(sample_rate);
 }
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)

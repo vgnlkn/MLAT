@@ -9,11 +9,10 @@ Field::Field() :
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
 {
-    _processor.setSampleRate(_sample_rate);
     _aircraft.setTimeDelta(_sample_rate);
 }
 
-void Field::startMovement()
+[[noreturn]] void Field::startMovement()
 {
     initialize();
 
@@ -23,7 +22,6 @@ void Field::startMovement()
         checkHeight();
         updateAircraftSpeed();
         sendSignalsToTowers();
-        //_processor.getEval().updateObservationMatrix(_current_position);
         processSignals(i);
         if (i % POINT_MOD == 0)
         {
@@ -39,8 +37,6 @@ void Field::initialize()
     sendSignalsToTowers();
     _processor.initSolver();
     _aircraft.checkAcceleration();
-
-    //_processor.getEval().updateObservationMatrix(_current_position);
 }
 
 void Field::updateAircraftPosition()

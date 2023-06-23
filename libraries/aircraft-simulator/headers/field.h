@@ -29,7 +29,6 @@ public:
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
-        _processor.setSampleRate(_sample_rate);
         _aircraft.setTimeDelta(_sample_rate);
     }
     //! Constructor with aircraft
@@ -42,15 +41,14 @@ public:
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
-        _processor.setSampleRate(_sample_rate);
         _aircraft.setTimeDelta(_sample_rate);
     }
     //! Destructor
-    ~Field() { if (_towers) delete[] _towers; };
+    ~Field() { delete[] _towers; };
 
     //! Methods responsible for the movement of the _aircraft
     //! Start movement
-    void startMovement();
+    [[noreturn]] void startMovement();
     //! Initialize the initial movement of the aircraft and towers
     void initialize();
     //! Calculates the new position of the aircraft
@@ -93,8 +91,6 @@ public:
     void updatePlot();
     //! Process Signals
     void processSignals(uint32_t i) { _processor.process(i); }
-    [[nodiscard]] Processor getProcessor() const { return _processor; }
-
 private:
     //! Aircraft
     Aircraft _aircraft;
