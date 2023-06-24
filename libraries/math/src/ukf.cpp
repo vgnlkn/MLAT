@@ -89,9 +89,7 @@ OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
 
 
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
-    S = 1e6 * S;
     OurMatrix<9, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
-    K = 1e6 * K;
     OurMatrix<9,9> I;
     I.setIdentity();
     _initial_coordinates = _initial_coordinates + K * discrepancy;

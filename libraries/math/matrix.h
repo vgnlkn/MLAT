@@ -24,7 +24,7 @@ public:
     //! Default constructor
     OurMatrix() : _matrix(new OurVector<col, type>[row]) { setZero(); };
     //! Destructor
-    ~OurMatrix() { if (_matrix) { delete[] _matrix; } }
+    ~OurMatrix() { delete[] _matrix; }
     //! Copy constructor
     OurMatrix(const OurMatrix& other);
     //! Get row
@@ -50,10 +50,6 @@ public:
     OurMatrix<row, col> LUFactorization(OurMatrix<row, col>& L);
     //! Inverse matrix with LU-factorization
     OurMatrix<col, row> getLUInverse();
-    //! Computing the Cholesky decomposition of current matrix
-    OurMatrix<row, col> choleskyDecomposition() const;
-    //! Inverse matrix by Eigen
-    OurMatrix<col, row> getEigenInverse();
     //! LU decompose
     OurMatrix<row, col> matrixDecompose(OurMatrix<row, col> matrix, OurVector<row>& perm, int& toggle);
     //! Solve system
@@ -78,6 +74,12 @@ public:
     //! Transposes the matrix
     void transpose();
     //! Strassen's algorithm
+    /**
+     * Strassen's algorithm for matrix multiplication works for square matrices
+     * with dimensions that are powers of two. If the dimensions of the matrices
+     * are not a power of two, then they can be padded with zeros to the next
+     * power of two.
+     */
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
     friend OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first, const OurMatrix<row2, col2, T>& second);
     //! Get row size
@@ -138,21 +140,26 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixInverse()
     auto copy = *this;
     auto lum = matrixDecompose(copy, perm, toggle);
 
-    // std::cout << "ITS LUM\n" << lum << "\n\n\n\n\n";
-
     OurVector<n> b;
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
+    for (uint8_t i = 0; i < n; ++i)
+    {
+        for (uint8_t j = 0; j < n; ++j)
+        {
             if (i == perm[j])
+            {
                 b[j] = 1.0;
+            }
             else
+            {
                 b[j] = 0.0;
+            }
         }
 
         OurVector<n> x = helperSolve(lum, b);
-        // std::cout << "ITS HELPERSOLVE\n" << x << "\n\n";
-        for (int j = 0; j < n; ++j)
+        for (uint8_t j = 0; j < n; ++j)
+        {
             result[j][i] = x[j];
+        }
     }
 
     return result;
@@ -164,19 +171,25 @@ OurVector<row> OurMatrix<row, col, type>::helperSolve(OurMatrix<row, col> &luMat
     const int n = row;
     OurVector<n> x = b;
 
-    for (int i = 1; i < n; ++i) {
+    for (int i = 1; i < n; ++i)
+    {
         double sum = x[i];
         for (int j = 0; j < i; ++j)
+        {
             sum -= luMatrix[i][j] * x[j];
+        }
         x[i] = sum;
     }
 
     x[n - 1] /= luMatrix[n - 1][n - 1];
 
-    for (int i = n - 2; i >= 0; --i) {
+    for (int i = n - 2; i >= 0; --i)
+    {
         double sum = x[i];
         for (int j = i + 1; j < n; ++j)
+        {
             sum -= luMatrix[i][j] * x[j];
+        }
         x[i] = sum / luMatrix[i][i];
     }
 
@@ -188,16 +201,16 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixDecompose(OurMatrix<row, co
 {
     const int n = row;
     OurMatrix<row, col> result = matrix;
-    for (int i = 0; i < n; ++i)
+    for (uint8_t i = 0; i < n; ++i)
     {
         perm[i] = i;
     }
     toggle = 1;
-    for (int j = 0; j < n - 1; ++j)
+    for (uint8_t j = 0; j < n - 1; ++j)
     {
         double colMax = std::abs(result[j][j]);
         int pRow = j;
-        for (int i = j + 1; i < n; ++i)
+        for (uint8_t i = j + 1; i < n; ++i)
         {
             if (result[i][j] > colMax)
             {
@@ -219,10 +232,10 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixDecompose(OurMatrix<row, co
         {
             return OurMatrix<row, col>();
         }
-        for (int i = j + 1; i < n; ++i)
+        for (uint8_t i = j + 1; i < n; ++i)
         {
             result[i][j] /= result[j][j];
-            for (int k = j + 1; k < n; ++k)
+            for (uint8_t k = j + 1; k < n; ++k)
             {
                 result[i][k] -= result[i][j] * result[j][k];
             }
@@ -230,65 +243,6 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixDecompose(OurMatrix<row, co
     }
 
     return result;
-}
-
-template<uint8_t row, uint8_t col, typename type>
-OurMatrix<col, row> OurMatrix<row, col, type>::getEigenInverse()
-{
-    /*Eigen::MatrixXd m(10, 10);
-
-    // Initialize the matrix with the given values
-    m << 3.187345867803569, 0.175809326376545, 3.061658622172275, 1.821163658088481, -3.011536541427024,
-            -0.125687245631293, -1.366182209715088, 2.885849295795730, 1.645354331711936, -1.240494964083794,
-            0.175809326376545, 1.122371219472738, 0.557747301005823, 1.294740799901882, 0.946561893096193,
-            0.381937974629278, 1.118931473525337, -0.564623918466915, 0.172369580429143, 0.736993498896059,
-            3.061658622172275, 0.557747301005823, 3.347689134593007, 2.518397576313314, -2.503911321166453,
-            0.286030512420731, -0.543261045858963, 2.789941833587183, 1.960650275307490, -0.829291558279693,
-            1.821163658088481, 1.294740799901882, 2.518397576313314, 2.779010045158949, -0.526422858186600,
-            0.697233918224832, 0.957846387070467, 1.223656776411432, 1.484269245257067, 0.260612468845635,
-            -3.011536541427024, 0.946561893096193, -2.503911321166453, -0.526422858186600, 3.958098434523217,
-            0.507625220260571, 2.485113683240424, -3.450473214262646, -1.472984751282793, 1.977488462979853,
-            -0.125687245631293, 0.381937974629278, 0.286030512420731, 0.697233918224832, 0.507625220260571,
-            0.411717758052024, 0.822921163856125, -0.095907462208547, 0.315295943595554, 0.411203405804101,
-            -1.366182209715088, 1.118931473525337, -0.543261045858963, 0.957846387070467, 2.485113683240424,
-            0.822921163856125, 2.324028596785555, -1.662192519384299, -0.161085086454869, 1.501107432929430,
-            2.885849295795730, -0.564623918466915, 2.789941833587183, 1.223656776411432, -3.450473214262646,
-            -0.095907462208547, -1.662192519384299, 3.354565752054098, 1.788280694878347, -1.566285057175752,
-            1.645354331711936, 0.172369580429143, 1.960650275307490, 1.484269245257067, -1.472984751282793,
-            0.315295943595554, -0.161085086454869, 1.788280694878347, 1.311899664827924, -0.476381030050423,
-            -1.240494964083794, 0.736993498896059, -0.829291558279693, 0.260612468845635, 1.977488462979853,
-            0.411203405804101, 1.501107432929430, -1.566285057175752, -0.476381030050423, 1.089904027125329;
-
-    // Print the matrix
-    std::cout << "Matrix:\n" << m << "\n\nInverse matrix * matrix:\n" << m.inverse() * m << "\n\n\n\n";
-
-    Eigen::MatrixXd matrix(row, col);
-    for (uint8_t i = 0; i < row; ++i)
-    {
-        for (uint8_t j = 0; j < col; ++j)
-        {
-            matrix(i, j) = std::round(_matrix[i][j] * 1e6) / 1e6;
-        }
-    }
-
-
-    Eigen::MatrixXd matrix_inverse(matrix.inverse());
-
-    std::cout << "S * S^-1 = \n " << matrix * matrix_inverse << "\n\n";
-
-    OurMatrix<col, row> this_inverse;
-    for (uint8_t i = 0; i < col; ++i)
-    {
-        for (uint8_t j = 0; j < row; ++j)
-        {
-            this_inverse[i][j] = matrix_inverse(i, j);
-        }
-    }
-
-    // std::cout << this_inverse << "\n\n\n\n\n\n";
-
-    return this_inverse;
-     */
 }
 
 template<uint8_t row, uint8_t col, typename type>
@@ -300,13 +254,13 @@ OurMatrix<col, row> OurMatrix<row, col, type>::getLUInverse()
     OurMatrix<col, row, type> U_inversed = U;
 
     double sum;
-    for (int i = col - 1; i >= 0; i--)
+    for (uint8_t i = col - 1; i >= 0; i--)
     {
         U_inversed[i][i] = 1 / U[i][i];
-        for (int j = i - 1; j >= 0; j--)
+        for (uint8_t j = i - 1; j >= 0; j--)
         {
             sum = 0;
-            for (int k = j + 1; k <= i; k++)
+            for (uint8_t k = j + 1; k <= i; k++)
             {
                 sum += U[j][k] * U_inversed[k][i];
             }
@@ -315,13 +269,13 @@ OurMatrix<col, row> OurMatrix<row, col, type>::getLUInverse()
     }
 
     OurMatrix<col, row, type> L_inversed = L;
-    for (int i = 0; i < col; i++)
+    for (uint8_t i = 0; i < col; i++)
     {
         L_inversed[i][i] = 1 / L[i][i];
-        for (int j = i + 1; j < col; j++)
+        for (uint8_t j = i + 1; j < col; j++)
         {
             sum = 0;
-            for (int k = i; k < j; k++)
+            for (uint8_t k = i; k < j; k++)
             {
                 sum += L[j][k] * L_inversed[k][i];
             }
@@ -370,88 +324,6 @@ OurMatrix<row, col> OurMatrix<row, col, type>::LUFactorization(OurMatrix<row, co
 
     return U;
 }
-
-template<uint8_t row, uint8_t col, typename type>
-OurMatrix<row, col> OurMatrix<row, col, type>::choleskyDecomposition() const
-{
-    checkParams(*this);
-    assert(row == col);
-
-    OurMatrix<row, col, type> L;
-
-    // Три реализации холецкого
-    /*
-    for (uint8_t i = 0; i < row; i++)
-    {
-        for (uint8_t j = 0; j <= i; j++)
-        {
-            double sum = 0;
-            for (uint8_t k = 0; k < j; k++)
-            {
-                sum += L[i][k] * L[j][k];
-            }
-
-            if (i == j)
-            {
-                L[i][j] = sqrt(_matrix[i][i] - sum);
-            }
-            else
-            {
-                L[i][j] = (1.0 / L[j][j] * (_matrix[i][j] - sum));
-            }
-        }
-    }
-    */
-    /*
-    for (uint8_t i = 0; i < row; i++)
-    {
-        for (uint8_t j = 0; j <= i; j++)
-        {
-            double sum = 0;
-            for (uint8_t k = 0; k < j; k++)
-            {
-                sum += L[i][k] * L[j][k];
-            }
-
-            if (i == j)
-            {
-                L[i][j] = sqrt(_matrix[i][i] - sum);
-            }
-            else
-            {
-                L[i][j] = (1.0 / L[j][j] * (_matrix[i][j] - sum));
-            }
-        }
-    }
-     */
-
-    for (uint8_t i = 0; i < row; ++i)
-    {
-        for (uint8_t j = 0; j <= i; ++j)
-        {
-            double sum = 0.0;
-            if (j == i)
-            {
-                for (int k = 0; k < j; ++k)
-                {
-                    sum += powl(L[j][k], 2);
-                }
-                L[j][j] = sqrtl(_matrix[j][j] - sum);
-            }
-            else
-            {
-                for (int k = 0; k < j; ++k)
-                {
-                    sum += (L[i][k] * L[j][k]);
-                }
-                L[i][j] = (_matrix[i][j] - sum) / L[j][j];
-            }
-        }
-    }
-
-    return L;
-}
-
 
 template<uint8_t row, uint8_t col, typename type>
 OurMatrix<col, row, type> OurMatrix<row, col, type>::getInverse() const
@@ -561,10 +433,10 @@ OurMatrix<row1, col2, T> operator*(const OurMatrix<row1, col1, T>& first, const 
 {
     assert(col1 == row2);
 
-    /*if (row1 == col1 == row2 == col2)
+    if (row1 == col1 == row2 == col2)
     {
         return strassenAlg(first, second);
-    } */
+    }
     return classicAlgMultiplication(first, second);
 }
 
@@ -593,12 +465,6 @@ OurMatrix<row1, col2, T> classicAlgMultiplication(const OurMatrix<row1, col1, T>
 }
 
 
-/**
- * Strassen's algorithm for matrix multiplication works for square matrices
- * with dimensions that are powers of two. If the dimensions of the matrices
- * are not a power of two, then they can be padded with zeros to the next
- * power of two.
- */
 template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
 OurMatrix<row1, col2, T> strassenAlg(const OurMatrix<row1, col1, T>& first,
                                      const OurMatrix<row2, col2, T>& second)
