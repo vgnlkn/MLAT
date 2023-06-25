@@ -5,6 +5,11 @@ class Plotter;
 class Field;
 class Aircraft;
 
+
+/*! \class MainClass
+*   \brief Run model and plotters
+* 	It creates model objects, activates it and adds plotters.
+*/
 class MainClass
 {
 public:
@@ -20,8 +25,10 @@ private:
     void setParameters();
 
 private:
+    //! Model
     Field* _field;
     Aircraft* _aircraft;
+    //! Graphics
     Plotter* _plt_mlat;
     Plotter* _plt_real;
     Plotter* _plt_filter;
