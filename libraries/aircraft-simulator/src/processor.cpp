@@ -14,12 +14,7 @@ void Processor::initSolver()
     init_state[3] = init[1];
     init_state[6] = init[2];
 
-    _nkf.setInitialParams(init_state);
-}
-
-void Processor::addTOA(uint16_t id, double TOA)
-{
-    _towers_toa[id] = TOA;
+    _unscented_filter.setInitialParams(init_state);
 }
 
 void Processor::process(uint32_t iter)
@@ -28,7 +23,8 @@ void Processor::process(uint32_t iter)
     calculateTDOA(tdoas);
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
-    OurVector<9> aircraft_trajectory_estimation =  _nkf.solve(tdoas);
+    OurVector<9> aircraft_trajectory_estimation =  _unscented_filter.solve(tdoas);
+    OurVector<9> standard_filter_estim = _estim.estimatedState(mlat_coords);
 
     auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
     {
@@ -85,7 +81,7 @@ void Processor::process(uint32_t iter)
 
     if (_overstatement > k_duration_overstatement)
     {
-        _nkf.reset();
+        _unscented_filter.reset();
     }
 
 
@@ -103,7 +99,7 @@ void Processor::setTower(uint16_t id, const Tower& tower)
     _towers[id] = tower;
     _towers_coordinates[id] = tower.getPosition();
     _solver.setTowersCoordinates(_towers_coordinates);
-    _nkf.setTowersCoordinates(_towers_coordinates);
+    _unscented_filter.setTowersCoordinates(_towers_coordinates);
 }
 
 void Processor::calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas)

@@ -26,7 +26,7 @@ public:
 	//! Estimated state
 	OurVector<9> estimatedState(OurVector<3>& observation);
 	//! Resetes covariance matrixes;
-	void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
+	inline void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
 
 private:
 	//! Kalman Filter

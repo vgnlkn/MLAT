@@ -1,10 +1,10 @@
 #ifndef MLAT_TOWER_H
 #define MLAT_TOWER_H
 
-#include <vector.h>
-#include <defines.h>
 #include <cstring>
 #include <cmath>
+#include <vector.h>
+#include <defines.h>
 
 /*! \class Tower
 *   \brief Tower class

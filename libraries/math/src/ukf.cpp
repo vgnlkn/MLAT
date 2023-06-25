@@ -129,7 +129,7 @@ void UKF::predict()
 void UKF::correct()
 {
     OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
-    OurMatrix<9, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
+    OurMatrix<9, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.getLUPInverse();
     OurMatrix<9,9> I;
     I.setIdentity();
     _initial_coordinates = _initial_coordinates + K * computeDiscrepancy();

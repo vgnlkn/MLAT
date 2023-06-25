@@ -1,15 +1,11 @@
 ﻿#ifndef MLAT_MATRIX_H
 #define MLAT_MATRIX_H
 
-#include <iostream>
 #include <vector>
 #include <cassert>
 #include <utility>
-#include <algorithm>
-#include <typeinfo>
 #include <cmath>
 #include <vector.h>
-// #include <Eigen/Dense>
 
 /*! \class OurMatrix
 *   \brief Class describing the matrix
@@ -22,9 +18,9 @@ class OurMatrix
 {
 public:
     //! Default constructor
-    OurMatrix() : _matrix(new OurVector<col, type>[row]) { setZero(); };
+    inline OurMatrix() : _matrix(new OurVector<col, type>[row]) { setZero(); };
     //! Destructor
-    ~OurMatrix() { delete[] _matrix; }
+    inline ~OurMatrix() { delete[] _matrix; }
     //! Copy constructor
     OurMatrix(const OurMatrix& other);
     //! Get row
@@ -32,11 +28,11 @@ public:
     //! Get column
     OurVector<row, type> getCol(uint8_t col_index) const;
     //! Replace all fields
-    void swap(OurMatrix& other) { std::swap(this->_matrix, other._matrix); };
+    inline void swap(OurMatrix& other) { std::swap(this->_matrix, other._matrix); };
     //! Set value val to each matrix element
     void setValue(type value);
     //! Set each matrix element to 0
-    void setZero() { this->setValue(0.f); }
+    inline void setZero() { this->setValue(0.f); }
     //! Gets transposed copy of matrix
     OurMatrix<col, row, type> getTransposed() const;
 
@@ -44,18 +40,12 @@ public:
     OurMatrix<col, row, type> pseudoInverse() const;
     //! Computing the QR-decomposition of current matrix
     std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> QRDecomposition() const;
-    //! Computing the LUP-factorization of current matrix
-    void LUPFactorization(OurVector<row>& P);
-    //! Computing the LU-factorization of current matrix
-    OurMatrix<row, col> LUFactorization(OurMatrix<row, col>& L);
-    //! Inverse matrix with LU-factorization
-    OurMatrix<col, row> getLUInverse();
     //! LU decompose
     OurMatrix<row, col> matrixDecompose(OurMatrix<row, col> matrix, OurVector<row>& perm, int& toggle);
     //! Solve system
     OurVector<row> helperSolve(OurMatrix<row, col>& luMatrix, OurVector<row>& b);
     //! Inverse matrix
-    OurMatrix<row, col> matrixInverse();
+    OurMatrix<row, col> getLUPInverse();
 
     //! Classical matrix multiplication algorithm
     template<uint8_t row1, uint8_t col1, uint8_t row2, uint8_t col2, typename T>
@@ -70,7 +60,7 @@ public:
     //! Set value on main diagonal of the matrix(sets 0 on other cells)
     void setDiagonalValue(type value);
     //! Set 1 on main diagonal of the matrix
-    void setIdentity() { this->setDiagonalValue(1.f); };
+    inline void setIdentity() { this->setDiagonalValue(1.f); };
     //! Transposes the matrix
     void transpose();
     //! Strassen's algorithm
@@ -93,17 +83,17 @@ public:
     //! Overloading operator==
     bool operator==(const OurMatrix& other) const;
     //! Overloading operator!=
-    bool operator!=(const OurMatrix& other) const { return !(*this == other); }
+    inline bool operator!=(const OurMatrix& other) const { return !(*this == other); }
     //! Overloading operator =
     OurMatrix<row, col, type>& operator=(const OurMatrix& other);
     //! Overloading operator[] with link
-    OurVector<col, type>& operator[] (uint8_t i) const { return _matrix[i]; }
+    inline OurVector<col, type>& operator[] (uint8_t i) const { return _matrix[i]; }
     //! Overloading sum with another matrix
     OurMatrix<row, col, type> operator+(const OurMatrix& other) const;
     //! Overloading operator- that inverts number
     OurMatrix<row, col, type> operator-() const;
     //! Overloading substraction with another matrix
-    OurMatrix<row, col, type> operator-(const OurMatrix& other) const { return *this + (-other); };
+    inline OurMatrix<row, col, type> operator-(const OurMatrix& other) const { return *this + (-other); };
     //! Overloading multiplying with single number (matrix first)
     OurMatrix<row, col, type> operator*(type number) const;
     //! Overloading multiplying with vector (matrix first)
@@ -131,7 +121,7 @@ private:
 };
 
 template<uint8_t row, uint8_t col, typename type>
-OurMatrix<row, col> OurMatrix<row, col, type>::matrixInverse()
+OurMatrix<row, col> OurMatrix<row, col, type>::getLUPInverse()
 {
     const int n = row;
     OurMatrix<row, col> result = *this;
@@ -246,86 +236,6 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixDecompose(OurMatrix<row, co
 }
 
 template<uint8_t row, uint8_t col, typename type>
-OurMatrix<col, row> OurMatrix<row, col, type>::getLUInverse()
-{
-    OurMatrix<row, col> L;
-    OurMatrix<row, col> U = this->LUFactorization(L);
-
-    OurMatrix<col, row, type> U_inversed = U;
-
-    double sum;
-    for (uint8_t i = col - 1; i >= 0; i--)
-    {
-        U_inversed[i][i] = 1 / U[i][i];
-        for (uint8_t j = i - 1; j >= 0; j--)
-        {
-            sum = 0;
-            for (uint8_t k = j + 1; k <= i; k++)
-            {
-                sum += U[j][k] * U_inversed[k][i];
-            }
-            U_inversed[j][i] = -sum / U[j][j];
-        }
-    }
-
-    OurMatrix<col, row, type> L_inversed = L;
-    for (uint8_t i = 0; i < col; i++)
-    {
-        L_inversed[i][i] = 1 / L[i][i];
-        for (uint8_t j = i + 1; j < col; j++)
-        {
-            sum = 0;
-            for (uint8_t k = i; k < j; k++)
-            {
-                sum += L[j][k] * L_inversed[k][i];
-            }
-            L_inversed[j][i] = -sum / L[j][j];
-        }
-    }
-
-
-    return U_inversed * L_inversed;
-}
-
-template<uint8_t row, uint8_t col, typename type>
-OurMatrix<row, col> OurMatrix<row, col, type>::LUFactorization(OurMatrix<row, col>& L)
-{
-    assert(row == col);
-    const uint8_t N = row;
-
-    OurMatrix<N, N> U = (*this);
-
-    for (uint8_t i = 0; i < N; i++)
-    {
-        for (uint8_t j = i; j < N; j++)
-        {
-            L[j][i] = U[j][i] / U[i][i];
-        }
-    }
-
-    for (uint8_t k = 1; k < N; k++)
-    {
-        for (uint8_t i = k - 1; i < N; i++)
-        {
-            for (uint8_t j = i; j < N; j++)
-            {
-                L[j][i] = U[j][i] / U[i][i];
-            }
-        }
-
-        for (uint8_t i = k; i < N; i++)
-        {
-            for (uint8_t j = k - 1; j < N; j++)
-            {
-                U[i][j] = U[i][j] - L[i][k - 1] * U[k - 1][j];
-            }
-        }
-    }
-
-    return U;
-}
-
-template<uint8_t row, uint8_t col, typename type>
 OurMatrix<col, row, type> OurMatrix<row, col, type>::getInverse() const
 {
     checkParams(*this);
@@ -386,45 +296,6 @@ OurMatrix<col, row, type> OurMatrix<row, col, type>::getInverse() const
     }
 
     return inverse_matrix;
-}
-
-template<uint8_t row, uint8_t col, typename type>
-void OurMatrix<row, col, type>::LUPFactorization(OurVector<row>& P)
-{
-    const uint8_t n = row;
-    for(uint8_t i = 0; i < n; i++)
-    {
-        P[i] = i;
-    }
-
-    for(uint8_t k = 0; k < n; k++)
-    {
-        double p = 0;
-        int kp = k;
-        for(uint8_t i = k; i < n; i++)
-        {
-            if(std::abs(_matrix[i][k]) > p)
-            {
-                p = std::abs(_matrix[i][k]);
-                kp = i;
-            }
-        }
-
-        if(kp != k)
-        {
-            std::swap(P[k], P[kp]);
-            std::swap(_matrix[k], _matrix[kp]);
-        }
-
-        for(uint8_t i = k + 1; i < n; i++)
-        {
-            _matrix[i][k] /= _matrix[k][k];
-            for(uint8_t j = k + 1; j < n; j++)
-            {
-                _matrix[i][j] -= _matrix[i][k] * _matrix[k][j];
-            }
-        }
-    }
 }
 
 

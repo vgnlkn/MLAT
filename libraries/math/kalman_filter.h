@@ -1,7 +1,6 @@
 #ifndef MLAT_KALMAN_FILTER_H
 #define MLAT_KALMAN_FILTER_H
 
-
 #include <matrix.h>
 
 /*! \class KalmanFilter

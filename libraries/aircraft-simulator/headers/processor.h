@@ -1,6 +1,8 @@
 #ifndef MLAT_PROCESSOR_H
 #define MLAT_PROCESSOR_H
 
+class Plotter;
+
 #include <chrono>
 #include <vector>
 #include <map>
@@ -9,8 +11,7 @@
 #include <equation_solver.h>
 #include <random>
 #include <ukf.h>
-
-class Plotter;
+#include <mlat_estimation.h>
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -38,25 +39,25 @@ class Processor
 public:
     //! Constructor
     inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _plt_filter_acceleration(nullptr),
-    _plt_filter_speed(nullptr), _noise(new NoizeGenerator) {}
+    _plt_filter_speed(nullptr), _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
     //! Destructor
     inline ~Processor() { delete _noise; }
     //! Initialize solver
     void initSolver();
     //! Adding TOA for one iteration
-    void addTOA(uint16_t id, double TOA);
+    inline void addTOA(uint16_t id, double TOA) { _towers_toa[id] = TOA; }
     //! Calculates TDOA
     void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
     //! Overloading operator[]
-    double& operator[](uint16_t id) { return _towers_toa[id]; }
+    inline double& operator[](uint16_t id) { return _towers_toa[id]; }
     //! Setter for _plt_mlat
-    void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
+    inline void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
     //! Setter for _plt_filter
-    void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
+    inline void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
     //! Setter for _plt_filter_speed
-    void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
+    inline void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
     //! Setter for _plt_filter_acceleration
-    void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
+    inline void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
 
@@ -95,7 +96,9 @@ private:
     //! Overstatement
     uint32_t _overstatement;
     //! Kalman Filter with built-in LSM
-    UKF _nkf;
+    UKF _unscented_filter;
+    //! Estimation for standard Kalman filter
+    MlatEstimation _estim;
 };
 
 

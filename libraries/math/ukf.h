@@ -1,13 +1,12 @@
 #ifndef UKF_H
 #define UKF_H
 
-#include <vector.h>
-#include <matrix.h>
-#include <defines.h>
 #include <map>
 #include <cmath>
 #include <cassert>
 #include <utility>
+#include <matrix.h>
+#include <defines.h>
 
 /*! \class UKF
 *   \brief Class which solves the MLAT problem
@@ -45,7 +44,7 @@ private:
     //! Corrects model values
     void correct();
     //! Set covariance state matrix
-    inline void setCovarianceState();
+    void setCovarianceState();
 
 private:
     //! Initial coordinates

@@ -15,7 +15,7 @@ class MainClass
 public:
     //! Constructor
     MainClass();
-    //! Deconstructor
+    //! Destructor
     ~MainClass();
 
     //! Run simulation of aircraft flight

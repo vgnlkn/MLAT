@@ -1,13 +1,12 @@
 #ifndef EQUATION_SOLVER_H
 #define EQUATION_SOLVER_H
 
-#include <vector.h>
-#include <matrix.h>
-#include <defines.h>
 #include <map>
 #include <cmath>
 #include <cassert>
 #include <utility>
+#include <matrix.h>
+#include <defines.h>
 
 /*! \class EquationSolver
 *   \brief Class which solves the MLAT problem
