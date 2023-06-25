@@ -23,14 +23,14 @@ void Processor::process(uint32_t iter)
     calculateTDOA(tdoas);
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
-    OurVector<9> aircraft_trajectory_estimation =  _unscented_filter.solve(tdoas);
+    OurVector<9> aircraft_trajectory_estimation = _unscented_filter.solve(tdoas);
     OurVector<9> standard_filter_estim = _estim.estimatedState(mlat_coords);
 
-    auto fillVector = [=](OurVector<3>& vector, uint8_t i) -> void
+    auto fillVector = [](const OurVector<9>& estimation, OurVector<3>& vector, uint8_t i) -> void
     {
-        vector[0] = aircraft_trajectory_estimation[i];
-        vector[1] = aircraft_trajectory_estimation[i + 3];
-        vector[2] = aircraft_trajectory_estimation[i + 6];
+        vector[0] = estimation[i];
+        vector[1] = estimation[i + 3];
+        vector[2] = estimation[i + 6];
     };
 
 
@@ -47,9 +47,14 @@ void Processor::process(uint32_t iter)
     };
 
     OurVector<3> filter_coords, filter_speed, filter_acceleration;
-    fillVector(filter_coords, 0);
-    fillVector(filter_speed, 1);
-    fillVector(filter_acceleration, 2);
+    fillVector(aircraft_trajectory_estimation, filter_coords, 0);
+    fillVector(aircraft_trajectory_estimation, filter_speed, 1);
+    fillVector(aircraft_trajectory_estimation, filter_acceleration, 2);
+
+    OurVector<3> standard_filter_coords, standard_filter_speed, standard_filter_acceleration;
+    fillVector(standard_filter_estim, standard_filter_coords, 0);
+    fillVector(standard_filter_estim, standard_filter_speed, 1);
+    fillVector(standard_filter_estim, standard_filter_acceleration, 2);
 
     _mlat_average = mlat_coords + _mlat_average;
     _kalman_average = filter_coords + _kalman_average;
@@ -82,6 +87,13 @@ void Processor::process(uint32_t iter)
     if (_overstatement > k_duration_overstatement)
     {
         _unscented_filter.reset();
+
+        standard_filter_estim[8] = 0;
+        standard_filter_estim[5] = 0;
+        standard_filter_estim[2] = 0;
+
+        _estim.initState(standard_filter_estim);
+        _estim.reset();
     }
 
 
@@ -91,6 +103,9 @@ void Processor::process(uint32_t iter)
         addPoint(filter_coords, _plt_filter);
         addPoint(filter_speed, _plt_filter_speed);
         addPoint(filter_acceleration, _plt_filter_acceleration);
+        addPoint(standard_filter_acceleration, _plt_standard_filter_acceleration);
+        addPoint(filter_acceleration, _plt_standard_filter_speed);
+        addPoint(standard_filter_coords, _plt_standard_filter);
     }
 }
 

@@ -36,6 +36,9 @@ private:
     Plotter* _plt_speed_real;
     Plotter* _plt_acceleration_filter;
     Plotter* _plt_acceleration_real;
+    Plotter* _plt_acceleration_standard_filter;
+    Plotter* _plt_speed_standard_filter;
+    Plotter* _plt_standard_filter;
 };
 
 

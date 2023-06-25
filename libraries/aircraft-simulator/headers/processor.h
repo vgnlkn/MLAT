@@ -39,7 +39,8 @@ class Processor
 public:
     //! Constructor
     inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _plt_filter_acceleration(nullptr),
-    _plt_filter_speed(nullptr), _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
+    _plt_filter_speed(nullptr), _plt_standard_filter_acceleration(nullptr), _plt_standard_filter_speed(nullptr),
+    _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
     //! Destructor
     inline ~Processor() { delete _noise; }
     //! Initialize solver
@@ -58,6 +59,12 @@ public:
     inline void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
     //! Setter for _plt_filter_acceleration
     inline void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
+    //! Setter for _plt_standard_filter
+    inline void setPlotterStandardFilter(Plotter* plt) { _plt_standard_filter = plt; }
+    //! Setter for _plt_standard_filter_speed
+    inline void setPlotterStandardFilterSpeed(Plotter* plt) { _plt_standard_filter_speed = plt; }
+    //! Setter for _plt_standard_filter_acceleration
+    inline void setPlotterStandardFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
 
@@ -85,6 +92,12 @@ private:
     Plotter* _plt_filter_speed;
     //! Plotter for filter acceleration
     Plotter* _plt_filter_acceleration;
+    //! Plotter for standard filter speed
+    Plotter* _plt_standard_filter_speed;
+    //! Plotter for standard filter acceleration
+    Plotter* _plt_standard_filter_acceleration;
+    //! Plotter for standard filter coordinates
+    Plotter* _plt_standard_filter;
     //! Noise generator
     NoizeGenerator* _noise;
     //! Average coordinates

@@ -88,8 +88,14 @@ public:
     void setPlotterFilter(Plotter* plt) { _processor.setPlotterFilter(plt); }
     //! Setting Filter plotter speed
     void setPlotterFilterSpeed(Plotter* plt) { _processor.setPlotterFilterSpeed(plt); }
-    //! Setting Filter plotter speed
+    //! Setting Filter plotter acceleration
     void setPlotterFilterAcceleration(Plotter* plt) { _processor.setPlotterFilterAcceleration(plt); }
+    //! Setting standard filter plotter
+    void setPlotterStandardFilter(Plotter* plt) { _processor.setPlotterStandardFilter(plt); }
+    //! Setting standard filter plotter speed
+    void setPlotterFilterStandardSpeed(Plotter* plt) { _processor.setPlotterStandardFilterSpeed(plt); }
+    //! Setting standard filter plotter acceleration
+    void setPlotterFilterStandardAcceleration(Plotter* plt) { _processor.setPlotterStandardFilterAcceleration(plt); }
     //! Setting coordinate plotter with real values
     void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
     //! Setting speed plotter with real values

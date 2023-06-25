@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(MLAT VERSION 0.1)
 
-# set(EIGEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../eigen)
-
 include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
 include(CheckCXXCompilerFlag)
-# include_directories(${EIGEN_DIR})
 
 add_subdirectory(applications)
 add_subdirectory(libraries)
