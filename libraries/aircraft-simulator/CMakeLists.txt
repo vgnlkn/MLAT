@@ -14,6 +14,5 @@ add_library (AircraftSimulator
     ${CMAKE_CURRENT_SOURCE_DIR}/src/field.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/processor.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/tower.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/plotter.cpp
-)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/plotter.cpp)
 target_link_libraries (AircraftSimulator Math)

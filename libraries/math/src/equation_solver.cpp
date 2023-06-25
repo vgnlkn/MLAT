@@ -39,14 +39,14 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
         {
             d_i += std::pow(coordinates_delta_i[i], 2);
         }
-        d_i = sqrtl(d_i);
+        d_i = sqrt(d_i);
         auto coordinates_delta_j = _towers_coordinates[tower_j] - at;
         double d_j = 0;
         for (uint8_t i = 0; i < 3; ++i)
         {
             d_j += std::pow(coordinates_delta_j[i], 2);
         }
-        d_j = sqrtl(d_j);
+        d_j = sqrt(d_j);
         return std::abs(d_i - d_j);
     };
 
@@ -74,18 +74,13 @@ OurVector<3> EquationSolver::solve(OurVector<EQUATIONS_COUNT>& tdoas)
     return _initial_coordinates;
 }
 
-double EquationSolver::distance(const OurVector<3>& from, const OurVector<3>& to)
-{
-    return sqrtl(std::pow(from[0] - to[0], 2) + std::pow(from[1] - to[1], 2) + std::pow(from[2] - to[2], 2));
-}
-
 OurVector<3> EquationSolver::getJacobianRow(OurVector<3>& coordinate, uint8_t tower_i, uint8_t tower_j)
 {
     OurVector<3> jacobian_row;
     auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
     auto denominator = [=](uint8_t index, double x, double y, double z)
     {
-        return sqrtl(
+        return sqrt(
             std::pow(_towers_coordinates[index][0] - x, 2) +
             std::pow(_towers_coordinates[index][1] - y, 2) +
             std::pow(_towers_coordinates[index][2] - z, 2)

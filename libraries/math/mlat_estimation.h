@@ -1,4 +1,4 @@
-﻿#ifndef MOTION_FILTER_H
+#ifndef MOTION_FILTER_H
 #define MOTION_FILTER_H
 
 #include <kalman_filter.h>
@@ -31,8 +31,6 @@ public:
 private:
 	//! Kalman Filter
 	KalmanFilter<9, 3> _filter;
-	//! Sample rate
-	double _time_delta;
 };
 
 #endif

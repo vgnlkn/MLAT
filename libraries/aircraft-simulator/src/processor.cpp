@@ -1,4 +1,5 @@
 #include <processor.h>
+#include <plotter.h>
 
 void Processor::initSolver()
 {

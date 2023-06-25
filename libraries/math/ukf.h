@@ -33,6 +33,14 @@ public:
 private:
     //! Returns the Jacobian row
     OurVector<9> getJacobianRow(OurVector<9>& position, uint8_t tower_i, uint8_t tower_j);
+    //! Update sign of Jacobian based on tdoas
+    void updateJacobian();
+    //! Error recalculation
+    OurVector<EQUATIONS_COUNT> computeDiscrepancy();
+    //! Predicts model values
+    void predict();
+    //! Corrects model values
+    void correct();
 
 private:
     //! Initial coordinates

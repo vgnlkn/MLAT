@@ -43,57 +43,12 @@ void UKF::setInitialParams(const OurVector<9>& initial_coordinates)
 
 OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
 {
-    OurVector<EQUATIONS_COUNT> discrepancy;
     _initial_tdoas = tdoas;
-    auto one_more_eq = [=](const OurVector<9>& at)
-    {
-        OurVector<3> x;
-        x[0] = at[0];
-        x[1] = at[3];
-        x[2] = at[6];
-        auto l2_norm = [](OurVector<3> vec) -> double
-        {
-            return sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
-        };
 
-        OurVector<EQUATIONS_COUNT> tdoa;
-        int k = 0;
-        for (int i = 0; i < TOWERS_COUNT; ++i)
-        {
-            for (int j = i + 1; j < TOWERS_COUNT; ++j)
-            {
-                tdoa[k++] = (l2_norm(x - _towers_coordinates[i]) - l2_norm(x - _towers_coordinates[j]));
-            }
-        }
-        return tdoa;
-    };
+    updateJacobian();
+    predict();
+    correct();
 
-    auto jacobian = this->getJacobian(_initial_coordinates);
-    uint8_t k = 0;
-    for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
-    {
-        for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
-        {
-            if (_initial_tdoas[k] < 0)
-            {
-                jacobian[k] = -jacobian[k];
-            }
-        }
-
-    }
-    _observation_mtx = jacobian;
-
-    _initial_coordinates = _evolution * _initial_coordinates;
-    discrepancy = one_more_eq(_initial_coordinates) - _initial_tdoas * LIGHT_SPEED;
-    _covariance_state = _evolution * _covariance_state * _evolution.getTransposed();
-
-
-    OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
-    OurMatrix<9, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
-    OurMatrix<9,9> I;
-    I.setIdentity();
-    _initial_coordinates = _initial_coordinates + K * discrepancy;
-    _covariance_state = (I - K * _observation_mtx) * _covariance_state;
     return _initial_coordinates;
 }
 
@@ -120,4 +75,67 @@ OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint
                                 numerator(coordinate[column], _towers_coordinates[tower_j][column / 3]) / denominator_j);
     }
     return jacobian_row;
+}
+
+void UKF::updateJacobian()
+{
+    auto jacobian = this->getJacobian(_initial_coordinates);
+    uint8_t k = 0;
+    for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
+    {
+        for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
+        {
+            if (_initial_tdoas[k] < 0)
+            {
+                jacobian[k] = -jacobian[k];
+            }
+        }
+
+    }
+    _observation_mtx = jacobian;
+}
+
+OurVector<EQUATIONS_COUNT> UKF::computeDiscrepancy()
+{
+    OurVector<EQUATIONS_COUNT> discrepancy;
+    auto one_more_eq = [=](const OurVector<9>& at)
+    {
+        OurVector<3> x;
+        x[0] = at[0];
+        x[1] = at[3];
+        x[2] = at[6];
+        auto l2_norm = [](OurVector<3> vec) -> double
+        {
+            return sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
+        };
+
+        OurVector<EQUATIONS_COUNT> tdoa;
+        int k = 0;
+        for (int i = 0; i < TOWERS_COUNT; ++i)
+        {
+            for (int j = i + 1; j < TOWERS_COUNT; ++j)
+            {
+                tdoa[k++] = (l2_norm(x - _towers_coordinates[i]) - l2_norm(x - _towers_coordinates[j]));
+            }
+        }
+        return tdoa;
+    };
+
+    return one_more_eq(_initial_coordinates) - _initial_tdoas * LIGHT_SPEED;
+}
+
+void UKF::predict()
+{
+    _initial_coordinates = _evolution * _initial_coordinates;
+    _covariance_state = _evolution * _covariance_state * _evolution.getTransposed();
+}
+
+void UKF::correct()
+{
+    OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
+    OurMatrix<9, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.matrixInverse();
+    OurMatrix<9,9> I;
+    I.setIdentity();
+    _initial_coordinates = _initial_coordinates + K * computeDiscrepancy();
+    _covariance_state = (I - K * _observation_mtx) * _covariance_state;
 }

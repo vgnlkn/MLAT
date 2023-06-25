@@ -5,7 +5,8 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../utilities)
 
 add_executable (simulator
 	main.cpp
-        ../utilities/defines.h)
+    ../utilities/defines.h
+	../utilities/src/main_class.cpp ../utilities/main_class.h)
 target_link_libraries (simulator AircraftSimulator)
 target_link_libraries (simulator Math)
 

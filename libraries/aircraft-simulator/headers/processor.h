@@ -3,15 +3,14 @@
 
 #include <chrono>
 #include <vector>
-#include <vector.h>
 #include <map>
 #include <set>
 #include <tower.h>
 #include <equation_solver.h>
-#include <plotter.h>
 #include <random>
-#include <mlat_estimation.h>
 #include <ukf.h>
+
+class Plotter;
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -87,8 +86,6 @@ private:
     Plotter* _plt_filter_acceleration;
     //! Noise generator
     NoizeGenerator* _noise;
-    //! Estimation
-    MlatEstimation _estim;
     //! Average coordinates
     OurVector<3> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude

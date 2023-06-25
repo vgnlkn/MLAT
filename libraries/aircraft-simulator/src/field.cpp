@@ -1,16 +1,6 @@
 #include <field.h>
+#include <plotter.h>
 
-
-Field::Field() :
-        _towers(new Tower[TOWERS_COUNT]),
-        _plt_flight(nullptr),
-        _plt_speed(nullptr),
-        _plt_acceleration(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-{
-    _aircraft.setTimeDelta(_sample_rate);
-}
 
 [[noreturn]] void Field::startMovement()
 {

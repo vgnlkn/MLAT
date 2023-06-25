@@ -33,7 +33,6 @@ void MlatEstimation::updateStateMatrix(double time_delta)
 		state_matrix[i][i + 2] = time_delta * time_delta * 0.5;
 		state_matrix[i + 1][i + 2] = time_delta;
 	}
-	_time_delta = time_delta;
 	_filter.setStateMatrix(state_matrix);
 }
 
@@ -44,7 +43,7 @@ void MlatEstimation::initState(OurVector<9>& initial_state)
 
 OurVector<9> MlatEstimation::estimatedState(OurVector<3>& observation)
 {
-	_filter.predict(_time_delta);
+	_filter.predict();
 	return _filter.correct(observation);
 }
 

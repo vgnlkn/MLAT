@@ -1,12 +1,10 @@
 #ifndef MLAT_FIELD_H
 #define MLAT_FIELD_H
 
-#include <aircraft.h>
-#include <plotter.h>
-#include <processor.h>
 #include <chrono>
 #include <thread>
-
+#include <aircraft.h>
+#include <processor.h>
 
 /*! \class Field
 *   \brief The class in which the flight is simulated.
@@ -18,7 +16,16 @@ class Field
 {
 public:
     //! Default constructor
-    Field();
+    Field() :
+            _towers(new Tower[TOWERS_COUNT]),
+            _plt_flight(nullptr),
+            _plt_speed(nullptr),
+            _plt_acceleration(nullptr),
+            _tower_count(TOWERS_COUNT),
+            _sample_rate(k_sample_rate)
+    {
+        _aircraft.setTimeDelta(_sample_rate);
+    }
     //! Constructor with start position
     explicit Field(const OurVector<3>& start): 
         _towers(new Tower[TOWERS_COUNT]),
@@ -47,6 +54,8 @@ public:
     ~Field() { delete[] _towers; };
 
     //! Methods responsible for the movement of the _aircraft
+    //! Setter for _aircraft
+    void setAircraft(const Aircraft& aircraft) { _aircraft = aircraft; }
     //! Start movement
     [[noreturn]] void startMovement();
     //! Initialize the initial movement of the aircraft and towers
