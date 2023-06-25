@@ -15,25 +15,25 @@ class Tower
 {
 public:
     //! Default constructor
-    Tower() : _id(0) {};
+    inline Tower() : _id(0) {};
     //! Copy constructor
     Tower(const Tower& other);
     //! Overloading operator=
     Tower& operator=(const Tower& other);
     //! Overloading operator==
-    bool operator==(const Tower& other) const { return _id == other._id && _position == other._position; }
+    inline bool operator==(const Tower& other) const { return _id == other._id && _position == other._position; }
     //! Overloading operator<
-    bool operator<(const Tower& other) const { return _id < other._id; }
+    inline bool operator<(const Tower& other) const { return _id < other._id; }
     //! Receives a signal
     double calculateTime(const OurVector<3>& current_position);
     //! Getter for _position
-    [[nodiscard]] OurVector<3> getPosition() const { return _position; }
+    [[nodiscard]] inline OurVector<3> getPosition() const { return _position; }
     //! Setter for _position
-    void setPosition(const OurVector<3>& other) { _position = other; }
+    inline void setPosition(const OurVector<3>& other) { _position = other; }
     //! Getter for _id
-    [[nodiscard]] uint16_t getID() const { return _id; }
+    [[nodiscard]] inline uint16_t getID() const { return _id; }
     //! Setter for _id
-    void setID(uint16_t id) { _id = id; }
+    inline void setID(uint16_t id) { _id = id; }
 
 private:
     //! Needed for operator=
