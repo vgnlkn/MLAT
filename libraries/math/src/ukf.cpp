@@ -27,17 +27,13 @@ void UKF::setInitialParams(const OurVector<9>& initial_coordinates)
 
     _evolution.setZero();
     _evolution.setIdentity();
-    _covariance_state.setZero();
     for (int i = 0; i < 9; i += 3)
     {
         _evolution[i][i + 1] = k_sample_rate;
         _evolution[i][i + 2] = k_sample_rate * k_sample_rate * 0.5;
         _evolution[i + 1][i + 2] = k_sample_rate;
     }
-    for (int i = 0; i < 9; ++i)
-    {
-        _covariance_state[i][i] = k_covariance_dispersion[i];
-    }
+    setCovarianceState();
     _observation_error.setDiagonalValue(1e-6);
 }
 
@@ -104,7 +100,7 @@ OurVector<EQUATIONS_COUNT> UKF::computeDiscrepancy()
         x[0] = at[0];
         x[1] = at[3];
         x[2] = at[6];
-        auto l2_norm = [](OurVector<3> vec) -> double
+        auto l2_norm = [](const OurVector<3>& vec) -> double
         {
             return sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
         };
@@ -138,4 +134,13 @@ void UKF::correct()
     I.setIdentity();
     _initial_coordinates = _initial_coordinates + K * computeDiscrepancy();
     _covariance_state = (I - K * _observation_mtx) * _covariance_state;
+}
+
+void UKF::setCovarianceState()
+{
+    _covariance_state.setZero();
+    for (int i = 0; i < 9; ++i)
+    {
+        _covariance_state[i][i] = k_covariance_dispersion[i];
+    }
 }

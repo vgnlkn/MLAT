@@ -37,7 +37,7 @@ void Field::updateAircraftPosition()
 void Field::updateAircraftSpeed()
 {
     _aircraft.calculateNewSpeed();
-    // _aircraft.checkSpeed();
+    _aircraft.checkSpeed();
 }
 
 void Field::sendSignalsToTowers()
@@ -72,18 +72,18 @@ void Field::checkHeight()
 {
     if (_current_position[2] > 10.f && _aircraft.getSpeed()[2] > 0.f)
     {
-        // decreaseVerticalSpeed();
+        decreaseVerticalSpeed();
     }
     if (_aircraft.getSpeed()[2] < -0.1f)
     {
-        // stopVerticalSpeed();
+        stopVerticalSpeed();
     }
 }
 
 void Field::decreaseVerticalSpeed()
 {
     OurVector<3> new_acceleration = _aircraft.getAcceleration();
-    new_acceleration[2] = new_acceleration[2] > 1e-4 ? new_acceleration[2] / 1.5f : new_acceleration[2] - 1e-5;
+    new_acceleration[2] = new_acceleration[2] > 2e-8 ? new_acceleration[2] / 1.5f : new_acceleration[2] - 1e-9;
 
     _aircraft.setAcceleration(new_acceleration);
     _aircraft.calculateNewSpeed();

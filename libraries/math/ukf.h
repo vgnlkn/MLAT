@@ -21,6 +21,7 @@ public:
     UKF() = default;
     //! Destructor
     ~UKF() = default;
+
     //! Returns the Jacobian of the least squares problem
     OurMatrix<EQUATIONS_COUNT, 9> getJacobian(OurVector<9>& position);
     //! Setter for tower coordinates
@@ -29,6 +30,8 @@ public:
     void setInitialParams(const OurVector<9>& initial_coordinates);
     //! Method which return the solution
     OurVector<9> solve(OurVector<EQUATIONS_COUNT>& tdoas);
+    //! Reset state covariance matrix
+    inline void reset() { setCovarianceState(); }
 
 private:
     //! Returns the Jacobian row
@@ -41,6 +44,8 @@ private:
     void predict();
     //! Corrects model values
     void correct();
+    //! Set covariance state matrix
+    inline void setCovarianceState();
 
 private:
     //! Initial coordinates
@@ -49,7 +54,6 @@ private:
     OurVector<EQUATIONS_COUNT> _initial_tdoas;
     //! Tower coordinates
     std::map<uint16_t, OurVector<3>> _towers_coordinates;
-
 
     OurVector<9> _state; //! (x, y, z)
 	OurVector<EQUATIONS_COUNT> _observation;

@@ -25,7 +25,6 @@ void Processor::addTOA(uint16_t id, double TOA)
 void Processor::process(uint32_t iter)
 {
     OurVector<EQUATIONS_COUNT> tdoas;
-    OurVector<EQUATIONS_COUNT> tdoass;
     calculateTDOA(tdoas);
 
     OurVector<3> mlat_coords = _solver.solve(tdoas);
@@ -55,6 +54,39 @@ void Processor::process(uint32_t iter)
     fillVector(filter_coords, 0);
     fillVector(filter_speed, 1);
     fillVector(filter_acceleration, 2);
+
+    _mlat_average = mlat_coords + _mlat_average;
+    _kalman_average = filter_coords + _kalman_average;
+    if (_iteration % 100 == 0)
+    {
+        _overstatement = 0;
+        _mlat_average.setValue(0);
+        _mlat_min = mlat_coords;
+        _mlat_max = mlat_coords;
+        _kalman_average.setValue(0);
+        _iteration = 1;
+    }
+
+    for (int i = 0; i < 3; ++i)
+    {
+        if (mlat_coords[i] < _mlat_min[i])
+        {
+            _mlat_min[i] = mlat_coords[i];
+        }
+        else if (mlat_coords[i] > _mlat_max[i])
+        {
+            _mlat_max[i] = mlat_coords[i];
+        }
+        if (std::abs(_mlat_average[i] - _kalman_average[i]) > _iteration++ * std::abs(_mlat_min[i] - _mlat_max[i]))
+        {
+            _overstatement++;
+        }
+    }
+
+    if (_overstatement > k_duration_overstatement)
+    {
+        _nkf.reset();
+    }
 
 
     if (iter % POINT_MOD == 0)

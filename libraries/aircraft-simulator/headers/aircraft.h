@@ -16,7 +16,7 @@ class Aircraft
 {
 public:
     //! Empty constructor
-    Aircraft(): _time_delta(1.) { _towers.reserve(TOWERS_COUNT); };
+    inline Aircraft(): _time_delta(1.) { _towers.reserve(TOWERS_COUNT); };
     //! Copy constructor
     Aircraft(const Aircraft& other);
     //! Constructor with acceleration
@@ -24,9 +24,9 @@ public:
 
     //! Methods to work with speed
     //! Get speed of the _aircraft
-    [[nodiscard]] OurVector<3> getSpeed() const { return _state.getCol(0); }
+    [[nodiscard]] inline OurVector<3> getSpeed() const { return _state.getCol(0); }
     //! Get acceleration of the _aircraft
-    [[nodiscard]] OurVector<3> getAcceleration() const { return _state.getCol(1); }
+    [[nodiscard]] inline OurVector<3> getAcceleration() const { return _state.getCol(1); }
     //! Set speed of the _aircraft
     void setSpeed(const OurVector<3>& speed);
     //! Set acceleration of the _aircraft

@@ -90,6 +90,11 @@ private:
     OurVector<3> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
     OurVector<3> _mlat_min, _mlat_max;
+    //! Counter for iterations
+    uint32_t _iteration;
+    //! Overstatement
+    uint32_t _overstatement;
+    //! Kalman Filter with built-in LSM
     UKF _nkf;
 };
 
