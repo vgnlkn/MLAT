@@ -87,12 +87,6 @@ void Processor::process(uint32_t iter)
     if (_overstatement > k_duration_overstatement)
     {
         _unscented_filter.reset();
-
-        standard_filter_estim[8] = 0;
-        standard_filter_estim[5] = 0;
-        standard_filter_estim[2] = 0;
-
-        _estim.initState(standard_filter_estim);
         _estim.reset();
     }
 
@@ -104,7 +98,7 @@ void Processor::process(uint32_t iter)
         addPoint(filter_speed, _plt_filter_speed);
         addPoint(filter_acceleration, _plt_filter_acceleration);
         addPoint(standard_filter_acceleration, _plt_standard_filter_acceleration);
-        addPoint(filter_acceleration, _plt_standard_filter_speed);
+        addPoint(standard_filter_speed, _plt_standard_filter_speed);
         addPoint(standard_filter_coords, _plt_standard_filter);
     }
 }

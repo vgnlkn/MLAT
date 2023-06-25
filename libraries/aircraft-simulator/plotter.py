@@ -77,7 +77,7 @@ def animate(i):
     ax.plot(xs1, ys1, zs1, label='MLAT', color='blue')
     ax.plot(xs2, ys2, zs2, label='Real values', color='red')
     ax.plot(xs3, ys3, zs3, label='Unscented Kalman Filter', color='black')
-    ax.plot(xs4, ys4, zs4, label='Standard Kalman Filter', color='cyan')
+    ax.plot(xs4, ys4, zs4, label='Standard Kalman Filter', color='green')
 
     ax.set_xlabel('x, km')
     ax.set_ylabel('y, km')
@@ -121,21 +121,24 @@ fig, axs = plt.subplots(3, 3, figsize=(8, 10))
 
 # Plot for x coordinate
 axs[0][0].plot(arr_x_real, label='Real')
-axs[0][0].plot(arr_x_filter, label='Filter')
+axs[0][0].plot(arr_x_filter, label='Unscented Filter')
+axs[0][0].plot(arr_x_standard_filter, label='Standard Filter')
 axs[0][0].set_title('x')
 axs[0][0].set_ylabel('km')
 axs[0][0].legend()
 
 # Plot for y coordinate
 axs[1][0].plot(arr_y_real, label='Real')
-axs[1][0].plot(arr_y_filter, label='Filter')
+axs[1][0].plot(arr_y_filter, label='Unscented Filter')
+axs[1][0].plot(arr_y_standard_filter, label='Standard Filter')
 axs[1][0].set_title('y')
 axs[1][0].set_ylabel('km')
 axs[1][0].legend()
 
 # Plot for z coordinate
 axs[2][0].plot(arr_z_real, label='Real')
-axs[2][0].plot(arr_z_filter, label='Filter')
+axs[2][0].plot(arr_z_filter, label='Unscented Filter')
+axs[2][0].plot(arr_z_standard_filter, label='Standard Filter')
 axs[2][0].set_title('z')
 axs[2][0].set_ylabel('km')
 axs[2][0].set_xlabel('iteration number')
@@ -145,21 +148,24 @@ axs[2][0].legend()
 
 # Plot for x speed
 axs[0][1].plot(x_real_speed, label='Real')
-axs[0][1].plot(x_filter_speed, label='Filter')
+axs[0][1].plot(x_filter_speed, label='Unscented Filter')
+axs[0][1].plot(x_standard_filter_speed, label='Standard Filter')
 axs[0][1].set_title('v_x')
 axs[0][1].set_ylabel('m/s')
 axs[0][1].legend()
 
 # Plot for y speed
 axs[1][1].plot(y_real_speed, label='Real')
-axs[1][1].plot(y_filter_speed, label='Filter')
+axs[1][1].plot(y_filter_speed, label='Unscented Filter')
+axs[1][1].plot(y_standard_filter_speed, label='Standard Filter')
 axs[1][1].set_title('v_y')
 axs[1][1].set_ylabel('m/s')
 axs[1][1].legend()
 
 # Plot for z speed
 axs[2][1].plot(z_real_speed, label='Real')
-axs[2][1].plot(z_filter_speed, label='Filter')
+axs[2][1].plot(z_filter_speed, label='Unscented Filter')
+axs[2][1].plot(z_standard_filter_speed, label='Standard Filter')
 axs[2][1].set_title('v_z')
 axs[2][1].set_ylabel('m/s')
 axs[2][1].set_xlabel('iteration number')
@@ -169,21 +175,24 @@ axs[2][1].legend()
 
 # Plot for x speed
 axs[0][2].plot(x_real_acceleration, label='Real')
-axs[0][2].plot(x_filter_acceleration, label='Filter')
+axs[0][2].plot(x_filter_acceleration, label='Unscented Filter')
+axs[0][2].plot(x_standard_filter_acceleration, label='Standard Filter')
 axs[0][2].set_title('a_x')
 axs[0][2].set_ylabel('m/s^2')
 axs[0][2].legend()
 
 # Plot for y speed
 axs[1][2].plot(y_real_acceleration, label='Real')
-axs[1][2].plot(y_filter_acceleration, label='Filter')
+axs[1][2].plot(y_filter_acceleration, label='Unscented Filter')
+axs[1][2].plot(y_standard_filter_acceleration, label='Standard Filter')
 axs[1][2].set_title('a_y')
 axs[1][2].set_ylabel('m/s^2')
 axs[1][2].legend()
 
 # Plot for z speed
 axs[2][2].plot(z_real_acceleration, label='Real')
-axs[2][2].plot(z_filter_acceleration, label='Filter')
+axs[2][2].plot(z_filter_acceleration, label='Unscented Filter')
+axs[2][2].plot(z_standard_filter_acceleration, label='Standard Filter')
 axs[2][2].set_title('a_z')
 axs[2][2].set_ylabel('m/s^2')
 axs[2][2].set_xlabel('iteration number')

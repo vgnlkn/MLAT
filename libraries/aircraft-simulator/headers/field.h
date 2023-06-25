@@ -24,6 +24,7 @@ public:
             _tower_count(TOWERS_COUNT),
             _sample_rate(k_sample_rate)
     {
+        _processor.setSampleRate(_sample_rate);
         _aircraft.setTimeDelta(_sample_rate);
     }
     //! Constructor with start position
@@ -36,6 +37,7 @@ public:
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
+        _processor.setSampleRate(_sample_rate);
         _aircraft.setTimeDelta(_sample_rate);
     }
     //! Constructor with aircraft
@@ -48,6 +50,7 @@ public:
         _tower_count(TOWERS_COUNT),
         _sample_rate(k_sample_rate)
     {
+        _processor.setSampleRate(_sample_rate);
         _aircraft.setTimeDelta(_sample_rate);
     }
     //! Destructor
@@ -104,6 +107,7 @@ public:
     void setPlotterAcceleration(Plotter* plt) { _plt_acceleration = plt; }
     //! Getter of _processor
     void updatePlot();
+
     //! Process Signals
     void processSignals(uint32_t i) { _processor.process(i); }
 private:

@@ -43,6 +43,7 @@ public:
     _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
     //! Destructor
     inline ~Processor() { delete _noise; }
+
     //! Initialize solver
     void initSolver();
     //! Adding TOA for one iteration
@@ -64,9 +65,11 @@ public:
     //! Setter for _plt_standard_filter_speed
     inline void setPlotterStandardFilterSpeed(Plotter* plt) { _plt_standard_filter_speed = plt; }
     //! Setter for _plt_standard_filter_acceleration
-    inline void setPlotterStandardFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
+    inline void setPlotterStandardFilterAcceleration(Plotter* plt) { _plt_standard_filter_acceleration = plt; }
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
+    //! Update state covariance matrix(matrix P)
+    void setSampleRate(double time_delta) { _estim.updateStateMatrix(time_delta); }
 
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position

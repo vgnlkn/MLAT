@@ -6,15 +6,19 @@
 MainClass::MainClass()
 {
     _plt_mlat = new Plotter(STOCK_PATH_MLAT);
+
     _plt_real = new Plotter(STOCK_PATH_REAL);
+    _plt_speed_real = new Plotter(STOCK_PATH_SPEED_REAL);
+    _plt_acceleration_real = new Plotter(STOCK_PATH_ACCELERATION_REAL);
+
     _plt_filter = new Plotter(STOCK_PATH_FILTER);
     _plt_speed_filter = new Plotter(STOCK_PATH_SPEED_FILTER);
-    _plt_speed_real = new Plotter(STOCK_PATH_SPEED_REAL);
     _plt_acceleration_filter = new Plotter(STOCK_PATH_ACCELERATION_FILTER);
-    _plt_acceleration_real = new Plotter(STOCK_PATH_ACCELERATION_REAL);
+
     _plt_speed_standard_filter = new Plotter(STOCK_PATH_SPEED_STANDARD_FILTER);
     _plt_standard_filter = new Plotter(STOCK_PATH_STANDARD_FILTER);
     _plt_acceleration_standard_filter = new Plotter(STOCK_PATH_ACCELERATION_STANDARD_FILTER);
+
     _aircraft = new Aircraft;
     _field = new Field;
 }

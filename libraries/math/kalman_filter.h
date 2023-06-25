@@ -36,12 +36,12 @@ public:
     OurVector<dim_state> correct(const OurVector<dim_observation>& state_vector);
 
 private:
-    OurVector<dim_state> _system_vector;                       // x
-    OurMatrix<dim_state, dim_state> _state_transition_matrix;  // F
-    OurMatrix<dim_state, dim_state> _error_covariance_matrix;  // Q
-    OurMatrix<dim_state, dim_state> _state_covariance_matrix;  // P
-    OurMatrix<dim_observation, dim_observation> _noise_covariance_matrix;  // R
-    OurMatrix<dim_observation, dim_state> _observation_matrix; // H
+    OurVector<dim_state> _system_vector;                       //! x
+    OurMatrix<dim_state, dim_state> _state_transition_matrix;  //! F
+    OurMatrix<dim_state, dim_state> _error_covariance_matrix;  //! Q
+    OurMatrix<dim_state, dim_state> _state_covariance_matrix;  //! P
+    OurMatrix<dim_observation, dim_observation> _noise_covariance_matrix;  //! R
+    OurMatrix<dim_observation, dim_state> _observation_matrix; //! H
 };
 
 template<uint8_t dim_state, uint8_t dim_observation>
