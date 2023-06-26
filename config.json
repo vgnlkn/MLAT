@@ -1,0 +1,12 @@
+{
+  "STOCK_PATH_MLAT": "mlat.txt",
+  "STOCK_PATH_REAL": "real.txt",
+  "STOCK_PATH_FILTER": "filter.txt",
+  "STOCK_PATH_SPEED_FILTER": "speed_filter.txt",
+  "STOCK_PATH_SPEED_REAL": "speed_real.txt",
+  "STOCK_PATH_ACCELERATION_FILTER": "acceleration_filter.txt",
+  "STOCK_PATH_ACCELERATION_REAL": "acceleration_real.txt",
+  "STOCK_PATH_STANDARD_FILTER": "filter_standard.txt",
+  "STOCK_PATH_SPEED_STANDARD_FILTER": "speed_filter_standard.txt",
+  "STOCK_PATH_ACCELERATION_STANDARD_FILTER": "acceleration_filter_standard.txt"
+}

@@ -4,6 +4,7 @@
 class Plotter;
 class Field;
 class Aircraft;
+class IReader;
 
 
 /*! \class MainClass
@@ -39,6 +40,8 @@ private:
     Plotter* _plt_acceleration_standard_filter;
     Plotter* _plt_speed_standard_filter;
     Plotter* _plt_standard_filter;
+    //! Reader
+    IReader* _json_reader;
 };
 
 

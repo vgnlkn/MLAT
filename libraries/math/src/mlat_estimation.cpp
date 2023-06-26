@@ -1,8 +1,7 @@
 ﻿#include <mlat_estimation.h>
-#include <matrix.h>
 
-
-static const double array_dispersion[] = {1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10};
+//! Diagonals values for state covariance matrix(matrix P)
+static const double k_covariance_dispersion[] = {1e4, 9000, 10, 1e4, 9000, 10, 1e4, 1e3, 10};
 
 MlatEstimation::MlatEstimation()
 {
@@ -12,7 +11,7 @@ MlatEstimation::MlatEstimation()
     _filter.setErrorCovarianceMatrix(covariance_error);
 
     OurMatrix<3, 3> covariance_noise;
-    covariance_noise.setDiagonalValue(array_dispersion[4]);
+    covariance_noise.setDiagonalValue(k_covariance_dispersion[4]);
     _filter.setNoiseCovarianceMatrix(covariance_noise);
 
     OurMatrix<3, 9> observation_matrix;
@@ -54,7 +53,7 @@ OurMatrix<9, 9> MlatEstimation::getCovarianceStateMatrix()
     OurMatrix<9, 9> covariance_state;
     for (uint8_t i = 0; i < 9; ++i)
     {
-        covariance_state[i][i] = array_dispersion[i];
+        covariance_state[i][i] = k_covariance_dispersion[i];
     }
 
     return covariance_state;

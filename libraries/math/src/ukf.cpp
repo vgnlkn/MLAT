@@ -1,5 +1,6 @@
 #include <ukf.h>
 
+//! Diagonals values for state covariance matrix(matrix P)
 static const double k_covariance_dispersion[] = { 1e3, 0.1, 1e3, 1e4, 0.1, 1e3, 1e3, 0.1, 1e4 };
 
 OurMatrix<EQUATIONS_COUNT, 9> UKF::getJacobian(OurVector<9>& position)

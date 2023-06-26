@@ -3,11 +3,13 @@
 Tower::Tower(const Tower &other)
 {
     _position = other._position;
+    _id = other._id;
 }
 
 void Tower::swap(Tower &other)
 {
     std::swap(_position, other._position);
+    std::swap(_id, other._id);
 }
 
 Tower &Tower::operator=(const Tower &other)
