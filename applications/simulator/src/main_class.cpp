@@ -47,7 +47,8 @@ void MainClass::setParameters()
 {
     OurVector<3> acceleration;
     acceleration.setValue(1e-4);
-    acceleration[2] = 2e-6;
+    acceleration[1] = 5e-5;
+    acceleration[2] = 3e-6;
     _aircraft->setAcceleration(acceleration);
 
     _field->setAircraft(*_aircraft);

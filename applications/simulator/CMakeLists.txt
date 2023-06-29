@@ -10,7 +10,8 @@ add_executable (simulator
 	src/main_class.cpp
 	headers/main_class.h
 	../utilities/json_reader.h
-	../utilities/interface_reader.h)
+	../utilities/interface_reader.h
+)
 
 target_link_libraries (simulator AircraftSimulator)
 target_link_libraries (simulator Math)

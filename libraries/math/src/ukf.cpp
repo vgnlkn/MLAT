@@ -53,20 +53,20 @@ OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint
 {
     OurVector<9> jacobian_row;
     auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [=](uint8_t index, double x, double y, double z)
+    auto denominator = [=](uint8_t index, const OurVector<9>& coordinate)
     {
         return sqrt(
-                std::pow(_towers_coordinates[index][0] - x, 2) +
-                std::pow(_towers_coordinates[index][1] - y, 2) +
-                std::pow(_towers_coordinates[index][2] - z, 2)
+                std::pow(_towers_coordinates[index][0] - coordinate[0], 2) +
+                std::pow(_towers_coordinates[index][1] - coordinate[3], 2) +
+                std::pow(_towers_coordinates[index][2] - coordinate[6], 2)
         );
     };
 
-    double denominator_i = denominator(tower_i, coordinate[0], coordinate[3], coordinate[6]);
-    double denominator_j = denominator(tower_j, coordinate[0], coordinate[3], coordinate[6]);
+    double denominator_i = denominator(tower_i, coordinate);
+    double denominator_j = denominator(tower_j, coordinate);
     assert(denominator_i && denominator_j);
 
-    for (int column = 0; column < 9; column+=3)
+    for (int column = 0; column < 9; column += 3)
     {
         jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column / 3]) / denominator_i -
                                 numerator(coordinate[column], _towers_coordinates[tower_j][column / 3]) / denominator_j);

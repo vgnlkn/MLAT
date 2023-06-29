@@ -38,9 +38,7 @@ class Processor
 {
 public:
     //! Constructor
-    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _plt_filter_acceleration(nullptr),
-    _plt_filter_speed(nullptr), _plt_standard_filter_acceleration(nullptr), _plt_standard_filter_speed(nullptr),
-    _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
+    Processor();
     //! Destructor
     inline ~Processor() { delete _noise; }
 
