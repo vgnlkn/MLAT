@@ -16,49 +16,17 @@ class Field
 {
 public:
     //! Default constructor
-    Field() :
-            _towers(new Tower[TOWERS_COUNT]),
-            _plt_flight(nullptr),
-            _plt_speed(nullptr),
-            _plt_acceleration(nullptr),
-            _tower_count(TOWERS_COUNT),
-            _sample_rate(k_sample_rate)
-    {
-        _processor.setSampleRate(_sample_rate);
-        _aircraft.setTimeDelta(_sample_rate);
-    }
+    Field();
     //! Constructor with start position
-    explicit Field(const OurVector<3>& start): 
-        _towers(new Tower[TOWERS_COUNT]),
-        _current_position(start), 
-        _plt_flight(nullptr),
-        _plt_speed(nullptr),
-        _plt_acceleration(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-    {
-        _processor.setSampleRate(_sample_rate);
-        _aircraft.setTimeDelta(_sample_rate);
-    }
+    explicit Field(const OurVector<k_space_dimension>& start);
     //! Constructor with aircraft
-    explicit Field(const Aircraft& aircraft): 
-        _aircraft(aircraft), 
-        _towers(new Tower[TOWERS_COUNT]),
-        _plt_flight(nullptr),
-        _plt_speed(nullptr),
-        _plt_acceleration(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-    {
-        _processor.setSampleRate(_sample_rate);
-        _aircraft.setTimeDelta(_sample_rate);
-    }
+    explicit Field(const Aircraft& aircraft);
     //! Destructor
     ~Field() { delete[] _towers; };
 
     //! Methods responsible for the movement of the _aircraft
     //! Setter for _aircraft
-    void setAircraft(const Aircraft& aircraft) { _aircraft = aircraft; }
+    inline void setAircraft(const Aircraft& aircraft) { _aircraft = aircraft; }
     //! Start movement
     [[noreturn]] void startMovement();
     //! Initialize the initial movement of the aircraft and towers
@@ -114,7 +82,7 @@ private:
     //! Aircraft
     Aircraft _aircraft;
     //! Start position with (x; y; z) coordinates in vector
-    OurVector<3> _current_position;
+    OurVector<k_space_dimension> _current_position;
     //! All towers in the field
     Tower* _towers;
     //! Number of towers

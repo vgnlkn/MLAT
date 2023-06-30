@@ -25,11 +25,11 @@ public:
     //! Overloading operator<
     inline bool operator<(const Tower& other) const { return _id < other._id; }
     //! Receives a signal
-    double calculateTime(const OurVector<3>& current_position);
+    double calculateTime(const OurVector<k_space_dimension>& current_position);
     //! Getter for _position
-    [[nodiscard]] inline OurVector<3> getPosition() const { return _position; }
+    [[nodiscard]] inline OurVector<k_space_dimension> getPosition() const { return _position; }
     //! Setter for _position
-    inline void setPosition(const OurVector<3>& other) { _position = other; }
+    inline void setPosition(const OurVector<k_space_dimension>& other) { _position = other; }
     //! Getter for _id
     [[nodiscard]] inline uint16_t getID() const { return _id; }
     //! Setter for _id
@@ -43,7 +43,7 @@ private:
     //! id of the tower
     uint16_t _id;
     //! Position of tower
-    OurVector<3> _position;
+    OurVector<k_space_dimension> _position;
 };
 
 

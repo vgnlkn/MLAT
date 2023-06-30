@@ -1,6 +1,43 @@
 #include <field.h>
 #include <plotter.h>
 
+Field::Field() :
+        _towers(new Tower[k_towers_count]),
+        _plt_flight(nullptr),
+        _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
+        _tower_count(k_towers_count),
+        _sample_rate(k_sample_rate)
+{
+    _processor.setSampleRate(_sample_rate);
+    _aircraft.setTimeDelta(_sample_rate);
+}
+
+Field::Field(const OurVector<k_space_dimension> &start) :
+        _towers(new Tower[k_towers_count]),
+        _current_position(start),
+        _plt_flight(nullptr),
+        _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
+        _tower_count(k_towers_count),
+        _sample_rate(k_sample_rate)
+{
+    _processor.setSampleRate(_sample_rate);
+    _aircraft.setTimeDelta(_sample_rate);
+}
+
+Field::Field(const Aircraft &aircraft) :
+        _aircraft(aircraft),
+        _towers(new Tower[k_towers_count]),
+        _plt_flight(nullptr),
+        _plt_speed(nullptr),
+        _plt_acceleration(nullptr),
+        _tower_count(k_towers_count),
+        _sample_rate(k_sample_rate)
+{
+    _processor.setSampleRate(_sample_rate);
+    _aircraft.setTimeDelta(_sample_rate);
+}
 
 [[noreturn]] void Field::startMovement()
 {
@@ -13,7 +50,7 @@
         updateAircraftSpeed();
         sendSignalsToTowers();
         processSignals(i);
-        if (i % POINT_MOD == 0)
+        if (i % k_point_mod == 0)
         {
             updatePlot();
         }
@@ -54,7 +91,7 @@ void Field::sendSignalsToTowers()
 
 void Field::updatePlot()
 {
-    auto drawPoint = [](Plotter* plt, const OurVector<3>& param)
+    auto drawPoint = [](Plotter* plt, const OurVector<k_space_dimension>& param)
     {
         if (plt)
         {
@@ -70,11 +107,11 @@ void Field::updatePlot()
 
 void Field::checkHeight()
 {
-    if (_current_position[2] > 10.f && _aircraft.getSpeed()[2] > 0.f)
+    if (_current_position[2] > k_max_height && _aircraft.getSpeed()[2] > 0.f)
     {
         decreaseVerticalSpeed();
     }
-    if (_aircraft.getSpeed()[2] < -0.1f)
+    if (_aircraft.getSpeed()[2] < k_min_z_speed)
     {
         stopVerticalSpeed();
     }
@@ -82,8 +119,9 @@ void Field::checkHeight()
 
 void Field::decreaseVerticalSpeed()
 {
-    OurVector<3> new_acceleration = _aircraft.getAcceleration();
-    new_acceleration[2] = new_acceleration[2] > 2e-8 ? new_acceleration[2] / 1.5f : new_acceleration[2] - 1e-9;
+    OurVector<k_space_dimension> new_acceleration = _aircraft.getAcceleration();
+    new_acceleration[2] = new_acceleration[2] > 1e-7 ? new_acceleration[2] / k_coefficient_deceleration :
+                                                       new_acceleration[2] - k_deceleration_speed;
 
     _aircraft.setAcceleration(new_acceleration);
     _aircraft.calculateNewSpeed();

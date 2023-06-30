@@ -3,13 +3,13 @@
 //! Diagonals values for state covariance matrix(matrix P)
 static const double k_covariance_dispersion[] = { 1e3, 0.1, 1e3, 1e4, 0.1, 1e3, 1e3, 0.1, 1e4 };
 
-OurMatrix<EQUATIONS_COUNT, 9> UKF::getJacobian(OurVector<9>& position)
+OurMatrix<k_equations_count, k_observation_dim> UKF::getJacobian(OurVector<9>& position)
 {
-    OurMatrix<EQUATIONS_COUNT, 9> jacobian;
+    OurMatrix<k_equations_count, k_observation_dim> jacobian;
     uint8_t k = 0;
-    for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
+    for (uint8_t i = 0; i < k_towers_count; ++i)
     {
-        for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
+        for (uint8_t j = i + 1; j < k_towers_count; ++j)
         {
             jacobian[k++] = getJacobianRow(position, i, j);
         }
@@ -17,28 +17,28 @@ OurMatrix<EQUATIONS_COUNT, 9> UKF::getJacobian(OurVector<9>& position)
     return jacobian;
 }
 
-void UKF::setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates)
+void UKF::setTowersCoordinates(std::map<uint16_t, OurVector<k_space_dimension>> tower_coordinates)
 {
     _towers_coordinates = std::move(tower_coordinates);
 }
 
-void UKF::setInitialParams(const OurVector<9>& initial_coordinates)
+void UKF::setInitialParams(const OurVector<k_observation_dim>& initial_coordinates)
 {
     _initial_coordinates = initial_coordinates * 0.01f;
 
     _evolution.setZero();
     _evolution.setIdentity();
-    for (int i = 0; i < 9; i += 3)
+    for (int i = 0; i < k_observation_dim; i += k_space_dimension)
     {
         _evolution[i][i + 1] = k_sample_rate;
         _evolution[i][i + 2] = k_sample_rate * k_sample_rate * 0.5;
         _evolution[i + 1][i + 2] = k_sample_rate;
     }
     setCovarianceState();
-    _observation_error.setDiagonalValue(1e-6);
+    _observation_error.setDiagonalValue(k_noise_dispersion);
 }
 
-OurVector<9> UKF::solve(OurVector<EQUATIONS_COUNT>& tdoas)
+OurVector<9> UKF::solve(OurVector<k_equations_count>& tdoas)
 {
     _initial_tdoas = tdoas;
 
@@ -66,7 +66,7 @@ OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint
     double denominator_j = denominator(tower_j, coordinate);
     assert(denominator_i && denominator_j);
 
-    for (int column = 0; column < 9; column += 3)
+    for (int column = 0; column < k_observation_dim; column += k_space_dimension)
     {
         jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column / 3]) / denominator_i -
                                 numerator(coordinate[column], _towers_coordinates[tower_j][column / 3]) / denominator_j);
@@ -78,9 +78,9 @@ void UKF::updateJacobian()
 {
     auto jacobian = this->getJacobian(_initial_coordinates);
     uint8_t k = 0;
-    for (uint8_t i = 0; i < TOWERS_COUNT; ++i)
+    for (uint8_t i = 0; i < k_towers_count; ++i)
     {
-        for (uint8_t j = i + 1; j < TOWERS_COUNT; ++j)
+        for (uint8_t j = i + 1; j < k_towers_count; ++j)
         {
             if (_initial_tdoas[k] < 0)
             {
@@ -92,25 +92,25 @@ void UKF::updateJacobian()
     _observation_mtx = jacobian;
 }
 
-OurVector<EQUATIONS_COUNT> UKF::computeDiscrepancy()
+OurVector<k_equations_count> UKF::computeDiscrepancy()
 {
-    OurVector<EQUATIONS_COUNT> discrepancy;
-    auto one_more_eq = [=](const OurVector<9>& at)
+    OurVector<k_equations_count> discrepancy;
+    auto one_more_eq = [=](const OurVector<k_observation_dim>& at)
     {
         OurVector<3> x;
         x[0] = at[0];
         x[1] = at[3];
         x[2] = at[6];
-        auto l2_norm = [](const OurVector<3>& vec) -> double
+        auto l2_norm = [](const OurVector<k_space_dimension>& vec) -> double
         {
             return sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
         };
 
-        OurVector<EQUATIONS_COUNT> tdoa;
+        OurVector<k_equations_count> tdoa;
         int k = 0;
-        for (int i = 0; i < TOWERS_COUNT; ++i)
+        for (int i = 0; i < k_towers_count; ++i)
         {
-            for (int j = i + 1; j < TOWERS_COUNT; ++j)
+            for (int j = i + 1; j < k_towers_count; ++j)
             {
                 tdoa[k++] = (l2_norm(x - _towers_coordinates[i]) - l2_norm(x - _towers_coordinates[j]));
             }
@@ -118,7 +118,7 @@ OurVector<EQUATIONS_COUNT> UKF::computeDiscrepancy()
         return tdoa;
     };
 
-    return one_more_eq(_initial_coordinates) - _initial_tdoas * LIGHT_SPEED;
+    return one_more_eq(_initial_coordinates) - _initial_tdoas * k_light_speed;
 }
 
 void UKF::predict()
@@ -129,9 +129,11 @@ void UKF::predict()
 
 void UKF::correct()
 {
-    OurMatrix<EQUATIONS_COUNT, EQUATIONS_COUNT> S = ((_observation_mtx * _covariance_state) * _observation_mtx.getTransposed() + _observation_error);
-    OurMatrix<9, EQUATIONS_COUNT> K = (_covariance_state * _observation_mtx.getTransposed()) * S.getLUPInverse();
-    OurMatrix<9,9> I;
+    OurMatrix<k_equations_count, k_equations_count> S = ((_observation_mtx * _covariance_state)
+                                                        * _observation_mtx.getTransposed() + _observation_error);
+    OurMatrix<k_observation_dim, k_equations_count> K = (_covariance_state * _observation_mtx.getTransposed())
+                                                        * S.getLUPInverse();
+    OurMatrix<k_observation_dim, k_observation_dim> I;
     I.setIdentity();
     _initial_coordinates = _initial_coordinates + K * computeDiscrepancy();
     _covariance_state = (I - K * _observation_mtx) * _covariance_state;
@@ -140,7 +142,7 @@ void UKF::correct()
 void UKF::setCovarianceState()
 {
     _covariance_state.setZero();
-    for (int i = 0; i < 9; ++i)
+    for (int i = 0; i < k_observation_dim; ++i)
     {
         _covariance_state[i][i] = k_covariance_dispersion[i];
     }

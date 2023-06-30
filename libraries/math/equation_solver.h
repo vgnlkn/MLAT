@@ -21,25 +21,26 @@ public:
     //! Destructor
     ~EquationSolver() = default;
     //! Returns the Jacobian of the least squares problem
-    OurMatrix<EQUATIONS_COUNT, 3> getJacobian(OurVector<3>& position);
+    OurMatrix<k_equations_count, k_space_dimension> getJacobian(OurVector<k_space_dimension>& position);
     //! Setter for tower coordinates
-    void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates);
+    void setTowersCoordinates(std::map<uint16_t, OurVector<k_space_dimension>> tower_coordinates);
     //! Setter for initial parameters
-    void setInitialParams(const OurVector<3>& initial_coordinates, const OurVector<EQUATIONS_COUNT>& initial_tdoas);
+    void setInitialParams(const OurVector<k_space_dimension>& initial_coordinates,
+                          const OurVector<k_equations_count>& initial_tdoas);
     //! Method which return the solution
-    OurVector<3> solve(OurVector<EQUATIONS_COUNT>& tdoas);
+    OurVector<k_space_dimension> solve(OurVector<k_equations_count>& tdoas);
 
 private:
     //! Returns the Jacobian row
-    OurVector<3> getJacobianRow(OurVector<3>& position, uint8_t tower_i, uint8_t tower_j);
+    OurVector<k_space_dimension> getJacobianRow(OurVector<3>& position, uint8_t tower_i, uint8_t tower_j);
 
 private:
     //! Initial coordinates
-    OurVector<3> _initial_coordinates;
+    OurVector<k_space_dimension> _initial_coordinates;
     //! Initial TDOAS
-    OurVector<EQUATIONS_COUNT> _initial_tdoas;
+    OurVector<k_equations_count> _initial_tdoas;
     //! Tower coordinates
-    std::map<uint16_t, OurVector<3>> _towers_coordinates;
+    std::map<uint16_t, OurVector<k_space_dimension>> _towers_coordinates;
 };
 
 #endif
