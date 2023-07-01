@@ -28,7 +28,7 @@ void UKF::setInitialParams(const OurVector<k_observation_dim>& initial_coordinat
 
     _evolution.setZero();
     _evolution.setIdentity();
-    for (int i = 0; i < k_observation_dim; i += k_space_dim)
+    for (uint8_t i = 0; i < k_observation_dim; i += k_space_dim)
     {
         _evolution[i][i + 1] = k_sample_rate;
         _evolution[i][i + 2] = k_sample_rate * k_sample_rate * 0.5;
@@ -53,20 +53,20 @@ OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint
 {
     OurVector<9> jacobian_row;
     auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [&](uint8_t index, const OurVector<9>& coordinate)
+    auto denominator = [&](uint8_t index, const OurVector<9>& coordinate_param)
     {
         return sqrt(
-                std::pow(_towers_coordinates[index][0] - coordinate[0], 2) +
-                std::pow(_towers_coordinates[index][1] - coordinate[3], 2) +
-                std::pow(_towers_coordinates[index][2] - coordinate[6], 2)
+                std::pow(_towers_coordinates[index][0] - coordinate_param[0], 2) +
+                std::pow(_towers_coordinates[index][1] - coordinate_param[3], 2) +
+                std::pow(_towers_coordinates[index][2] - coordinate_param[6], 2)
         );
     };
 
     double denominator_i = denominator(tower_i, coordinate);
     double denominator_j = denominator(tower_j, coordinate);
-    assert(denominator_i && denominator_j);
+    assert(static_cast<bool>(denominator_i) && static_cast<bool>(denominator_j));
 
-    for (int column = 0; column < k_observation_dim; column += k_space_dim)
+    for (uint8_t column = 0; column < k_observation_dim; column += k_space_dim)
     {
         jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column / 3]) / denominator_i -
                                 numerator(coordinate[column], _towers_coordinates[tower_j][column / 3]) / denominator_j);
@@ -107,10 +107,10 @@ OurVector<k_equations_count> UKF::computeDiscrepancy()
         };
 
         OurVector<k_equations_count> tdoa;
-        int k = 0;
-        for (int i = 0; i < k_towers_count; ++i)
+        uint8_t k = 0;
+        for (uint8_t i = 0; i < k_towers_count; ++i)
         {
-            for (int j = i + 1; j < k_towers_count; ++j)
+            for (uint8_t j = i + 1; j < k_towers_count; ++j)
             {
                 tdoa[k++] = (l2_norm(x - _towers_coordinates[i]) - l2_norm(x - _towers_coordinates[j]));
             }
@@ -142,7 +142,7 @@ void UKF::correct()
 void UKF::setCovarianceState()
 {
     _covariance_state.setZero();
-    for (int i = 0; i < k_observation_dim; ++i)
+    for (uint8_t i = 0; i < k_observation_dim; ++i)
     {
         _covariance_state[i][i] = k_covariance_dispersion[i];
     }

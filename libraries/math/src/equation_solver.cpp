@@ -78,20 +78,20 @@ OurVector<k_space_dim> EquationSolver::getJacobianRow(OurVector<k_space_dim>& co
 {
     OurVector<k_space_dim> jacobian_row;
     auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [&](uint8_t index, const OurVector<k_space_dim>& coordinate)
+    auto denominator = [&](uint8_t index, const OurVector<k_space_dim>& coordinate_param)
     {
         return sqrt(
-            std::pow(_towers_coordinates[index][0] - coordinate[0], 2) +
-            std::pow(_towers_coordinates[index][1] - coordinate[1], 2) +
-            std::pow(_towers_coordinates[index][2] - coordinate[2], 2)
+            std::pow(_towers_coordinates[index][0] - coordinate_param[0], 2) +
+            std::pow(_towers_coordinates[index][1] - coordinate_param[1], 2) +
+            std::pow(_towers_coordinates[index][2] - coordinate_param[2], 2)
         );
     };
 
     double denominator_i = denominator(tower_i, coordinate);
     double denominator_j = denominator(tower_j, coordinate);
-    assert(denominator_i && denominator_j);
+    assert(static_cast<bool>(denominator_i) && static_cast<bool>(denominator_j));
 
-    for (int column = 0; column < k_space_dim; ++column)
+    for (uint8_t column = 0; column < k_space_dim; ++column)
     {
         jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column]) / denominator_i -
                                 numerator(coordinate[column], _towers_coordinates[tower_j][column]) / denominator_j);

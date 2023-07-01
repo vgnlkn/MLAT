@@ -27,7 +27,7 @@ void MlatEstimation::updateStateMatrix(double time_delta)
 {
     OurMatrix<k_dim_state, k_dim_state> state_matrix;
     state_matrix.setIdentity();
-    for (int i = 0; i < k_dim_state; i += k_space_dim)
+    for (uint8_t i = 0; i < k_dim_state; i += k_space_dim)
     {
         state_matrix[i][i + 1] = time_delta;
         state_matrix[i][i + 2] = time_delta * time_delta * 0.5;

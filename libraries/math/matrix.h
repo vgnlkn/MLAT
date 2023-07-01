@@ -146,13 +146,13 @@ OurMatrix<row, col> OurMatrix<row, col, type>::getLUPInverse()
 template<uint8_t row, uint8_t col, typename type>
 OurVector<row> OurMatrix<row, col, type>::helperSolve(OurMatrix<row, col> &luMatrix, OurVector<row> &b)
 {
-    const int n = row;
+    const uint8_t n = row;
     OurVector<n> x = b;
 
-    for (int i = 1; i < n; ++i)
+    for (uint8_t i = 1; i < n; ++i)
     {
         double sum = x[i];
-        for (int j = 0; j < i; ++j)
+        for (uint8_t j = 0; j < i; ++j)
         {
             sum -= luMatrix[i][j] * x[j];
         }
@@ -163,12 +163,13 @@ OurVector<row> OurMatrix<row, col, type>::helperSolve(OurMatrix<row, col> &luMat
 
     for (int i = n - 2; i >= 0; --i)
     {
-        double sum = x[i];
-        for (int j = i + 1; j < n; ++j)
+        auto idx_i = static_cast<uint8_t>(i);
+        double sum = x[idx_i];
+        for (uint8_t j = idx_i + 1; j < n; ++j)
         {
-            sum -= luMatrix[i][j] * x[j];
+            sum -= luMatrix[idx_i][j] * x[j];
         }
-        x[i] = sum / luMatrix[i][i];
+        x[idx_i] = sum / luMatrix[idx_i][idx_i];
     }
 
     return x;
@@ -187,7 +188,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixDecompose(OurMatrix<row, co
     for (uint8_t j = 0; j < n - 1; ++j)
     {
         double colMax = std::abs(result[j][j]);
-        int pRow = j;
+        uint8_t pRow = j;
         for (uint8_t i = j + 1; i < n; ++i)
         {
             if (result[i][j] > colMax)
@@ -201,7 +202,7 @@ OurMatrix<row, col> OurMatrix<row, col, type>::matrixDecompose(OurMatrix<row, co
             OurVector<row> rowPtr = result[pRow];
             result[pRow] = result[j];
             result[j] = rowPtr;
-            int tmp = perm[pRow];
+            double tmp = perm[pRow];
             perm[pRow] = perm[j];
             perm[j] = tmp;
             toggle = -toggle;
@@ -394,7 +395,7 @@ inline OurVector<row, type> OurMatrix<row, col, type>::getCol(const uint8_t col_
 {
     assert(col_index < col);
     OurVector<row, type> column;
-    for (int i = 0; i < row; ++i)
+    for (uint8_t i = 0; i < row; ++i)
     {
         column[i] = _matrix[i][col_index];
     }
@@ -415,9 +416,9 @@ template<uint8_t row, uint8_t col, typename type>
 inline OurMatrix<col, row, type> OurMatrix<row, col, type>::getTransposed() const
 {
     OurMatrix<col, row, type> transposed;
-    for (int i = 0; i < row; ++i)
+    for (uint8_t i = 0; i < row; ++i)
     {
-        for (int j = 0; j < col; ++j)
+        for (uint8_t j = 0; j < col; ++j)
         {
             transposed[j][i] = _matrix[i][j];
         }
@@ -434,17 +435,21 @@ inline OurMatrix<col, row, type> OurMatrix<row, col, type>::pseudoInverse() cons
     OurMatrix<col, col, type> R_inversed = QR.second;
 
     double sum;
-    for (int i = col - 1; i >= 0; i--)
+    const int column = col;
+    for (int i = column - 1; i >= 0; i--)
     {
-        R_inversed[i][i] = 1 / QR.second[i][i];
+        auto idx_i = static_cast<uint8_t>(i);
+        R_inversed[idx_i][idx_i] = 1 / QR.second[idx_i][idx_i];
         for (int j = i - 1; j >= 0; j--)
         {
+            auto idx_j = static_cast<uint8_t>(j);
             sum = 0;
             for (int k = j + 1; k <= i; k++)
             {
-                sum += QR.second[j][k] * R_inversed[k][i];
+                auto idx_k = static_cast<uint8_t>(k);
+                sum += QR.second[idx_j][idx_k] * R_inversed[idx_k][idx_i];
             }
-            R_inversed[j][i] = -sum / QR.second[j][j];
+            R_inversed[idx_j][idx_i] = -sum / QR.second[idx_j][idx_j];
         }
     }
 
@@ -457,32 +462,32 @@ inline std::pair<OurMatrix<row, col, type>, OurMatrix<col, col, type>> OurMatrix
 {
     OurMatrix<row, col, type> Q;
     OurMatrix<col, col, type> R;
-    for (int j = 0; j < col; j++)
+    for (uint8_t j = 0; j < col; j++)
     {
-        for (int i = 0; i < row; i++)
+        for (uint8_t i = 0; i < row; i++)
         {
             Q[i][j] = _matrix[i][j];
         }
-        for (int k = 0; k < j; k++)
+        for (uint8_t k = 0; k < j; k++)
         {
             double dot = 0;
-            for (int i = 0; i < row; i++)
+            for (uint8_t i = 0; i < row; i++)
             {
                 dot += Q[i][k] * _matrix[i][j];
             }
             R[k][j] = dot;
-            for (int i = 0; i < row; i++)
+            for (uint8_t i = 0; i < row; i++)
             {
                 Q[i][j] -= R[k][j] * Q[i][k];
             }
         }
         double norm = 0;
-        for (int i = 0; i < row; i++)
+        for (uint8_t i = 0; i < row; i++)
         {
             norm += Q[i][j] * Q[i][j];
         }
-        norm = sqrtl(norm);
-        for (int i = 0; i < row; i++)
+        norm = std::sqrt(norm);
+        for (uint8_t i = 0; i < row; i++)
         {
             Q[i][j] /= norm;
         }
@@ -497,7 +502,7 @@ inline void OurMatrix<row, col, type>::setDiagonalValue(type value)
 {
     assert(row == col);
     this->setZero();
-    for (int y = 0; y < row; ++y)
+    for (uint8_t y = 0; y < row; ++y)
     {
         _matrix[y][y] = value;
     }
@@ -507,9 +512,9 @@ template<uint8_t row, uint8_t col, typename type>
 inline void OurMatrix<row, col, type>::transpose()
 {
     assert(row == col);
-    for (int i = 1; i < row; ++i)
+    for (uint8_t i = 1; i < row; ++i)
     {
-        for (int j = 0; j < i; ++j)
+        for (uint8_t j = 0; j < i; ++j)
         {
             std::swap(_matrix[i][j], _matrix[j][i]);
         }

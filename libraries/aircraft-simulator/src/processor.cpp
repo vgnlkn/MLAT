@@ -80,7 +80,7 @@ void Processor::process(uint32_t iter)
         _iteration = 1;
     }
 
-    for (int i = 0; i < k_space_dim; ++i)
+    for (uint8_t i = 0; i < k_space_dim; ++i)
     {
         if (mlat_coords[i] < _mlat_min[i])
         {
@@ -125,11 +125,11 @@ void Processor::setTower(uint16_t id, const Tower& tower)
 
 void Processor::calculateTDOA(OurVector<k_equations_count>& tdoas)
 {
-    auto noize = [&](int i) -> double
+    auto noize = [&](uint8_t i) -> double
     {
         return _towers_toa[i] * _noise->generate();
     };
-    uint16_t k = 0;
+    uint8_t k = 0;
     for (uint8_t i = 0; i < k_towers_count; ++i)
     {
         for (uint8_t j = i + 1; j < k_towers_count; ++j)
