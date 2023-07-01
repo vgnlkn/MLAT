@@ -10,20 +10,7 @@ MainClass::MainClass()
     _json_reader = new JSONReader(STOCK_PATH);
 
     _plt_creator = new PlotterCreator;
-    /*_plt_mlat = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_MLAT"));
-    _plt_real = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_REAL"));
-    _plt_speed_real = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_SPEED_REAL"));
-    _plt_acceleration_real = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_ACCELERATION_REAL"));
 
-    _plt_filter = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_FILTER"));
-    _plt_speed_filter = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_SPEED_FILTER"));
-    _plt_acceleration_filter = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_ACCELERATION_FILTER"));
-
-    _plt_speed_standard_filter = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_SPEED_STANDARD_FILTER"));
-    _plt_standard_filter = _plt_creator->FactoryMethod(PLOTTER_PATH + _json_reader->getContent("STOCK_PATH_STANDARD_FILTER"));
-    _plt_acceleration_standard_filter = _plt_creator->FactoryMethod(PLOTTER_PATH +
-                                                    _json_reader->getContent("STOCK_PATH_ACCELERATION_STANDARD_FILTER"));
-*/
     _plt_mlat = _plt_creator->FactoryMethod(_json_reader->getContent("STOCK_PATH_MLAT"));
     _plt_real = _plt_creator->FactoryMethod(_json_reader->getContent("STOCK_PATH_REAL"));
     _plt_speed_real = _plt_creator->FactoryMethod(_json_reader->getContent("STOCK_PATH_SPEED_REAL"));
