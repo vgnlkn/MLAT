@@ -4,9 +4,14 @@
 #include <interface_creator.h>
 #include <plotter.h>
 
+/**
+ * \class PlotterCreator
+ * \brief PlotterCreator class inherited from class ICreator and creates Plotter object
+ **/
 class PlotterCreator final : public ICreator
 {
 public:
+    //! Factory Method, that creates and return plotter object
     [[nodiscard]] IProduct* FactoryMethod(const std::string& file_name) const final { return new Plotter(file_name); }
 };
 

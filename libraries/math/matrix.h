@@ -548,7 +548,7 @@ template<uint8_t row, uint8_t col, typename type>
 inline OurMatrix<row, col, type> OurMatrix<row, col, type>::operator+(const OurMatrix& other) const
 {
     OurMatrix<row, col, type> prod;
-    for (int8_t y = 0; y < row; ++y)
+    for (uint8_t y = 0; y < row; ++y)
     {
         prod[y] = _matrix[y] + other[y];
     }
@@ -570,7 +570,7 @@ template<uint8_t row, uint8_t col, typename type>
 inline OurMatrix<row, col, type> OurMatrix<row, col, type>::operator*(type number) const
 {
     OurMatrix<row, col, type> prod;
-    for (int8_t y = 0; y < row; ++y)
+    for (uint8_t y = 0; y < row; ++y)
     {
         prod[y] = _matrix[y] * number;
     }

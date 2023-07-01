@@ -7,7 +7,7 @@ TEST(VectorTests, SimpleArithmetic)
 {
 	// init
 	OurVector<3> a, b;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		a[i] = (i + 2) * 10.0f;
 		b[i] = (i + 3) * 17.0f;
@@ -16,7 +16,7 @@ TEST(VectorTests, SimpleArithmetic)
 	// copy constructor & operator ==
 	OurVector<3> a_copy = a;
 	OurVector<3> b_copy = b;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(a_copy[i], a[i]);
 		ASSERT_EQ(b_copy[i], b[i]);
@@ -28,14 +28,14 @@ TEST(VectorTests, SimpleArithmetic)
 	OurVector<3> c = a + b;
 	ASSERT_TRUE(a_copy == a);
 	ASSERT_TRUE(b_copy == b);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(c[i], a[i] + b[i]);
 	}
 
 	// zero init
 	OurVector<3> d;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(d[i], 0.f);
 	}
@@ -44,7 +44,7 @@ TEST(VectorTests, SimpleArithmetic)
 	d = a - b;
 	ASSERT_TRUE(a_copy == a);
 	ASSERT_TRUE(b_copy == b);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(d[i], a[i] - b[i]);
 	}
@@ -53,7 +53,7 @@ TEST(VectorTests, SimpleArithmetic)
 	d = a * b;
 	ASSERT_TRUE(a_copy == a);
 	ASSERT_TRUE(b_copy == b);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(d[i], a[i] * b[i]);
 	}
@@ -64,7 +64,7 @@ TEST(VectorTests, SimpleArithmetic)
 	// const and vector product
 	d = 5 * a;
 	ASSERT_TRUE(a_copy == a);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(d[i], 5 * a[i]);
 	}
@@ -72,14 +72,14 @@ TEST(VectorTests, SimpleArithmetic)
 	// vector and const product
 	d = a * 19;
 	ASSERT_TRUE(a_copy == a);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(d[i], a[i] * 19);
 	}
 	
 	// setValue
 	d.setValue(3.f);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(d[i], 3.f);
 	}
@@ -89,7 +89,7 @@ TEST(VectorTests, SimpleArithmetic)
 	ASSERT_TRUE(a == b_copy);
 	ASSERT_TRUE(b == a_copy);
 	a = -a;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(a[i], (-1) * b_copy[i]);
 	}
@@ -98,7 +98,7 @@ TEST(VectorTests, SimpleArithmetic)
 TEST(VectorTests, MultiSum)
 {
 	OurVector<3> a, b, c, d, res;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		a[i] = (i + 1) * 10.0f;
 		b[i] = (i + 2) * 10.0f;
@@ -116,7 +116,7 @@ TEST(VectorTests, MultiSum)
 	ASSERT_TRUE(b == b_copy);
 	ASSERT_TRUE(c == c_copy);
 	ASSERT_TRUE(d == d_copy);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(res[i], a[i] + b[i] + c[i] + d[i]);
 	}
@@ -125,7 +125,7 @@ TEST(VectorTests, MultiSum)
 TEST(VectorTests, MultiProduct)
 {
 	OurVector<3> a, b, c, d, res;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		a[i] = (i + 1) * 10.0f;
 		b[i] = (i + 2) * 10.0f;
@@ -143,7 +143,7 @@ TEST(VectorTests, MultiProduct)
 	ASSERT_TRUE(b == b_copy);
 	ASSERT_TRUE(c == c_copy);
 	ASSERT_TRUE(d == d_copy);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(res[i], a[i] * b[i] * c[i] * d[i]);
 	}
@@ -152,7 +152,7 @@ TEST(VectorTests, MultiProduct)
 TEST(VectorTests, AdvancedArithmetic_1)
 {
 	OurVector<3> a, b, c, d, res;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		a[i] = (i + 1) * 10.0f;
 		b[i] = (i + 2) * 10.0f;
@@ -171,7 +171,7 @@ TEST(VectorTests, AdvancedArithmetic_1)
 	ASSERT_TRUE(b == b_copy);
 	ASSERT_TRUE(c == c_copy);
 	ASSERT_TRUE(d == d_copy);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(res[i], a[i] + b[i] * c[i] + d[i]);
 	}
@@ -180,7 +180,7 @@ TEST(VectorTests, AdvancedArithmetic_1)
 TEST(VectorTests, AdvancedArithmetic_2)
 {
 	OurVector<3> a, b, c, d, res;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		a[i] = (i + 1) * 10.0f;
 		b[i] = (i + 2) * 10.0f;
@@ -199,7 +199,7 @@ TEST(VectorTests, AdvancedArithmetic_2)
 	ASSERT_TRUE(b == b_copy);
 	ASSERT_TRUE(c == c_copy);
 	ASSERT_TRUE(d == d_copy);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(res[i], a[i] * b[i] * (d[i] - c[i]));
 	}
@@ -208,7 +208,7 @@ TEST(VectorTests, AdvancedArithmetic_2)
 TEST(VectorTests, AdvancedArithmetic_3)
 {
 	OurVector<3> a, b, c, d, res;
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		a[i] = (i + 1) * 10.0f;
 		b[i] = (i + 2) * 10.0f;
@@ -227,7 +227,7 @@ TEST(VectorTests, AdvancedArithmetic_3)
 	ASSERT_TRUE(b == b_copy);
 	ASSERT_TRUE(c == c_copy);
 	ASSERT_TRUE(d == d_copy);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(res[i], ((-1) * a[i]) * b[i] * (d[i] - c[i]));
 	}
@@ -236,7 +236,7 @@ TEST(VectorTests, AdvancedArithmetic_3)
 	ASSERT_TRUE(b == b_copy);
 	ASSERT_TRUE(c == c_copy);
 	ASSERT_TRUE(d == d_copy);
-	for (int i = 0; i < 3; ++i)
+	for (uint8_t i = 0; i < 3; ++i)
 	{
 		ASSERT_EQ(res[i], (-1) * (a[i] * b[i] * c[i] * d[i] + (a[i] + b[i] + c[i] + d[i])));
 	}
