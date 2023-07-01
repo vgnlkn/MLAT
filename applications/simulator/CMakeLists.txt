@@ -6,11 +6,12 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../utilities)
 
 
 file(GLOB UTILITY_HEADERS ../utilities/*.h)
+file(GLOB SIMULATOR_HEADERS headers/*.h)
 
 add_executable (simulator
 	main.cpp
 	src/main_class.cpp
-	headers/main_class.h
+	${SIMULATOR_HEADERS}
 	${UTILITY_HEADERS}
 )
 

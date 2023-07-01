@@ -1,10 +1,11 @@
 #ifndef MLAT_MAIN_CLASS_H
 #define MLAT_MAIN_CLASS_H
 
-class Plotter;
 class Field;
 class Aircraft;
 class IReader;
+class IProduct;
+class PlotterCreator;
 
 
 /*! \class MainClass
@@ -29,17 +30,19 @@ private:
     //! Model
     Field* _field;
     Aircraft* _aircraft;
-    //! Graphics
-    Plotter* _plt_mlat;
-    Plotter* _plt_real;
-    Plotter* _plt_filter;
-    Plotter* _plt_speed_filter;
-    Plotter* _plt_speed_real;
-    Plotter* _plt_acceleration_filter;
-    Plotter* _plt_acceleration_real;
-    Plotter* _plt_acceleration_standard_filter;
-    Plotter* _plt_speed_standard_filter;
-    Plotter* _plt_standard_filter;
+    //! Plotters
+    PlotterCreator* _plt_creator;
+
+    IProduct* _plt_mlat;
+    IProduct* _plt_real;
+    IProduct* _plt_filter;
+    IProduct* _plt_speed_filter;
+    IProduct* _plt_speed_real;
+    IProduct* _plt_acceleration_filter;
+    IProduct* _plt_acceleration_real;
+    IProduct* _plt_acceleration_standard_filter;
+    IProduct* _plt_speed_standard_filter;
+    IProduct* _plt_standard_filter;
     //! Reader
     IReader* _json_reader;
 };
