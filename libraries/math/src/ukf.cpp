@@ -17,7 +17,7 @@ OurMatrix<k_equations_count, k_observation_dim> UKF::getJacobian(OurVector<9>& p
     return jacobian;
 }
 
-void UKF::setTowersCoordinates(std::map<uint16_t, OurVector<k_space_dimension>> tower_coordinates)
+void UKF::setTowersCoordinates(std::map<uint16_t, OurVector<k_space_dim>> tower_coordinates)
 {
     _towers_coordinates = std::move(tower_coordinates);
 }
@@ -28,7 +28,7 @@ void UKF::setInitialParams(const OurVector<k_observation_dim>& initial_coordinat
 
     _evolution.setZero();
     _evolution.setIdentity();
-    for (int i = 0; i < k_observation_dim; i += k_space_dimension)
+    for (int i = 0; i < k_observation_dim; i += k_space_dim)
     {
         _evolution[i][i + 1] = k_sample_rate;
         _evolution[i][i + 2] = k_sample_rate * k_sample_rate * 0.5;
@@ -53,7 +53,7 @@ OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint
 {
     OurVector<9> jacobian_row;
     auto numerator = [](double tower_coordinate, double plane_coordinate) { return plane_coordinate - tower_coordinate; };
-    auto denominator = [=](uint8_t index, const OurVector<9>& coordinate)
+    auto denominator = [&](uint8_t index, const OurVector<9>& coordinate)
     {
         return sqrt(
                 std::pow(_towers_coordinates[index][0] - coordinate[0], 2) +
@@ -66,7 +66,7 @@ OurVector<9> UKF::getJacobianRow(OurVector<9>& coordinate, uint8_t tower_i, uint
     double denominator_j = denominator(tower_j, coordinate);
     assert(denominator_i && denominator_j);
 
-    for (int column = 0; column < k_observation_dim; column += k_space_dimension)
+    for (int column = 0; column < k_observation_dim; column += k_space_dim)
     {
         jacobian_row[column] = (numerator(coordinate[column], _towers_coordinates[tower_i][column / 3]) / denominator_i -
                                 numerator(coordinate[column], _towers_coordinates[tower_j][column / 3]) / denominator_j);
@@ -95,13 +95,13 @@ void UKF::updateJacobian()
 OurVector<k_equations_count> UKF::computeDiscrepancy()
 {
     OurVector<k_equations_count> discrepancy;
-    auto one_more_eq = [=](const OurVector<k_observation_dim>& at)
+    auto one_more_eq = [&](const OurVector<k_observation_dim>& at)
     {
         OurVector<3> x;
         x[0] = at[0];
         x[1] = at[3];
         x[2] = at[6];
-        auto l2_norm = [](const OurVector<k_space_dimension>& vec) -> double
+        auto l2_norm = [](const OurVector<k_space_dim>& vec) -> double
         {
             return sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
         };

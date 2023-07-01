@@ -26,7 +26,7 @@ public:
     //! Returns the Jacobian of the least squares problem
     OurMatrix<k_equations_count, k_observation_dim> getJacobian(OurVector<k_observation_dim>& position);
     //! Setter for tower coordinates
-    void setTowersCoordinates(std::map<uint16_t, OurVector<k_space_dimension>> tower_coordinates);
+    void setTowersCoordinates(std::map<uint16_t, OurVector<k_space_dim>> tower_coordinates);
     //! Setter for initial parameters
     void setInitialParams(const OurVector<k_observation_dim>& initial_coordinates);
     //! Method which return the solution
@@ -54,7 +54,7 @@ private:
     //! Initial TDOAS
     OurVector<k_equations_count> _initial_tdoas;
     //! Tower coordinates
-    std::map<uint16_t, OurVector<k_space_dimension>> _towers_coordinates;
+    std::map<uint16_t, OurVector<k_space_dim>> _towers_coordinates;
 
     OurVector<k_observation_dim> _state; //! (x, y, z)
 	OurVector<k_equations_count> _observation;

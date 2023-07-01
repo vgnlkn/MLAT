@@ -7,7 +7,7 @@ static const uint8_t k_towers_count = 5;
 static const uint8_t k_equations_count = 10;
 static const uint8_t k_max_iterations_count = 1;
 static const uint8_t k_point_mod = 100;
-static const uint8_t k_space_dimension = 3;
+static const uint8_t k_space_dim = 3;
 static const double k_light_speed = 3e5f;
 
 static const double k_sample_rate = 3e-2;

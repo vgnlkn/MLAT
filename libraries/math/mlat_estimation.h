@@ -23,17 +23,17 @@ public:
     //! Update state matrix
     void updateStateMatrix(double time_delta);
     //! Initial state for filter
-    void initState(OurVector<9>& initial_state);
+    void initState(OurVector<k_dim_state>& initial_state);
     //! Get default state covariance state matrix
     OurMatrix<k_dim_state, k_dim_state> getCovarianceStateMatrix();
     //! Estimated state
-    OurVector<k_dim_state> estimatedState(OurVector<k_space_dimension>& observation);
+    OurVector<k_dim_state> estimatedState(OurVector<k_space_dim>& observation);
     //! Resets covariance matrixes;
     void reset() { _filter.setStateCovarianceMatrix(getCovarianceStateMatrix()); }
 
 private:
     //! Kalman Filter
-    KalmanFilter<k_dim_state, k_space_dimension> _filter;
+    KalmanFilter<k_dim_state, k_space_dim> _filter;
     //! Sample rate
     double _time_delta;
 };

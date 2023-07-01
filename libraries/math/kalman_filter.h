@@ -31,7 +31,7 @@ public:
     { _noise_covariance_matrix = other; }
 
     //! Predicts model values
-    void predict(double time_delta);
+    void predict();
     //! Corrects model values
     OurVector<dim_state> correct(const OurVector<dim_observation>& state_vector);
 
@@ -45,7 +45,7 @@ private:
 };
 
 template<uint8_t dim_state, uint8_t dim_observation>
-void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
+void KalmanFilter<dim_state, dim_observation>::predict()
 {
     _system_vector = _state_transition_matrix * _system_vector;
     _state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix

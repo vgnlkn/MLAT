@@ -22,10 +22,10 @@ Tower &Tower::operator=(const Tower &other)
     return *this;
 }
 
-double Tower::calculateTime(const OurVector<k_space_dimension> &current_position)
+double Tower::calculateTime(const OurVector<k_space_dim> &current_position)
 {
-    const OurVector<k_space_dimension>& b = _position;
-    const OurVector<k_space_dimension>& a = current_position;
+    const OurVector<k_space_dim>& b = _position;
+    const OurVector<k_space_dim>& a = current_position;
 
     double distance = sqrt((std::pow((a[0] - b[0]), 2)) + (std::pow((a[1] - b[1]), 2)) +
                                (std::pow((a[2] - b[2]), 2)));

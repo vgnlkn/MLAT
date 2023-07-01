@@ -10,11 +10,11 @@ MlatEstimation::MlatEstimation()
     OurMatrix<k_dim_state, k_dim_state> covariance_error;
     _filter.setErrorCovarianceMatrix(covariance_error);
 
-    OurMatrix<k_space_dimension, k_space_dimension> covariance_noise;
+    OurMatrix<k_space_dim, k_space_dim> covariance_noise;
     covariance_noise.setDiagonalValue(k_covariance_dispersion[4]);
     _filter.setNoiseCovarianceMatrix(covariance_noise);
 
-    OurMatrix<k_space_dimension, k_dim_state> observation_matrix;
+    OurMatrix<k_space_dim, k_dim_state> observation_matrix;
     observation_matrix.setZero();
     observation_matrix[0][0] = 1;
     observation_matrix[1][3] = 1;
@@ -27,7 +27,7 @@ void MlatEstimation::updateStateMatrix(double time_delta)
 {
     OurMatrix<k_dim_state, k_dim_state> state_matrix;
     state_matrix.setIdentity();
-    for (int i = 0; i < k_dim_state; i += k_space_dimension)
+    for (int i = 0; i < k_dim_state; i += k_space_dim)
     {
         state_matrix[i][i + 1] = time_delta;
         state_matrix[i][i + 2] = time_delta * time_delta * 0.5;
@@ -42,9 +42,9 @@ void MlatEstimation::initState(OurVector<k_dim_state>& initial_state)
     _filter.setSystemVector(initial_state);
 }
 
-OurVector<9> MlatEstimation::estimatedState(OurVector<k_space_dimension>& observation)
+OurVector<9> MlatEstimation::estimatedState(OurVector<k_space_dim>& observation)
 {
-    _filter.predict(_time_delta);
+    _filter.predict();
     return _filter.correct(observation);
 }
 

@@ -2,12 +2,12 @@
 #include <plotter.h>
 
 
-Processor::Processor() : _plt_filter(nullptr),
-                         _plt_mlat(nullptr),
-                         _plt_filter_acceleration(nullptr),
+Processor::Processor() : _plt_mlat(nullptr),
+                         _plt_filter(nullptr),
                          _plt_filter_speed(nullptr),
-                         _plt_standard_filter_acceleration(nullptr),
+                         _plt_filter_acceleration(nullptr),
                          _plt_standard_filter_speed(nullptr),
+                         _plt_standard_filter_acceleration(nullptr),
                          _plt_standard_filter(nullptr),
                          _noise(new NoizeGenerator),
                          _iteration(1),
@@ -15,7 +15,7 @@ Processor::Processor() : _plt_filter(nullptr),
 
 void Processor::initSolver()
 {
-    OurVector<k_space_dimension> init;
+    OurVector<k_space_dim> init;
     OurVector<k_equations_count> tdoas;
     calculateTDOA(tdoas);
 
@@ -34,11 +34,11 @@ void Processor::process(uint32_t iter)
     OurVector<k_equations_count> tdoas;
     calculateTDOA(tdoas);
 
-    OurVector<k_space_dimension> mlat_coords = _solver.solve(tdoas);
+    OurVector<k_space_dim> mlat_coords = _solver.solve(tdoas);
     OurVector<9> aircraft_trajectory_estimation = _unscented_filter.solve(tdoas);
     OurVector<9> standard_filter_estim = _estim.estimatedState(mlat_coords);
 
-    auto fillVector = [](const OurVector<9>& estimation, OurVector<k_space_dimension>& vector, uint8_t i) -> void
+    auto fillVector = [](const OurVector<9>& estimation, OurVector<k_space_dim>& vector, uint8_t i) -> void
     {
         vector[0] = estimation[i];
         vector[1] = estimation[i + 3];
@@ -46,7 +46,7 @@ void Processor::process(uint32_t iter)
     };
 
 
-    auto addPoint = [](const OurVector<k_space_dimension>& coords, Plotter* plt) -> void
+    auto addPoint = [](const OurVector<k_space_dim>& coords, Plotter* plt) -> void
     {
         if (plt)
         {
@@ -58,12 +58,12 @@ void Processor::process(uint32_t iter)
         }
     };
 
-    OurVector<k_space_dimension> filter_coords, filter_speed, filter_acceleration;
+    OurVector<k_space_dim> filter_coords, filter_speed, filter_acceleration;
     fillVector(aircraft_trajectory_estimation, filter_coords, 0);
     fillVector(aircraft_trajectory_estimation, filter_speed, 1);
     fillVector(aircraft_trajectory_estimation, filter_acceleration, 2);
 
-    OurVector<k_space_dimension> standard_filter_coords, standard_filter_speed, standard_filter_acceleration;
+    OurVector<k_space_dim> standard_filter_coords, standard_filter_speed, standard_filter_acceleration;
     fillVector(standard_filter_estim, standard_filter_coords, 0);
     fillVector(standard_filter_estim, standard_filter_speed, 1);
     fillVector(standard_filter_estim, standard_filter_acceleration, 2);
@@ -80,7 +80,7 @@ void Processor::process(uint32_t iter)
         _iteration = 1;
     }
 
-    for (int i = 0; i < k_space_dimension; ++i)
+    for (int i = 0; i < k_space_dim; ++i)
     {
         if (mlat_coords[i] < _mlat_min[i])
         {
@@ -125,7 +125,7 @@ void Processor::setTower(uint16_t id, const Tower& tower)
 
 void Processor::calculateTDOA(OurVector<k_equations_count>& tdoas)
 {
-    auto noize = [=](int i) -> double
+    auto noize = [&](int i) -> double
     {
         return _towers_toa[i] * _noise->generate();
     };

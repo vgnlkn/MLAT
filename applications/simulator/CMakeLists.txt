@@ -4,13 +4,14 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/plotter)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/headers)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../utilities)
 
+
+file(GLOB UTILITY_HEADERS ../utilities/*.h)
+
 add_executable (simulator
 	main.cpp
-    ../utilities/defines.h
 	src/main_class.cpp
 	headers/main_class.h
-	../utilities/json_reader.h
-	../utilities/interface_reader.h
+	${UTILITY_HEADERS}
 )
 
 target_link_libraries (simulator AircraftSimulator)

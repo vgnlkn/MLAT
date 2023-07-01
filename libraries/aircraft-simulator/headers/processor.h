@@ -83,7 +83,7 @@ private:
     //! Towers
     std::map<uint16_t, Tower> _towers;
     //! Towers position
-    std::map<uint16_t, OurVector<k_space_dimension>> _towers_coordinates;
+    std::map<uint16_t, OurVector<k_space_dim>> _towers_coordinates;
     //! Solver for non-linear equation system
     EquationSolver _solver;
     //! Object which draws plots with direct problem
@@ -103,9 +103,9 @@ private:
     //! Noise generator
     NoizeGenerator* _noise;
     //! Average coordinates
-    OurVector<k_space_dimension> _mlat_average, _kalman_average;
+    OurVector<k_space_dim> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
-    OurVector<k_space_dimension> _mlat_min, _mlat_max;
+    OurVector<k_space_dim> _mlat_min, _mlat_max;
     //! Counter for iterations
     uint32_t _iteration;
     //! Overstatement

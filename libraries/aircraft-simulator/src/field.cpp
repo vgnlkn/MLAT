@@ -3,23 +3,23 @@
 
 Field::Field() :
         _towers(new Tower[k_towers_count]),
+        _tower_count(k_towers_count),
         _plt_flight(nullptr),
         _plt_speed(nullptr),
         _plt_acceleration(nullptr),
-        _tower_count(k_towers_count),
         _sample_rate(k_sample_rate)
 {
     _processor.setSampleRate(_sample_rate);
     _aircraft.setTimeDelta(_sample_rate);
 }
 
-Field::Field(const OurVector<k_space_dimension> &start) :
-        _towers(new Tower[k_towers_count]),
+Field::Field(const OurVector<k_space_dim> &start) :
         _current_position(start),
+        _towers(new Tower[k_towers_count]),
+        _tower_count(k_towers_count),
         _plt_flight(nullptr),
         _plt_speed(nullptr),
         _plt_acceleration(nullptr),
-        _tower_count(k_towers_count),
         _sample_rate(k_sample_rate)
 {
     _processor.setSampleRate(_sample_rate);
@@ -29,10 +29,10 @@ Field::Field(const OurVector<k_space_dimension> &start) :
 Field::Field(const Aircraft &aircraft) :
         _aircraft(aircraft),
         _towers(new Tower[k_towers_count]),
+        _tower_count(k_towers_count),
         _plt_flight(nullptr),
         _plt_speed(nullptr),
         _plt_acceleration(nullptr),
-        _tower_count(k_towers_count),
         _sample_rate(k_sample_rate)
 {
     _processor.setSampleRate(_sample_rate);
@@ -91,7 +91,7 @@ void Field::sendSignalsToTowers()
 
 void Field::updatePlot()
 {
-    auto drawPoint = [](Plotter* plt, const OurVector<k_space_dimension>& param)
+    auto drawPoint = [](Plotter* plt, const OurVector<k_space_dim>& param)
     {
         if (plt)
         {
@@ -119,7 +119,7 @@ void Field::checkHeight()
 
 void Field::decreaseVerticalSpeed()
 {
-    OurVector<k_space_dimension> new_acceleration = _aircraft.getAcceleration();
+    OurVector<k_space_dim> new_acceleration = _aircraft.getAcceleration();
     new_acceleration[2] = new_acceleration[2] > 1e-7 ? new_acceleration[2] / k_coefficient_deceleration :
                                                        new_acceleration[2] - k_deceleration_speed;
 

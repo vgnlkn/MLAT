@@ -18,7 +18,7 @@ public:
     //! Default constructor
     Field();
     //! Constructor with start position
-    explicit Field(const OurVector<k_space_dimension>& start);
+    explicit Field(const OurVector<k_space_dim>& start);
     //! Constructor with aircraft
     explicit Field(const Aircraft& aircraft);
     //! Destructor
@@ -82,7 +82,7 @@ private:
     //! Aircraft
     Aircraft _aircraft;
     //! Start position with (x; y; z) coordinates in vector
-    OurVector<k_space_dimension> _current_position;
+    OurVector<k_space_dim> _current_position;
     //! All towers in the field
     Tower* _towers;
     //! Number of towers

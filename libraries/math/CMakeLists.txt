@@ -19,7 +19,9 @@ if (${GTest_FOUND})
     message(STATUS "Starting tests...")
     add_executable(test_math ${TESTS})
 
-    target_link_libraries(test_math 
+    target_link_libraries(test_math
+        gtest
+        gtest_main
         ${CMAKE_THREAD_LIBS_INIT} 
         GTest::GTest
         GTest::gtest_main
