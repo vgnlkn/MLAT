@@ -18,6 +18,4 @@ add_executable (simulator
 target_link_libraries (simulator AircraftSimulator)
 target_link_libraries (simulator Math)
 
-target_compile_definitions(simulator PUBLIC STOCK_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../../config.json")
-target_compile_definitions(simulator PUBLIC PLOTTER_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../utilities/plotters/")
-
+add_compile_definitions(STOCK_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../../config.json")
