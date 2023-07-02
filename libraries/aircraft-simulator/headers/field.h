@@ -1,12 +1,10 @@
 #ifndef MLAT_FIELD_H
 #define MLAT_FIELD_H
 
-#include <aircraft.h>
-#include <plotter.h>
-#include <processor.h>
 #include <chrono>
 #include <thread>
-
+#include <aircraft.h>
+#include <processor.h>
 
 /*! \class Field
 *   \brief The class in which the flight is simulated.
@@ -20,37 +18,17 @@ public:
     //! Default constructor
     Field();
     //! Constructor with start position
-    explicit Field(const OurVector<3>& start): 
-        _towers(new Tower[TOWERS_COUNT]),
-        _current_position(start), 
-        _plt_flight(nullptr),
-        _plt_speed(nullptr),
-        _plt_acceleration(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-    {
-        _processor.setSampleRate(_sample_rate);
-        _aircraft.setTimeDelta(_sample_rate);
-    }
+    explicit Field(const OurVector<k_space_dim>& start);
     //! Constructor with aircraft
-    explicit Field(const Aircraft& aircraft): 
-        _aircraft(aircraft), 
-        _towers(new Tower[TOWERS_COUNT]),
-        _plt_flight(nullptr),
-        _plt_speed(nullptr),
-        _plt_acceleration(nullptr),
-        _tower_count(TOWERS_COUNT),
-        _sample_rate(k_sample_rate)
-    {
-        _processor.setSampleRate(_sample_rate);
-        _aircraft.setTimeDelta(_sample_rate);
-    }
+    explicit Field(const Aircraft& aircraft);
     //! Destructor
-    ~Field() { if (_towers) delete[] _towers; };
+    ~Field() { delete[] _towers; };
 
     //! Methods responsible for the movement of the _aircraft
+    //! Setter for _aircraft
+    inline void setAircraft(const Aircraft& aircraft) { _aircraft = aircraft; }
     //! Start movement
-    void startMovement();
+    [[noreturn]] void startMovement();
     //! Initialize the initial movement of the aircraft and towers
     void initialize();
     //! Calculates the new position of the aircraft
@@ -81,8 +59,14 @@ public:
     void setPlotterFilter(Plotter* plt) { _processor.setPlotterFilter(plt); }
     //! Setting Filter plotter speed
     void setPlotterFilterSpeed(Plotter* plt) { _processor.setPlotterFilterSpeed(plt); }
-    //! Setting Filter plotter speed
+    //! Setting Filter plotter acceleration
     void setPlotterFilterAcceleration(Plotter* plt) { _processor.setPlotterFilterAcceleration(plt); }
+    //! Setting standard filter plotter
+    void setPlotterStandardFilter(Plotter* plt) { _processor.setPlotterStandardFilter(plt); }
+    //! Setting standard filter plotter speed
+    void setPlotterFilterStandardSpeed(Plotter* plt) { _processor.setPlotterStandardFilterSpeed(plt); }
+    //! Setting standard filter plotter acceleration
+    void setPlotterFilterStandardAcceleration(Plotter* plt) { _processor.setPlotterStandardFilterAcceleration(plt); }
     //! Setting coordinate plotter with real values
     void setPlotterFlight(Plotter* plt) { _plt_flight = plt; }
     //! Setting speed plotter with real values
@@ -91,15 +75,14 @@ public:
     void setPlotterAcceleration(Plotter* plt) { _plt_acceleration = plt; }
     //! Getter of _processor
     void updatePlot();
+
     //! Process Signals
     void processSignals(uint32_t i) { _processor.process(i); }
-    [[nodiscard]] Processor getProcessor() const { return _processor; }
-
 private:
     //! Aircraft
     Aircraft _aircraft;
     //! Start position with (x; y; z) coordinates in vector
-    OurVector<3> _current_position;
+    OurVector<k_space_dim> _current_position;
     //! All towers in the field
     Tower* _towers;
     //! Number of towers

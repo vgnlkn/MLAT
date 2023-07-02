@@ -1,13 +1,12 @@
 #ifndef EQUATION_SOLVER_H
 #define EQUATION_SOLVER_H
 
-#include <vector.h>
-#include <matrix.h>
-#include <defines.h>
 #include <map>
 #include <cmath>
 #include <cassert>
 #include <utility>
+#include <matrix.h>
+#include <defines.h>
 
 /*! \class EquationSolver
 *   \brief Class which solves the MLAT problem
@@ -22,27 +21,26 @@ public:
     //! Destructor
     ~EquationSolver() = default;
     //! Returns the Jacobian of the least squares problem
-    OurMatrix<EQUATIONS_COUNT, 3> getJacobian(OurVector<3>& position);
+    OurMatrix<k_equations_count, k_space_dim> getJacobian(OurVector<k_space_dim>& position);
     //! Setter for tower coordinates
-    void setTowersCoordinates(std::map<uint16_t, OurVector<3>> tower_coordinates);
+    void setTowersCoordinates(std::map<uint16_t, OurVector<k_space_dim>> tower_coordinates);
     //! Setter for initial parameters
-    void setInitialParams(const OurVector<3>& initial_coordinates, const OurVector<EQUATIONS_COUNT>& initial_tdoas);
+    void setInitialParams(const OurVector<k_space_dim>& initial_coordinates,
+                          const OurVector<k_equations_count>& initial_tdoas);
     //! Method which return the solution
-    OurVector<3> solve(OurVector<EQUATIONS_COUNT>& tdoas);
+    OurVector<k_space_dim> solve(OurVector<k_equations_count>& tdoas);
 
 private:
-    //! Calculates the distance between two dots
-    double distance(const OurVector<3>& from, const OurVector<3>& to);
     //! Returns the Jacobian row
-    OurVector<3> getJacobianRow(OurVector<3>& position, uint8_t tower_i, uint8_t tower_j);
+    OurVector<k_space_dim> getJacobianRow(OurVector<3>& position, uint8_t tower_i, uint8_t tower_j);
 
 private:
     //! Initial coordinates
-    OurVector<3> _initial_coordinates;
+    OurVector<k_space_dim> _initial_coordinates;
     //! Initial TDOAS
-    OurVector<EQUATIONS_COUNT> _initial_tdoas;
+    OurVector<k_equations_count> _initial_tdoas;
     //! Tower coordinates
-    std::map<uint16_t, OurVector<3>> _towers_coordinates;
+    std::map<uint16_t, OurVector<k_space_dim>> _towers_coordinates;
 };
 
 #endif

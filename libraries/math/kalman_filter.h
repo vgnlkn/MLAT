@@ -3,7 +3,6 @@
 
 #include <matrix.h>
 #include <iostream>
-#include <iomanip>
 
 /*! \class KalmanFilter
 *   \brief Class describing Kalman Filter
@@ -31,70 +30,39 @@ public:
     void setNoiseCovarianceMatrix(const OurMatrix<dim_observation, dim_observation>& other)
     { _noise_covariance_matrix = other; }
 
-    //! Getter for _system_vector
-    auto getSystemVector() { return _system_vector; }
-
     //! Predicts model values
-    void predict(double time_delta);
+    void predict();
     //! Corrects model values
     OurVector<dim_state> correct(const OurVector<dim_observation>& state_vector);
 
-    //! Virtual function that overriden in extended filter
-    virtual OurVector<dim_observation> getError(const OurVector<dim_observation> &state_vector);
-protected:
-    OurVector<dim_state> _system_vector;                                   // x
-    OurMatrix<dim_state, dim_state> _state_transition_matrix;              // F
-    OurMatrix<dim_state, dim_state> _error_covariance_matrix;              // Q
-    OurMatrix<dim_state, dim_state> _state_covariance_matrix;              // P
-    OurMatrix<dim_observation, dim_observation> _noise_covariance_matrix;  // R
-    OurMatrix<dim_observation, dim_state> _observation_matrix;             // H
+private:
+    OurVector<dim_state> _system_vector;                       //! x
+    OurMatrix<dim_state, dim_state> _state_transition_matrix;  //! F
+    OurMatrix<dim_state, dim_state> _error_covariance_matrix;  //! Q
+    OurMatrix<dim_state, dim_state> _state_covariance_matrix;  //! P
+    OurMatrix<dim_observation, dim_observation> _noise_covariance_matrix;  //! R
+    OurMatrix<dim_observation, dim_state> _observation_matrix; //! H
 };
 
 template<uint8_t dim_state, uint8_t dim_observation>
-OurVector<dim_observation>
-KalmanFilter<dim_state, dim_observation>::getError(const OurVector<dim_observation> &state_vector)
-{
-    return state_vector - (_observation_matrix * _system_vector);
-}
-
-template<uint8_t dim_state, uint8_t dim_observation>
-void KalmanFilter<dim_state, dim_observation>::predict(double time_delta)
+void KalmanFilter<dim_state, dim_observation>::predict()
 {
     _system_vector = _state_transition_matrix * _system_vector;
-    //_state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix
-     //                         * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
+    _state_covariance_matrix = _state_transition_matrix * _state_covariance_matrix
+                               * _state_transition_matrix.getTransposed() + _error_covariance_matrix;
 }
 
 template<uint8_t dim_state, uint8_t dim_observation>
-OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<dim_observation> &state_vector) 
+OurVector<dim_state> KalmanFilter<dim_state, dim_observation>::correct(const OurVector<dim_observation> &state_vector)
 {
-
-    /*
-        Сейчас надо сделать так чтоб оно работало как МНК без прямого вызова H.pseudoInverse()
-        Т.е. вместо псевдоинверса должно быть K. Поэтому надо сделать адекватное взятие обр матрицы
-        численно стабильное.
-    */
     OurMatrix<dim_state, dim_state> identity_matrix;
     identity_matrix.setIdentity();
-    // раскомментировал матрицу P, но сильно легче не стало
-    OurMatrix<dim_observation, dim_observation> S = (_observation_matrix * _state_covariance_matrix) * _observation_matrix.getTransposed();
-                                                    //+ _noise_covariance_matrix;
-    OurMatrix<dim_observation, dim_observation> L = S.choleskyDecomposition();
-    //std::cout << std::fixed << std::setprecision(15);
-    std::cout << "S = \n" << S << "\n\n" << S * S.matrixInverse() << "\n\n";
-    OurMatrix<dim_state, dim_observation> K = (/*_state_covariance_matrix **/ _observation_matrix.getTransposed()) * S.getInverse();
-    
-   // std::cout << _observation_matrix.pseudoInverse() << std::endl << std::endl;
-    // std::cout << K << std::endl << std::endl;
-
-    exit(0);
-    
-   // std::cout << state_vector << std::endl;
-    OurVector<dim_observation> Y = this->getError(state_vector);
-    
-    // ТУТ ПОМЕНЯТ НА K*Y
-    _system_vector = _system_vector + (_observation_matrix.pseudoInverse() * Y);
-   // _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
+    OurMatrix<dim_observation, dim_observation> S = _observation_matrix * _state_covariance_matrix * _observation_matrix.getTransposed()
+                                                    + _noise_covariance_matrix;
+    OurMatrix<dim_state, dim_observation> K = _state_covariance_matrix * _observation_matrix.getTransposed() * S.getInverse();
+    OurVector<dim_observation> Y = state_vector - (_observation_matrix * _system_vector);
+    _system_vector = _system_vector + (K * Y);
+    _state_covariance_matrix = (identity_matrix - K * _observation_matrix) * _state_covariance_matrix;
 
     return _system_vector;
 }

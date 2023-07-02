@@ -1,0 +1,12 @@
+{
+  "STOCK_PATH_MLAT": "../../../applications/utilities/plotters/mlat.txt",
+  "STOCK_PATH_REAL": "../../../applications/utilities/plotters/real.txt",
+  "STOCK_PATH_FILTER": "../../../applications/utilities/plotters/filter.txt",
+  "STOCK_PATH_SPEED_FILTER": "../../../applications/utilities/plotters/speed_filter.txt",
+  "STOCK_PATH_SPEED_REAL": "../../../applications/utilities/plotters/speed_real.txt",
+  "STOCK_PATH_ACCELERATION_FILTER": "../../../applications/utilities/plotters/acceleration_filter.txt",
+  "STOCK_PATH_ACCELERATION_REAL": "../../../applications/utilities/plotters/acceleration_real.txt",
+  "STOCK_PATH_STANDARD_FILTER": "../../../applications/utilities/plotters/filter_standard.txt",
+  "STOCK_PATH_SPEED_STANDARD_FILTER": "../../../applications/utilities/plotters/speed_filter_standard.txt",
+  "STOCK_PATH_ACCELERATION_STANDARD_FILTER": "../../../applications/utilities/plotters/acceleration_filter_standard.txt"
+}

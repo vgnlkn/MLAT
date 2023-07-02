@@ -1,20 +1,18 @@
 #ifndef MLAT_PROCESSOR_H
 #define MLAT_PROCESSOR_H
 
+class Plotter;
+
 #include <chrono>
 #include <vector>
-#include <vector.h>
 #include <map>
 #include <set>
 #include <tower.h>
 #include <equation_solver.h>
-#include <plotter.h>
 #include <random>
-#include <mlat_estimation.h>
-#include <extended_evaluation.h>
-#include <ekf.h>
-#include <nkf.h>
 #include <ukf.h>
+#include <mlat_estimation.h>
+
 
 /*! \class NoiseGenerator
 *   \brief Generate noise with normal distribution
@@ -22,7 +20,7 @@
 class NoizeGenerator
 {
 public:
-    inline NoizeGenerator(): _rd(), _gen(_rd()), _distribution(0, 1e-6) {}
+    inline NoizeGenerator(): _rd(), _gen(_rd()), _distribution(0, k_noise_dispersion) {}
     inline double generate() { return _distribution(_gen); }
 
 private:
@@ -41,32 +39,36 @@ class Processor
 {
 public:
     //! Constructor
-    inline Processor() : _plt_filter(nullptr), _plt_mlat(nullptr), _plt_filter_acceleration(nullptr),
-    _plt_filter_speed(nullptr), _noise(new NoizeGenerator), _iteration(1), _overstatement(0) {}
+    Processor();
     //! Destructor
-    inline ~Processor() { if (_noise) { delete _noise; } }
+    inline ~Processor() { delete _noise; }
+
     //! Initialize solver
     void initSolver();
     //! Adding TOA for one iteration
-    void addTOA(uint16_t id, double TOA);
+    inline void addTOA(uint16_t id, double TOA) { _towers_toa[id] = TOA; }
     //! Calculates TDOA
-    void calculateTDOA(OurVector<EQUATIONS_COUNT>& tdoas);
+    void calculateTDOA(OurVector<k_equations_count>& tdoas);
     //! Overloading operator[]
-    double& operator[](uint16_t id) { return _towers_toa[id]; }
-    //! Get tower using her id
-    Tower getTower(uint16_t id) { return _towers[id]; }
+    inline double& operator[](uint16_t id) { return _towers_toa[id]; }
     //! Setter for _plt_mlat
-    void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
+    inline void setPlotterMlat(Plotter* plt) { _plt_mlat = plt; }
     //! Setter for _plt_filter
-    void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
+    inline void setPlotterFilter(Plotter* plt) { _plt_filter = plt; }
     //! Setter for _plt_filter_speed
-    void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
+    inline void setPlotterFilterSpeed(Plotter* plt) { _plt_filter_speed = plt; }
     //! Setter for _plt_filter_acceleration
-    void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
+    inline void setPlotterFilterAcceleration(Plotter* plt) { _plt_filter_acceleration = plt; }
+    //! Setter for _plt_standard_filter
+    inline void setPlotterStandardFilter(Plotter* plt) { _plt_standard_filter = plt; }
+    //! Setter for _plt_standard_filter_speed
+    inline void setPlotterStandardFilterSpeed(Plotter* plt) { _plt_standard_filter_speed = plt; }
+    //! Setter for _plt_standard_filter_acceleration
+    inline void setPlotterStandardFilterAcceleration(Plotter* plt) { _plt_standard_filter_acceleration = plt; }
     //! Set tower in _towers using object of tower and tower's id
     void setTower(uint16_t id, const Tower& tower);
-    //! Set samplerate
-    void setSampleRate(double sample_rate);
+    //! Update state covariance matrix(matrix P)
+    inline void setSampleRate(double time_delta) { _estim.updateStateMatrix(time_delta); }
 
     /*! Processing accepted data
     * Calculating TDOA and getting aircraft position
@@ -75,19 +77,13 @@ public:
     * Gauss-Newton algorithm
     */
     void process(uint32_t iter);
-
-    //! Getter for _eval
-    // ExtendedEvaluation& getEval() { return _eval; }
-
-    //! Getter for _nkf
-    UKF& getNKF() { return _nkf; }
 private:
     //! TOA
     std::map<uint16_t, double> _towers_toa;
     //! Towers
     std::map<uint16_t, Tower> _towers;
     //! Towers position
-    std::map<uint16_t, OurVector<3>> _towers_coordinates;
+    std::map<uint16_t, OurVector<k_space_dim>> _towers_coordinates;
     //! Solver for non-linear equation system
     EquationSolver _solver;
     //! Object which draws plots with direct problem
@@ -98,23 +94,26 @@ private:
     Plotter* _plt_filter_speed;
     //! Plotter for filter acceleration
     Plotter* _plt_filter_acceleration;
+    //! Plotter for standard filter speed
+    Plotter* _plt_standard_filter_speed;
+    //! Plotter for standard filter acceleration
+    Plotter* _plt_standard_filter_acceleration;
+    //! Plotter for standard filter coordinates
+    Plotter* _plt_standard_filter;
     //! Noise generator
     NoizeGenerator* _noise;
-    //! Estimation
-    // MlatEstimation _estim;
-    //! Estimation by extended filter
-    // ExtendedEvaluation _eval;
     //! Average coordinates
-    OurVector<3> _mlat_average, _kalman_average;
+    OurVector<k_space_dim> _mlat_average, _kalman_average;
     //! Vectors, necessery to calculate amplitude
-    OurVector<3> _mlat_min, _mlat_max;
+    OurVector<k_space_dim> _mlat_min, _mlat_max;
     //! Counter for iterations
     uint32_t _iteration;
     //! Overstatement
     uint32_t _overstatement;
-    //! ekf
-    // EKF<EQUATIONS_COUNT> _ekf;
-    UKF _nkf;
+    //! Kalman Filter with built-in LSM
+    UKF _unscented_filter;
+    //! Estimation for standard Kalman filter
+    MlatEstimation _estim;
 };
 
 

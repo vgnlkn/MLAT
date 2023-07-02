@@ -1,11 +1,10 @@
 #ifndef MLAT_TOWER_H
 #define MLAT_TOWER_H
 
+#include <cstring>
+#include <cmath>
 #include <vector.h>
 #include <defines.h>
-#include <cstring>
-#include <stack>
-#include <cmath>
 
 /*! \class Tower
 *   \brief Tower class
@@ -16,25 +15,25 @@ class Tower
 {
 public:
     //! Default constructor
-    Tower() = default;
+    inline Tower() : _id(0) {};
     //! Copy constructor
     Tower(const Tower& other);
     //! Overloading operator=
     Tower& operator=(const Tower& other);
     //! Overloading operator==
-    bool operator==(const Tower& other) const { return _id == other._id && _position == other._position; }
+    inline bool operator==(const Tower& other) const { return _id == other._id && _position == other._position; }
     //! Overloading operator<
-    bool operator<(const Tower& other) const { return _id < other._id; }
+    inline bool operator<(const Tower& other) const { return _id < other._id; }
     //! Receives a signal
-    double calculateTime(const OurVector<3>& current_position);
+    double calculateTime(const OurVector<k_space_dim>& current_position);
     //! Getter for _position
-    [[nodiscard]] OurVector<3> getPosition() const { return _position; }
+    [[nodiscard]] inline OurVector<k_space_dim> getPosition() const { return _position; }
     //! Setter for _position
-    void setPosition(const OurVector<3>& other) { _position = other; }
+    inline void setPosition(const OurVector<k_space_dim>& other) { _position = other; }
     //! Getter for _id
-    [[nodiscard]] uint16_t getID() const { return _id; }
+    [[nodiscard]] inline uint16_t getID() const { return _id; }
     //! Setter for _id
-    void setID(uint16_t id) { _id = id; }
+    inline void setID(uint16_t id) { _id = id; }
 
 private:
     //! Needed for operator=
@@ -44,7 +43,7 @@ private:
     //! id of the tower
     uint16_t _id;
     //! Position of tower
-    OurVector<3> _position;
+    OurVector<k_space_dim> _position;
 };
 
 

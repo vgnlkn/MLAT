@@ -1,34 +1,27 @@
 cmake_minimum_required(VERSION 3.10)
 
 include_directories (. tests/)
-
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/../../applications/utilities/)
 
+file(GLOB MATH_HEADERS *.h)
+file(GLOB MATH_SOURCES src/*.cpp)
+
 add_library (Math
-    vector.h
-    equation_solver.h
-    matrix.h
-    nkf.h
-    src/nkf.cpp
-    ukf.h
-    src/ukf.cpp
-    src/equation_solver.cpp
-        ../../applications/utilities/defines.h
-	kalman_filter.h
-        mlat_estimation.h
-        src/mlat_estimation.cpp
-        extended_evaluation.h src/extended_evaluation.cpp extended_filter.h ekf.h)
+    ${MATH_HEADERS}
+    ${MATH_SOURCES}
+    ../../applications/utilities/defines.h
+)
+
+file(GLOB TESTS ${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp)
 
 find_package(GTest)
 if (${GTest_FOUND})
     message(STATUS "Starting tests...")
-    add_executable(test_math 
-        tests/main.cpp
-        tests/test_vector.cpp
-        tests/test_matrix.cpp
-    )
+    add_executable(test_math ${TESTS})
 
-    target_link_libraries(test_math 
+    target_link_libraries(test_math
+        gtest
+        gtest_main
         ${CMAKE_THREAD_LIBS_INIT} 
         GTest::GTest
         GTest::gtest_main

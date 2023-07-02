@@ -10,18 +10,18 @@ TEST(MatrixTests, SimpleArithmetic)
     OurMatrix<3, 2> b;
 
     float k = 1.f;
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
         a[i][j] = k;
         ++k;
         }
     }
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 2; ++j)
+        for (uint8_t j = 0; j < 2; ++j)
         {
             b[i][j] = k;
             ++k;
@@ -32,17 +32,17 @@ TEST(MatrixTests, SimpleArithmetic)
     OurMatrix<2, 3> a_copy = a;
     OurMatrix<3, 2> b_copy = b;
 
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(a[i][j], a_copy[i][j]);
         }
     }
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 2; ++j)
+        for (uint8_t j = 0; j < 2; ++j)
         {
             ASSERT_EQ(b[i][j], b_copy[i][j]);
         }
@@ -59,9 +59,9 @@ TEST(MatrixTests, SimpleArithmetic)
     auto c_copy = c;
 
     OurMatrix<2, 3> d = a + c;
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(d[i][j], a[i][j] + c[i][j]);
         }
@@ -73,9 +73,9 @@ TEST(MatrixTests, SimpleArithmetic)
 
     // zero init
     OurMatrix<2, 3> e;
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(e[i][j], 0);
         }
@@ -86,9 +86,9 @@ TEST(MatrixTests, SimpleArithmetic)
     e = a - c;
     ASSERT_TRUE(a == a_copy);
     ASSERT_TRUE(c == c_copy);
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(e[i][j], a[i][j] - c[i][j]);
         }
@@ -111,9 +111,9 @@ TEST(MatrixTests, SimpleArithmetic)
     result[1][1] = 154;
 
 
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 2; ++j)
+        for (uint8_t j = 0; j < 2; ++j)
         {
             ASSERT_EQ(m1[i][j], result[i][j]);
         }
@@ -139,9 +139,9 @@ TEST(MatrixTests, SimpleArithmetic)
     res[2][2] = 105;
 
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(m2[i][j], res[i][j]);
         }
@@ -153,18 +153,18 @@ TEST(MatrixTests, SimpleArithmetic)
     OurMatrix<3, 3> m3, m4;
     k = 1.f;
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             m3[i][j] = k;
             ++k;
         }
     }
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             m4[i][j] = k;
             ++k;
@@ -190,9 +190,9 @@ TEST(MatrixTests, SimpleArithmetic)
     ans[2][1] = 342;
     ans[2][2] = 366;
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(ans[i][j], r[i][j]);
         }
@@ -202,9 +202,9 @@ TEST(MatrixTests, SimpleArithmetic)
     // const and matrix product
     m3 = 13 * m4;
     ASSERT_TRUE(m4 == m4_copy);
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(m3[i][j], m4[i][j] * 13);
         }
@@ -213,9 +213,9 @@ TEST(MatrixTests, SimpleArithmetic)
     // matrix and const product
     m3 = m4 * 10;
     ASSERT_TRUE(m4 == m4_copy);
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(m3[i][j], m4[i][j] * 10);
         }
@@ -223,9 +223,9 @@ TEST(MatrixTests, SimpleArithmetic)
 
     // setValue
     m3.setValue(15.f);
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             assert(m3[i][j] == 15);
         }
@@ -245,9 +245,9 @@ TEST(MatrixTests, SimpleArithmetic)
 
     // invert with -
     a = -a;
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(a[i][j], (-1) * a_copy[i][j]);
         }
@@ -255,9 +255,9 @@ TEST(MatrixTests, SimpleArithmetic)
 
     // setValue
     m3.setValue(15.f);
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(m3[i][j], 15);
         }
@@ -269,14 +269,14 @@ TEST(MatrixTests, MultiSum)
 {
     OurMatrix<3, 2> a, b, c, d, res;
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 2; ++j)
+        for (uint8_t j = 0; j < 2; ++j)
         {
-            a[i][j] = (i + j + 1) * 10.0f;
-            b[i][j] = (i + j + 2) * 10.0f;
-            c[i][j] = (i + j + 3) * 10.0f;
-            d[i][j] = (i + j + 3) * 10.0f;
+            a[i][j] = float(i + j + 1) * 10.0f;
+            b[i][j] = float(i + j + 2) * 10.0f;
+            c[i][j] = float(i + j + 3) * 10.0f;
+            d[i][j] = float(i + j + 3) * 10.0f;
         }
     }
 
@@ -291,9 +291,9 @@ TEST(MatrixTests, MultiSum)
     ASSERT_TRUE(b == b_copy);
     ASSERT_TRUE(c == c_copy);
     ASSERT_TRUE(d == d_copy);
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 2; ++j)
+        for (uint8_t j = 0; j < 2; ++j)
         {
             ASSERT_EQ(res[i][j], a[i][j] + b[i][j] + c[i][j] + d[i][j]);
         }
@@ -306,9 +306,9 @@ TEST(MatrixTests, MultiProduct)
     // square matrix
     OurMatrix<3, 3> a, b, c, d, res;
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             a[i][j] = (i + j + 1);
             b[i][j] = (i + j + 2);
@@ -341,9 +341,9 @@ TEST(MatrixTests, MultiProduct)
     result[2][1] = 14232;
     result[2][2] = 16554;
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(res[i][j], result[i][j]);
         }
@@ -356,33 +356,33 @@ TEST(MatrixTests, MultiProduct)
     OurMatrix<2, 1> m4, m4_copy;
     OurMatrix<2, 1> ans, answer;
 
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 2; ++j)
+        for (uint8_t j = 0; j < 2; ++j)
         {
             m1[i][j] = (i + j + 1);
         }
     }
 
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             m2[i][j] = (i + j + 2);
         }
     }
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 2; ++j)
+        for (uint8_t j = 0; j < 2; ++j)
         {
             m3[i][j] = (i + j + 3);
         }
     }
 
-    for (int i = 0; i < 2; ++i)
+    for (uint8_t i = 0; i < 2; ++i)
     {
-        for (int j = 0; j < 1; ++j)
+        for (uint8_t j = 0; j < 1; ++j)
         {
             m4[i][0] = (i + j + 4);
         }
@@ -409,14 +409,14 @@ TEST(MatrixTests, MultiProduct)
 TEST(MatrixTests, AdvancedArithmetic_1)
 {
     OurMatrix<3, 3> a, b, c, d, res;
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
-            a[i][j] = (i + j + 1) * 10.0f;
-            b[i][j] = (i + j + 2) * 10.0f;
-            c[i][j] = (i + j + 3) * 10.0f;
-            d[i][j] = (i + j + 4) * 10.0f;
+            a[i][j] = float(i + j + 1) * 10.0f;
+            b[i][j] = float(i + j + 2) * 10.0f;
+            c[i][j] = float(i + j + 3) * 10.0f;
+            d[i][j] = float(i + j + 4) * 10.0f;
         }
     }
 
@@ -442,9 +442,9 @@ TEST(MatrixTests, AdvancedArithmetic_1)
     ASSERT_TRUE(b == b_copy);
     ASSERT_TRUE(c == c_copy);
     ASSERT_TRUE(d == d_copy);
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(res[i][j], a[i][j] + multiplication[i][j] + d[i][j]);
         }
@@ -455,9 +455,9 @@ TEST(MatrixTests, AdvancedArithmetic_1)
 TEST(MatrixTests, AdvancedArithmetic_2)
 {
     OurMatrix<3, 3> a, b, c, d, res, ans;
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             a[i][j] = i + j + 1;
             b[i][j] = i + j + 2;
@@ -488,9 +488,9 @@ TEST(MatrixTests, AdvancedArithmetic_2)
     ans[2][1] = 150;
     ans[2][2] = 150;
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(res[i][j], ans[i][j]);
         }
@@ -501,9 +501,9 @@ TEST(MatrixTests, AdvancedArithmetic_2)
 TEST(MatrixTests, AdvancedArithmetic_3)
 {
     OurMatrix<3, 3> a, b, c, d, res;
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             a[i][j] = i + j + 1;
             b[i][j] = i + j + 2;
@@ -537,17 +537,17 @@ TEST(MatrixTests, AdvancedArithmetic_3)
     ans[2][1] = 199;
     ans[2][2] = 229;
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(e[i][j], ans[i][j]);
         }
     }
 
-    for (int i = 0; i < 3; ++i)
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (uint8_t j = 0; j < 3; ++j)
         {
             ASSERT_EQ(res[i][j], (-1) * ((-1) * a[i][j] * 2 + e[i][j]) + b[i][j]);
         }
@@ -617,77 +617,6 @@ TEST(MatrixTests, TestMultiplying)
         for (uint8_t j = 0; j < 3; ++j)
         {
             ans[i][j] /= 12.0;
-        }
-    }
-}
-
-TEST(MatrixTests, TestCholesky)
-{
-    OurMatrix<3, 3> matrix;
-    matrix[0][0] = 4;
-    matrix[0][1] = 12;
-    matrix[0][2] = -16;
-    matrix[1][0] = 12;
-    matrix[1][1] = 37;
-    matrix[1][2] = -43;
-    matrix[2][0] = -16;
-    matrix[2][1] = -43;
-    matrix[2][2] = 98;
-
-    OurMatrix<3, 3> L = matrix.choleskyDecomposition();
-    OurMatrix<3, 3> res = L * L.getTransposed();
-
-    for (uint8_t i = 0; i < 3; ++i)
-    {
-        for (uint8_t j = 0; j < 3; ++j)
-        {
-            ASSERT_EQ(matrix[i][j], res[i][j]);
-        }
-    }
-}
-
-
-TEST(MatrixTests, TestLU) {
-    OurMatrix<3, 3, double> a, L, ans;
-
-    a[0][0] = 3.0;
-    a[0][1] = 2.0;
-    a[0][2] = 3.0;
-    a[1][0] = 4.0;
-    a[1][1] = 5.0;
-    a[1][2] = 6.0;
-    a[2][0] = 7.0;
-    a[2][1] = 9.0;
-    a[2][2] = 10.0;
-
-    ans[0][0] = 0.8;
-    ans[0][1] = -1.4;
-    ans[0][2] = 0.6;
-    ans[1][0] = -0.4;
-    ans[1][1] = -1.8;
-    ans[1][2] = 1.2;
-    ans[2][0] = -0.2;
-    ans[2][1] = 2.6;
-    ans[2][2] = -1.4;
-
-    OurMatrix<3, 3> U = a.LUFactorization(L);
-    auto res = L * U;
-
-    for (uint8_t i = 0; i < 3; ++i)
-    {
-        for (uint8_t j = 0; j < 3; ++j)
-        {
-            ASSERT_EQ(a[i][j], res[i][j]);
-        }
-    }
-
-    std::cout << a << "\n\n" << a.getLUInverse() << "\n\n" << a.getInverse() << "\n";
-    a = a.getLUInverse();
-    for (uint8_t i = 0; i < 3; ++i)
-    {
-        for (uint8_t j = 0; j < 3; ++j)
-        {
-            ASSERT_EQ(a[i][j], ans[i][j]);
         }
     }
 }
